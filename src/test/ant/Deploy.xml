@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ ~ Copyright (c) 2010, 2011 Sonatype, Inc.
+ ~ All rights reserved. This program and the accompanying materials
+ ~ are made available under the terms of the Eclipse Public License v1.0
+ ~ which accompanies this distribution, and is available at
+ ~ http://www.eclipse.org/legal/epl-v10.html
+ ~
+ ~ Contributors:
+ ~    Sonatype, Inc. - initial API and implementation
+-->
+
+<!DOCTYPE project [
+       <!ENTITY common SYSTEM "common.xml">
+]>
+
+<project xmlns:repo="antlib:org.eclipse.aether.ant">
+
+  &common;
+
+  <repo:remoterepo id="distrepo" url="${project.distrepo.url}" type="default" releases="true" snapshots="true" updates="always" checksums="fail"/>
+  
+  <target name="setUp">
+    <touch file="${project.dir}/dummy-pom.xml"/>
+    <touch file="${project.dir}/other-pom.xml"/>
+    <touch file="${project.dir}/common.xml"/>
+  </target>
+  
+  <target name="testDeployGlobalPom" depends="setUp">
+    <repo:pom file="${project.dir}/dummy-pom.xml"/>
+    <repo:deploy remotereporef="distrepo"/>
+  </target>
+  
+  <target name="testDeployOverrideGlobalPom" depends="setUp">
+    <repo:pom file="${project.dir}/dummy-pom.xml"/>
+    <repo:deploy remotereporef="distrepo">
+      <pom file="${project.dir}/other-pom.xml"/>
+    </repo:deploy>
+  </target>
+  
+  <target name="testDeployOverrideGlobalPomByRef" depends="setUp">
+    <repo:pom file="${project.dir}/dummy-pom.xml"/>
+    <repo:pom file="${project.dir}/other-pom.xml" id="other"/>
+    <repo:deploy remotereporef="distrepo"/>
+    <repo:deploy pomref="other" remotereporef="distrepo"/>
+  </target>
+  
+  <target name="testDeployAttachedArtifact" depends="setUp">
+    <repo:pom file="${project.dir}/dummy-pom.xml"/>
+    <repo:artifact classifier="ant" file="${project.dir}/common.xml" id="ant"/>
+    <repo:deploy remotereporef="distrepo">
+      <repo:artifact refid="ant"/>
+    </repo:deploy>
+  </target>
+
+  <target name="testInlineRepo" depends="setUp">
+    <repo:localrepo dir="${build.dir}/local-repo-custom" />
+    <repo:deploy pomref="pom" remotereporef="distrepo">
+      <repo:artifact refid="ant"/>
+    </repo:deploy>
+  </target>
+
+</project>

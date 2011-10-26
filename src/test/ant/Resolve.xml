@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ ~ Copyright (c) 2010, 2011 Sonatype, Inc.
+ ~ All rights reserved. This program and the accompanying materials
+ ~ are made available under the terms of the Eclipse Public License v1.0
+ ~ which accompanies this distribution, and is available at
+ ~ http://www.eclipse.org/legal/epl-v10.html
+ ~
+ ~ Contributors:
+ ~    Sonatype, Inc. - initial API and implementation
+-->
+
+<!DOCTYPE project [
+       <!ENTITY common SYSTEM "common.xml">
+]>
+
+<project xmlns:repo="antlib:org.eclipse.aether.ant">
+
+  &common;
+
+  <repo:remoterepo id="remote" url="http://repo1.maven.org/maven2" type="default" releases="true" snapshots="true" updates="always" checksums="fail"/>
+  <repo:remoterepos id="aether.repositories">
+    <repo:remoterepo refid="remote"/>
+  </repo:remoterepos>
+
+  <target name="setUp">
+    <delete dir="${build.dir}/resolvetest-local-repo"/>
+  </target>
+
+  <target name="testResolveGlobalPom">
+    <repo:pom file="${project.dir}/pom.xml"/>
+    <repo:resolve>
+      <properties prefix="test.resolve.path" classpath="compile"/>
+    </repo:resolve>
+  </target>
+
+  <target name="testResolveOverrideGlobalPom">
+    <repo:pom file="${project.dir}/dummy-pom.xml"/>
+    <repo:resolve>
+      <dependencies>
+        <pom file="${project.dir}/pom.xml"/>
+      </dependencies>
+      <properties prefix="test.resolve.path" classpath="compile"/>
+    </repo:resolve>
+  </target>
+
+  <target name="testResolveGlobalPomIntoOtherLocalRepo">
+    <repo:localrepo dir="${build.dir}/resolvetest-local-repo"/>
+    <repo:pom file="${project.dir}/pom.xml"/>
+    <repo:resolve>
+      <properties prefix="test.resolve.path" classpath="compile"/>
+    </repo:resolve>
+  </target>
+
+  <target name="testResolveCustomFileLayout">
+    <repo:pom file="${project.dir}/pom.xml"/>
+    <repo:resolve>
+      <files dir="${build.dir}/resolve-custom-layout/" layout="{groupId}/{artifactId}/{groupIdDirs}/{extension}"/>
+    </repo:resolve>
+  </target>
+
+  <target name="testResolveAttachments">
+    <repo:resolve>
+      <dependencies>
+        <dependency groupid="org.sonatype.aether" artifactid="aether-impl" version="1.11" />
+      </dependencies>
+      <files dir="${build.dir}/resolve-attachments/" layout="javadoc/{groupId}-{artifactId}-{classifier}.{extension}" attachments="javadoc"/>
+      <files dir="${build.dir}/resolve-attachments/" layout="sources/{groupId}-{artifactId}-{classifier}.{extension}" attachments="sources"/>
+    </repo:resolve>
+  </target>
+
+  <target name="testResolvePath">
+    <repo:pom file="${project.dir}/pom.xml"/>
+    <repo:resolve>
+      <path refid="out" classpath="compile"/>
+    </repo:resolve>
+    <echo>${tostring:out}</echo>
+  </target>
+
+</project>

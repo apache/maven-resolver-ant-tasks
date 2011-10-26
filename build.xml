@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ ~ Copyright (c) 2010, 2011 Sonatype, Inc.
+ ~ All rights reserved. This program and the accompanying materials
+ ~ are made available under the terms of the Eclipse Public License v1.0
+ ~ which accompanies this distribution, and is available at
+ ~ http://www.eclipse.org/legal/epl-v10.html
+ ~
+ ~ Contributors:
+ ~    Sonatype, Inc. - initial API and implementation
+-->
+
+<project xmlns:aether="antlib:org.eclipse.aether.ant" default="deploy">
+
+  <!--
+  This is an example Ant build file using the Aether Ant Tasks to compile, test, install and deploy the
+  aether-ant-tasks project itself. As a prerequisite, run "mvn package" first to assemble the
+  aether-ant-task.jar which this build file will load below.
+  -->
+
+  <taskdef uri="antlib:org.eclipse.aether.ant" resource="org/eclipse/aether/ant/antlib.xml">
+    <classpath>
+      <fileset dir="target" includes="aether-ant-tasks-*uber.jar"/>
+    </classpath>
+  </taskdef>
+
+  <property name="build.dir" location="target/ant"/>
+
+  <aether:localrepo dir="${build.dir}/local-repo"/>
+
+  <aether:remoterepo id="rso" url="http://repository.sonatype.org/content/groups/public" type="default"
+                     releases="true" snapshots="true" updates="daily" checksums="fail"/>
+
+  <aether:remoterepos id="aether.repositories">
+    <aether:remoterepo refid="rso"/>
+  </aether:remoterepos>
+
+  <aether:pom file="pom.xml" id="pom"/>
+
+  <target name="clean">
+    <delete dir="${build.dir}"/>
+  </target>
+
+  <target name="process-resources">
+    <copy todir="${build.dir}/classes">
+      <fileset dir="src/main/resources"/>
+    </copy>
+  </target>
+
+  <target name="compile" depends="process-resources">
+    <mkdir dir="${build.dir}/classes"/>
+
+    <aether:resolve>
+      <dependencies>
+        <pom refid="pom"/>
+      </dependencies>
+      <path refid="cp.compile.main" classpath="compile"/>
+    </aether:resolve>
+
+    <javac classpathref="cp.compile.main" srcdir="src/main/java" destdir="${build.dir}/classes" 
+           includeAntRuntime="false" source="1.5" target="1.5" encoding="UTF-8" fork="true"/>
+  </target>
+
+  <target name="process-test-resources" depends="compile">
+  </target>
+
+  <target name="test-compile" depends="process-test-resources">
+    <mkdir dir="${build.dir}/test-classes"/>
+
+    <aether:resolve>
+      <dependencies>
+        <pom refid="pom"/>
+      </dependencies>
+      <path refid="cp.compile.test" classpath="test"/>
+      <path refid="cp.runtime.test" scopes="compile,test"/>
+    </aether:resolve>
+
+    <path id="cp.test">
+      <path refid="cp.compile.test"/>
+      <pathelement location="${build.dir}/classes"/>
+    </path>
+
+    <javac classpathref="cp.test" srcdir="src/test/java" destdir="${build.dir}/test-classes"
+           includeAntRuntime="false" source="1.5" target="1.5" encoding="UTF-8" fork="true"/>
+  </target>
+
+  <target name="test" depends="test-compile">
+    <junit haltonfailure="true" fork="true" forkmode="once" outputtoformatters="false">
+      <classpath>
+        <pathelement location="${build.dir}/test-classes"/>
+        <pathelement location="${build.dir}/classes"/>
+        <path refid="cp.runtime.test"/>
+      </classpath>
+
+      <formatter type="brief" usefile="false"/>
+
+      <batchtest>
+        <fileset dir="${build.dir}/test-classes" includes="**/*Test.class" excludes="**/AntBuildsTest*"/>
+      </batchtest>
+    </junit>
+  </target>
+
+  <target name="package" depends="test">
+    <jar destfile="${build.dir}/aether-ant-tasks-${pom.version}.jar" basedir="${build.dir}/classes"/>
+    <jar destfile="${build.dir}/aether-ant-tasks-${pom.version}-sources.jar" basedir="src/main/java"/>
+
+    <aether:artifacts id="output">
+      <artifact file="${build.dir}/aether-ant-tasks-${pom.version}.jar"/>
+      <artifact file="${build.dir}/aether-ant-tasks-${pom.version}-sources.jar" classifier="sources"/>
+    </aether:artifacts>
+  </target>
+
+  <target name="install" depends="package">
+    <aether:install artifactsref="output"/>
+  </target>
+
+  <target name="deploy" depends="install">
+    <aether:deploy artifactsref="output">
+      <remoteRepo id="dist" url="file:///${build.dir}/dist-repo"/>
+    </aether:deploy>
+  </target>
+
+</project>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ ~ Copyright (c) 2010, 2011 Sonatype, Inc.
+ ~ All rights reserved. This program and the accompanying materials
+ ~ are made available under the terms of the Eclipse Public License v1.0
+ ~ which accompanies this distribution, and is available at
+ ~ http://www.eclipse.org/legal/epl-v10.html
+ ~
+ ~ Contributors:
+ ~    Sonatype, Inc. - initial API and implementation
+-->
+
+<!DOCTYPE project [
+       <!ENTITY common SYSTEM "common.xml">
+]>
+
+<project xmlns:repo="antlib:org.eclipse.aether.ant">
+
+  &common;
+  
+  <target name="testPom">
+    <repo:pom file="${project.dir}/reactor/pom1.xml"/>
+  </target>
+  
+  <target name="testArtifact">
+    <repo:pom file="${project.dir}/reactor/pom1.xml" id="pom"/>
+    <repo:artifact pomref="pom" file="${project.dir}/reactor/pom1.xml"/>
+  </target>
+  
+  <target name="testArtifactInMemoryPom">
+    <repo:pom groupid="test" artifactid="test" version="0.1-SNAPSHOT" id="pom"/>
+    <repo:artifact pomref="pom" file="${project.dir}/reactor/pom1.xml"/>
+  </target>
+
+  <target name="testResolveArtifact">
+    <repo:pom file="${project.dir}/reactor/pom1.xml" id="pom"/>
+    <repo:artifact pomref="pom" file="${project.dir}/reactor/pom1.xml" type="jar"/>
+    <repo:pom file="${project.dir}/reactor/pom2.xml" id="pom2"/>
+
+    <repo:resolve>
+      <dependencies pomref="pom2"/>
+      <properties prefix="resolve"/>
+    </repo:resolve>
+  </target>
+
+  <target name="testResolveArtifactInMemoryPom">
+    <repo:pom groupid="test" artifactid="test" version="0.1-SNAPSHOT" id="pom"/>
+    <repo:artifact pomref="pom" file="${project.dir}/reactor/pom1.xml" type="jar"/>
+    <repo:pom file="${project.dir}/reactor/pom2.xml" id="pom2"/>
+
+    <repo:resolve>
+      <dependencies pomref="pom2"/>
+      <properties prefix="resolve"/>
+    </repo:resolve>
+  </target>
+
+</project>

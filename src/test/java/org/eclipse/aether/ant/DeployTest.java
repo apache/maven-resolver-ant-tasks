@@ -16,7 +16,7 @@ import static org.hamcrest.Matchers.*;
 import java.io.File;
 import java.util.Arrays;
 
-import org.eclipse.aether.test.util.TestFileUtils;
+import org.eclipse.aether.internal.test.util.TestFileUtils;
 
 /*
  * still missing:

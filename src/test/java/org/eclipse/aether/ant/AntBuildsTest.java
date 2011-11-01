@@ -25,7 +25,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.DefaultLogger;
 import org.eclipse.aether.ant.AntSettingsDecryptorFactory;
-import org.eclipse.aether.test.impl.TestFileProcessor;
+import org.eclipse.aether.internal.test.impl.TestFileProcessor;
 
 public abstract class AntBuildsTest
     extends BuildFileTest

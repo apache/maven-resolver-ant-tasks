@@ -20,7 +20,7 @@ import java.util.Map;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
-import org.eclipse.aether.test.util.TestFileUtils;
+import org.eclipse.aether.internal.test.util.TestFileUtils;
 
 public class ResolveTest
     extends AntBuildsTest

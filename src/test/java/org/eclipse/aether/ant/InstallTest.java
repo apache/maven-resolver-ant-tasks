@@ -16,7 +16,7 @@ import static org.hamcrest.Matchers.*;
 import java.io.File;
 import java.io.IOException;
 
-import org.eclipse.aether.test.util.TestFileUtils;
+import org.eclipse.aether.internal.test.util.TestFileUtils;
 
 public class InstallTest
     extends AntBuildsTest

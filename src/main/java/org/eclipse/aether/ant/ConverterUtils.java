@@ -27,11 +27,11 @@ import org.eclipse.aether.ant.types.RemoteRepositories;
 import org.eclipse.aether.ant.types.RemoteRepository;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.artifact.Artifact;
+import org.eclipse.aether.artifact.ArtifactProperties;
 import org.eclipse.aether.artifact.ArtifactType;
 import org.eclipse.aether.artifact.ArtifactTypeRegistry;
 import org.eclipse.aether.impl.RemoteRepositoryManager;
 import org.eclipse.aether.repository.RepositoryPolicy;
-import org.eclipse.aether.util.artifact.ArtifactProperties;
 import org.eclipse.aether.util.artifact.DefaultArtifact;
 import org.eclipse.aether.util.artifact.DefaultArtifactType;
 

@@ -14,7 +14,7 @@ package org.eclipse.aether.ant.tasks;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Reference;
 import org.eclipse.aether.ant.AntRepoSys;
-import org.eclipse.aether.ant.ConverterUtils;
+import org.eclipse.aether.ant.util.ConverterUtils;
 import org.eclipse.aether.ant.types.RemoteRepository;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;

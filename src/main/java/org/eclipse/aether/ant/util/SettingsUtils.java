@@ -8,7 +8,7 @@
  * Contributors:
  *    Sonatype, Inc. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.aether.ant;
+package org.eclipse.aether.ant.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +22,9 @@ import org.apache.maven.settings.Repository;
 import org.apache.maven.settings.RepositoryPolicy;
 
 /**
+ * Uitility methods to read settings from mavens settings.xml.
  */
-class SettingsUtils
+public class SettingsUtils
 {
 
     public static List<org.apache.maven.model.Profile> convert( List<Profile> profiles )

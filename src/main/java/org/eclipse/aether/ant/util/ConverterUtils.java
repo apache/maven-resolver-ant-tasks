@@ -8,7 +8,7 @@
  * Contributors:
  *    Sonatype, Inc. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.aether.ant;
+package org.eclipse.aether.ant.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,6 +35,9 @@ import org.eclipse.aether.repository.RepositoryPolicy;
 import org.eclipse.aether.util.artifact.DefaultArtifact;
 import org.eclipse.aether.util.artifact.DefaultArtifactType;
 
+/**
+ * Utility methods to convert between aether and ant objects.
+ */
 public class ConverterUtils
 {
 
@@ -59,7 +62,7 @@ public class ConverterUtils
         return artifact;
     }
 
-    static org.eclipse.aether.repository.Authentication toAuthentication( Authentication auth )
+    public static org.eclipse.aether.repository.Authentication toAuthentication( Authentication auth )
     {
         if ( auth == null )
         {
@@ -139,7 +142,7 @@ public class ConverterUtils
     /**
      * Adds every &lt;String, String>-entry in the map as a property to the given Properties.
      */
-    static Properties addProperties( Properties props, Map<?, ?> map )
+    public static Properties addProperties( Properties props, Map<?, ?> map )
     {
         if ( props == null )
         {
@@ -155,7 +158,7 @@ public class ConverterUtils
         return props;
     }
 
-    static org.eclipse.aether.repository.Proxy toProxy( Proxy proxy )
+    public static org.eclipse.aether.repository.Proxy toProxy( Proxy proxy )
     {
         if ( proxy == null )
         {
@@ -180,7 +183,7 @@ public class ConverterUtils
         return result;
     }
 
-    static List<org.eclipse.aether.repository.RemoteRepository> toRepositories( Project project,
+    public static List<org.eclipse.aether.repository.RemoteRepository> toRepositories( Project project,
                                                                           RepositorySystemSession session,
                                                                           RemoteRepositories repos, RemoteRepositoryManager remoteRepositoryManager )
     {

@@ -8,17 +8,18 @@
  * Contributors:
  *    Sonatype, Inc. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.aether.ant;
+package org.eclipse.aether.ant.util;
 
 import java.io.File;
 
 import org.apache.tools.ant.Project;
+import org.eclipse.aether.ant.Names;
 import org.eclipse.aether.ant.types.RemoteRepositories;
 
-class AetherUtils
+public class AetherUtils
 {
 
-    static File findGlobalSettings( Project project )
+    public static File findGlobalSettings( Project project )
     {
         File file = new File( new File( project.getProperty( "ant.home" ), "etc" ), Names.SETTINGS_XML );
         if ( file.isFile() )
@@ -37,7 +38,7 @@ class AetherUtils
         return null;
     }
 
-    static String getMavenHome( Project project )
+    public static String getMavenHome( Project project )
     {
         String mavenHome = project.getProperty( "maven.home" );
         if ( mavenHome != null )
@@ -47,7 +48,7 @@ class AetherUtils
         return System.getenv( "M2_HOME" );
     }
 
-    static File findUserSettings( Project project )
+    public static File findUserSettings( Project project )
     {
         File userHome = new File( project.getProperty( "user.home" ) );
         File file = new File( new File( userHome, ".ant" ), Names.SETTINGS_XML );
@@ -61,7 +62,7 @@ class AetherUtils
         }
     }
 
-    static RemoteRepositories getDefaultRepositories( Project project )
+    public static RemoteRepositories getDefaultRepositories( Project project )
     {
         Object obj = project.getReference( Names.ID_DEFAULT_REPOS );
         if ( obj instanceof RemoteRepositories )

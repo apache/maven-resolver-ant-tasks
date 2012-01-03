@@ -26,8 +26,8 @@ import org.eclipse.aether.util.artifact.DefaultArtifact;
 /**
  * Workspace reader caching available POMs and artifacts for ant builds.
  * <p/>
- * Cached are &lt;pom> elements which are defined by the 'file'-attribute, as they reference a backing pom.xml file that
- * can be used for resolution with Aether. Also cached are &lt;artifact> elements that directly define a 'pom'-attribute
+ * &lt;pom> elements are cached if they are defined by the 'file'-attribute, as they reference a backing pom.xml file that
+ * can be used for resolution with Aether. &lt;artifact> elements are cached if they directly define a 'pom'-attribute
  * or child. The POM may be file-based or in-memory.
  */
 public class ProjectWorkspaceReader

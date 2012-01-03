@@ -8,7 +8,7 @@
  * Contributors:
  *    Sonatype, Inc. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.aether.ant;
+package org.eclipse.aether.ant.listeners;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;

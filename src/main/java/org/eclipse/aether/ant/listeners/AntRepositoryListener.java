@@ -19,8 +19,9 @@ import org.eclipse.aether.RepositoryEvent;
 import org.eclipse.aether.transfer.MetadataNotFoundException;
 
 /**
+ * Logs repository events like installed and unresolved artifacts and metadata.
  */
-class AntRepositoryListener
+public class AntRepositoryListener
     extends AbstractRepositoryListener
 {
 

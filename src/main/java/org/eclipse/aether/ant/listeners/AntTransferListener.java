@@ -22,8 +22,9 @@ import org.eclipse.aether.transfer.TransferEvent;
 import org.eclipse.aether.transfer.TransferResource;
 
 /**
+ * Logs up- and downloads.
  */
-class AntTransferListener
+public class AntTransferListener
     extends AbstractTransferListener
 {
 

@@ -10,25 +10,24 @@
  *******************************************************************************/
 package org.eclipse.aether.ant;
 
-import org.apache.maven.repository.internal.DefaultServiceLocator;
 import org.apache.tools.ant.Project;
 import org.eclipse.aether.RepositorySystem;
+import org.eclipse.aether.impl.DefaultServiceLocator;
 
 /**
  */
-class AntServiceLocator
-    extends DefaultServiceLocator
+class AntServiceLocatorErrorHandler
+    extends DefaultServiceLocator.ErrorHandler
 {
 
     private Project project;
 
-    public AntServiceLocator( Project project )
+    public AntServiceLocatorErrorHandler( Project project )
     {
         this.project = project;
     }
 
-    @Override
-    protected void serviceCreationFailed( Class<?> type, Class<?> impl, Throwable exception )
+    public void serviceCreationFailed( Class<?> type, Class<?> impl, Throwable exception )
     {
         String msg = "Could not initialize repository system";
         if ( !RepositorySystem.class.equals( type ) )

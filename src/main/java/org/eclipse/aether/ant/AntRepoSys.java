@@ -28,7 +28,7 @@ import org.apache.maven.model.building.ModelBuilder;
 import org.apache.maven.model.building.ModelBuildingException;
 import org.apache.maven.model.building.ModelBuildingRequest;
 import org.apache.maven.model.resolution.ModelResolver;
-import org.apache.maven.repository.internal.MavenRepositorySystemSession;
+import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.settings.building.DefaultSettingsBuilderFactory;
@@ -43,6 +43,13 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Reference;
+import org.eclipse.aether.ConfigurationProperties;
+import org.eclipse.aether.DefaultRepositoryCache;
+import org.eclipse.aether.DefaultRepositorySystemSession;
+import org.eclipse.aether.RepositorySystem;
+import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.ant.listeners.AntRepositoryListener;
+import org.eclipse.aether.ant.listeners.AntTransferListener;
 import org.eclipse.aether.ant.types.Authentication;
 import org.eclipse.aether.ant.types.Dependencies;
 import org.eclipse.aether.ant.types.Dependency;
@@ -53,11 +60,6 @@ import org.eclipse.aether.ant.types.Pom;
 import org.eclipse.aether.ant.types.Proxy;
 import org.eclipse.aether.ant.types.RemoteRepositories;
 import org.eclipse.aether.ant.types.RemoteRepository;
-import org.eclipse.aether.ConfigurationProperties;
-import org.eclipse.aether.DefaultRepositoryCache;
-import org.eclipse.aether.DefaultRepositorySystemSession;
-import org.eclipse.aether.RepositorySystem;
-import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.ant.util.AetherUtils;
 import org.eclipse.aether.ant.util.ConverterUtils;
 import org.eclipse.aether.ant.util.SettingsUtils;
@@ -66,6 +68,7 @@ import org.eclipse.aether.collection.CollectResult;
 import org.eclipse.aether.collection.DependencyCollectionException;
 import org.eclipse.aether.connector.async.AsyncRepositoryConnectorFactory;
 import org.eclipse.aether.connector.file.FileRepositoryConnectorFactory;
+import org.eclipse.aether.impl.DefaultServiceLocator;
 import org.eclipse.aether.impl.RemoteRepositoryManager;
 import org.eclipse.aether.repository.AuthenticationSelector;
 import org.eclipse.aether.repository.LocalRepositoryManager;
@@ -93,7 +96,7 @@ public class AntRepoSys
 
     private Project project;
 
-    private AntServiceLocator locator;
+    private DefaultServiceLocator locator;
 
     private RepositorySystem repoSys;
 
@@ -139,7 +142,8 @@ public class AntRepoSys
     {
         this.project = project;
 
-        locator = new AntServiceLocator( project );
+        locator = MavenRepositorySystemUtils.newServiceLocator();
+        locator.setErrorHandler( new AntServiceLocatorErrorHandler( project ) );
         locator.setServices( Logger.class, new AntLogger( project ) );
         locator.setServices( ModelBuilder.class, modelBuilder );
         locator.addService( RepositoryConnectorFactory.class, FileRepositoryConnectorFactory.class );
@@ -207,7 +211,7 @@ public class AntRepoSys
 
     public RepositorySystemSession getSession( Task task, LocalRepository localRepo )
     {
-        DefaultRepositorySystemSession session = new MavenRepositorySystemSession();
+        DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
 
         Map<Object, Object> configProps = new LinkedHashMap<Object, Object>();
         configProps.put( ConfigurationProperties.USER_AGENT, getUserAgent() );

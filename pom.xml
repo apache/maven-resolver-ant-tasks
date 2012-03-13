@@ -83,7 +83,7 @@
          the ant tasks currently only build with a maven actually using the org.eclipse packages:
          https://github.com/bentmann/maven-3
     -->
-    <mavenVersion>3.0.5-SNAPSHOT</mavenVersion>
+    <mavenVersion>3.0.3</mavenVersion>
     <aetherVersion>0.9.0-SNAPSHOT</aetherVersion>
   </properties>
 

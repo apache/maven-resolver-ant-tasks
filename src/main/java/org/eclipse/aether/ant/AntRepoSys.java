@@ -218,10 +218,10 @@ public class AntRepoSys
         configProps.putAll( System.getProperties() );
         configProps.putAll( (Map<?, ?>) project.getProperties() );
         configProps.putAll( (Map<?, ?>) project.getUserProperties() );
-        session.setConfigProps( configProps );
+        session.setConfigProperties( configProps );
 
         session.setOffline( isOffline() );
-        session.setUserProps( project.getUserProperties() );
+        session.setUserProperties( project.getUserProperties() );
 
         session.setLocalRepositoryManager( getLocalRepoMan( localRepo ) );
 

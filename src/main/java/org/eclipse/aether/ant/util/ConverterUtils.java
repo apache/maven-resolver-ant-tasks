@@ -34,6 +34,7 @@ import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.artifact.DefaultArtifactType;
 import org.eclipse.aether.impl.RemoteRepositoryManager;
 import org.eclipse.aether.repository.RepositoryPolicy;
+import org.eclipse.aether.util.repository.AuthenticationBuilder;
 
 /**
  * Utility methods to convert between aether and ant objects.
@@ -68,8 +69,10 @@ public class ConverterUtils
         {
             return null;
         }
-        return new org.eclipse.aether.repository.Authentication( auth.getUsername(), auth.getPassword(),
-                                                                  auth.getPrivateKeyFile(), auth.getPassphrase() );
+        AuthenticationBuilder authBuilder = new AuthenticationBuilder();
+        authBuilder.username( auth.getUsername() ).password( auth.getPassword() );
+        authBuilder.privateKey( auth.getPrivateKeyFile(), auth.getPassphrase() );
+        return authBuilder.build();
     }
 
     public static org.eclipse.aether.graph.Dependency toDependency( Dependency dependency, List<Exclusion> exclusions,

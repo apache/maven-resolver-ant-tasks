@@ -76,6 +76,7 @@ import org.eclipse.aether.repository.MirrorSelector;
 import org.eclipse.aether.repository.ProxySelector;
 import org.eclipse.aether.spi.connector.RepositoryConnectorFactory;
 import org.eclipse.aether.spi.log.Logger;
+import org.eclipse.aether.util.repository.AuthenticationBuilder;
 import org.eclipse.aether.util.repository.ConservativeAuthenticationSelector;
 import org.eclipse.aether.util.repository.DefaultAuthenticationSelector;
 import org.eclipse.aether.util.repository.DefaultMirrorSelector;
@@ -342,13 +343,11 @@ public class AntRepoSys
         Settings settings = getSettings();
         for ( org.apache.maven.settings.Proxy proxy : settings.getProxies() )
         {
-            org.eclipse.aether.repository.Authentication auth = null;
-            if ( proxy.getUsername() != null || proxy.getPassword() != null )
-            {
-                auth = new org.eclipse.aether.repository.Authentication( proxy.getUsername(), proxy.getPassword() );
-            }
+            AuthenticationBuilder auth = new AuthenticationBuilder();
+            auth.username( proxy.getUsername() ).password( proxy.getPassword() );
             selector.add( new org.eclipse.aether.repository.Proxy( proxy.getProtocol(), proxy.getHost(),
-                                                                    proxy.getPort(), auth ), proxy.getNonProxyHosts() );
+                                                                   proxy.getPort(), auth.build() ),
+                          proxy.getNonProxyHosts() );
         }
 
         return selector;
@@ -397,10 +396,10 @@ public class AntRepoSys
         Settings settings = getSettings();
         for ( Server server : settings.getServers() )
         {
-            org.eclipse.aether.repository.Authentication auth =
-                new org.eclipse.aether.repository.Authentication( server.getUsername(), server.getPassword(),
-                                                                   server.getPrivateKey(), server.getPassphrase() );
-            selector.add( server.getId(), auth );
+            AuthenticationBuilder auth = new AuthenticationBuilder();
+            auth.username( server.getUsername() ).password( server.getPassword() );
+            auth.privateKey( server.getPrivateKey(), server.getPassphrase() );
+            selector.add( server.getId(), auth.build() );
         }
 
         return new ConservativeAuthenticationSelector( selector );

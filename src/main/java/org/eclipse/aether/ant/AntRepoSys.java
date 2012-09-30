@@ -344,7 +344,7 @@ public class AntRepoSys
         for ( org.apache.maven.settings.Proxy proxy : settings.getProxies() )
         {
             AuthenticationBuilder auth = new AuthenticationBuilder();
-            auth.username( proxy.getUsername() ).password( proxy.getPassword() );
+            auth.addUsername( proxy.getUsername() ).addPassword( proxy.getPassword() );
             selector.add( new org.eclipse.aether.repository.Proxy( proxy.getProtocol(), proxy.getHost(),
                                                                    proxy.getPort(), auth.build() ),
                           proxy.getNonProxyHosts() );
@@ -397,8 +397,8 @@ public class AntRepoSys
         for ( Server server : settings.getServers() )
         {
             AuthenticationBuilder auth = new AuthenticationBuilder();
-            auth.username( server.getUsername() ).password( server.getPassword() );
-            auth.privateKey( server.getPrivateKey(), server.getPassphrase() );
+            auth.addUsername( server.getUsername() ).addPassword( server.getPassword() );
+            auth.addPrivateKey( server.getPrivateKey(), server.getPassphrase() );
             selector.add( server.getId(), auth.build() );
         }
 

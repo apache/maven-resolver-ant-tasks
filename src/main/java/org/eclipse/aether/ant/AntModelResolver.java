@@ -90,11 +90,11 @@ class AntModelResolver
 
     static RemoteRepository convert( Repository repository )
     {
-        RemoteRepository result =
-            new RemoteRepository( repository.getId(), repository.getLayout(), repository.getUrl() );
-        result.setPolicy( true, convert( repository.getSnapshots() ) );
-        result.setPolicy( false, convert( repository.getReleases() ) );
-        return result;
+        RemoteRepository.Builder builder =
+            new RemoteRepository.Builder( repository.getId(), repository.getLayout(), repository.getUrl() );
+        builder.setSnapshotPolicy( convert( repository.getSnapshots() ) );
+        builder.setReleasePolicy( convert( repository.getReleases() ) );
+        return builder.build();
     }
 
     private static RepositoryPolicy convert( org.apache.maven.model.RepositoryPolicy policy )

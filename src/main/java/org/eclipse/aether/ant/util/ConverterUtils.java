@@ -70,8 +70,8 @@ public class ConverterUtils
             return null;
         }
         AuthenticationBuilder authBuilder = new AuthenticationBuilder();
-        authBuilder.username( auth.getUsername() ).password( auth.getPassword() );
-        authBuilder.privateKey( auth.getPrivateKeyFile(), auth.getPassphrase() );
+        authBuilder.addUsername( auth.getUsername() ).addPassword( auth.getPassword() );
+        authBuilder.addPrivateKey( auth.getPrivateKeyFile(), auth.getPassphrase() );
         return authBuilder.build();
     }
 
@@ -91,9 +91,11 @@ public class ConverterUtils
                                                                        RepositorySystemSession session )
     {
         org.eclipse.aether.repository.RemoteRepository result = toRepository( repo );
-        result.setAuthentication( session.getAuthenticationSelector().getAuthentication( result ) );
-        result.setProxy( session.getProxySelector().getProxy( result ) );
-        return result;
+        org.eclipse.aether.repository.RemoteRepository.Builder builder =
+            new org.eclipse.aether.repository.RemoteRepository.Builder( result );
+        builder.setAuthentication( session.getAuthenticationSelector().getAuthentication( result ) );
+        builder.setProxy( session.getProxySelector().getProxy( result ) );
+        return builder.build();
     }
 
     private static org.eclipse.aether.graph.Exclusion toExclusion( Exclusion exclusion )
@@ -173,17 +175,14 @@ public class ConverterUtils
 
     private static org.eclipse.aether.repository.RemoteRepository toRepository( RemoteRepository repo )
     {
-        org.eclipse.aether.repository.RemoteRepository result = new org.eclipse.aether.repository.RemoteRepository();
-        result.setId( repo.getId() );
-        result.setContentType( repo.getType() );
-        result.setUrl( repo.getUrl() );
-        result.setPolicy( true,
-                          toPolicy( repo.getSnapshotPolicy(), repo.isSnapshots(), repo.getUpdates(),
-                                    repo.getChecksums() ) );
-        result.setPolicy( false,
-                          toPolicy( repo.getReleasePolicy(), repo.isReleases(), repo.getUpdates(), repo.getChecksums() ) );
-        result.setAuthentication( toAuthentication( repo.getAuthentication() ) );
-        return result;
+        org.eclipse.aether.repository.RemoteRepository.Builder builder =
+            new org.eclipse.aether.repository.RemoteRepository.Builder( repo.getId(), repo.getType(), repo.getUrl() );
+        builder.setSnapshotPolicy( toPolicy( repo.getSnapshotPolicy(), repo.isSnapshots(), repo.getUpdates(),
+                                             repo.getChecksums() ) );
+        builder.setReleasePolicy( toPolicy( repo.getReleasePolicy(), repo.isReleases(), repo.getUpdates(),
+                                            repo.getChecksums() ) );
+        builder.setAuthentication( toAuthentication( repo.getAuthentication() ) );
+        return builder.build();
     }
 
     public static List<org.eclipse.aether.repository.RemoteRepository> toRepositories( Project project,

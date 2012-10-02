@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.aether.ant.tasks;
 
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Reference;
 import org.eclipse.aether.ant.AntRepoSys;

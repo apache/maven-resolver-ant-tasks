@@ -22,7 +22,7 @@ import org.apache.maven.settings.Repository;
 import org.apache.maven.settings.RepositoryPolicy;
 
 /**
- * Uitility methods to read settings from mavens settings.xml.
+ * Utility methods to read settings from Mavens settings.xml.
  */
 public class SettingsUtils
 {

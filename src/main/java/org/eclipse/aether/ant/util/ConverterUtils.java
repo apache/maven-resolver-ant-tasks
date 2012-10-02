@@ -37,7 +37,7 @@ import org.eclipse.aether.repository.RepositoryPolicy;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
 
 /**
- * Utility methods to convert between aether and ant objects.
+ * Utility methods to convert between Aether and Ant objects.
  */
 public class ConverterUtils
 {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 Sonatype, Inc.
+ * Copyright (c) 2010, 2013 Sonatype, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,7 +25,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.DefaultLogger;
 import org.eclipse.aether.ant.AntSettingsDecryptorFactory;
-import org.eclipse.aether.internal.test.impl.TestFileProcessor;
+import org.eclipse.aether.internal.test.util.TestFileProcessor;
 
 public abstract class AntBuildsTest
     extends BuildFileTest

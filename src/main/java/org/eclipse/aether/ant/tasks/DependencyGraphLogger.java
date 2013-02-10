@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 Sonatype, Inc.
+ * Copyright (c) 2010, 2013 Sonatype, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.graph.DependencyNode;
 import org.eclipse.aether.graph.DependencyVisitor;
+import org.eclipse.aether.util.graph.manager.DependencyManagerUtils;
 
 /**
  */
@@ -44,14 +45,16 @@ class DependencyGraphLogger
             buffer.append( art );
             buffer.append( ':' ).append( dep.getScope() );
 
-            if ( node.getPremanagedScope() != null && !node.getPremanagedScope().equals( dep.getScope() ) )
+            String premanagedScope = DependencyManagerUtils.getPremanagedScope( node );
+            if ( premanagedScope != null && !premanagedScope.equals( dep.getScope() ) )
             {
-                buffer.append( " (scope managed from " ).append( node.getPremanagedScope() ).append( ")" );
+                buffer.append( " (scope managed from " ).append( premanagedScope ).append( ")" );
             }
 
-            if ( node.getPremanagedVersion() != null && !node.getPremanagedVersion().equals( art.getVersion() ) )
+            String premanagedVersion = DependencyManagerUtils.getPremanagedVersion( node );
+            if ( premanagedVersion != null && !premanagedVersion.equals( art.getVersion() ) )
             {
-                buffer.append( " (version managed from " ).append( node.getPremanagedVersion() ).append( ")" );
+                buffer.append( " (version managed from " ).append( premanagedVersion ).append( ")" );
             }
         }
         else

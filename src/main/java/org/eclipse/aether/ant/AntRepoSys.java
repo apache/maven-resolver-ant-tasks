@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2012 Sonatype, Inc.
+ * Copyright (c) 2010, 2013 Sonatype, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -224,8 +224,6 @@ public class AntRepoSys
         session.setOffline( isOffline() );
         session.setUserProperties( project.getUserProperties() );
 
-        session.setLocalRepositoryManager( getLocalRepoMan( localRepo ) );
-
         session.setProxySelector( getProxySelector() );
         session.setMirrorSelector( getMirrorSelector() );
         session.setAuthenticationSelector( getAuthSelector() );
@@ -234,6 +232,8 @@ public class AntRepoSys
 
         session.setRepositoryListener( new AntRepositoryListener( task ) );
         session.setTransferListener( new AntTransferListener( task ) );
+
+        session.setLocalRepositoryManager( getLocalRepoMan( session, localRepo ) );
 
         session.setWorkspaceReader( ProjectWorkspaceReader.getInstance() );
 
@@ -281,7 +281,7 @@ public class AntRepoSys
         return new File( new File( project.getProperty( "user.home" ), ".m2" ), "repository" );
     }
 
-    private LocalRepositoryManager getLocalRepoMan( LocalRepository localRepo )
+    private LocalRepositoryManager getLocalRepoMan( RepositorySystemSession session, LocalRepository localRepo )
     {
         if ( localRepo == null )
         {
@@ -301,7 +301,7 @@ public class AntRepoSys
         org.eclipse.aether.repository.LocalRepository repo =
             new org.eclipse.aether.repository.LocalRepository( repoDir );
 
-        return getSystem().newLocalRepositoryManager( repo );
+        return getSystem().newLocalRepositoryManager( session, repo );
     }
 
     private synchronized Settings getSettings()

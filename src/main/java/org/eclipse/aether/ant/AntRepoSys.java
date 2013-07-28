@@ -12,6 +12,8 @@ package org.eclipse.aether.ant;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -43,6 +45,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Reference;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.eclipse.aether.ConfigurationProperties;
 import org.eclipse.aether.DefaultRepositoryCache;
 import org.eclipse.aether.DefaultRepositorySystemSession;
@@ -219,6 +222,7 @@ public class AntRepoSys
         configProps.putAll( System.getProperties() );
         configProps.putAll( (Map<?, ?>) project.getProperties() );
         configProps.putAll( (Map<?, ?>) project.getUserProperties() );
+        processServerConfiguration( configProps );
         session.setConfigProperties( configProps );
 
         session.setOffline( isOffline() );
@@ -263,6 +267,52 @@ public class AntRepoSys
             return Boolean.parseBoolean( prop );
         }
         return getSettings().isOffline();
+    }
+
+    private void processServerConfiguration( Map<Object, Object> configProps )
+    {
+        Settings settings = getSettings();
+        for ( Server server : settings.getServers() )
+        {
+            if ( server.getConfiguration() != null )
+            {
+                Xpp3Dom dom = (Xpp3Dom) server.getConfiguration();
+                for ( int i = dom.getChildCount() - 1; i >= 0; i-- )
+                {
+                    Xpp3Dom child = dom.getChild( i );
+                    if ( "wagonProvider".equals( child.getName() ) )
+                    {
+                        dom.removeChild( i );
+                    }
+                    else if ( "httpHeaders".equals( child.getName() ) )
+                    {
+                        configProps.put( ConfigurationProperties.HTTP_HEADERS + "." + server.getId(),
+                                         getHttpHeaders( child ) );
+                    }
+                }
+
+                configProps.put( "aether.connector.wagon.config." + server.getId(), dom );
+            }
+
+            configProps.put( "aether.connector.perms.fileMode." + server.getId(), server.getFilePermissions() );
+            configProps.put( "aether.connector.perms.dirMode." + server.getId(), server.getDirectoryPermissions() );
+        }
+    }
+
+    private Map<String, String> getHttpHeaders( Xpp3Dom dom )
+    {
+        Map<String, String> headers = new HashMap<String, String>();
+        for ( int i = 0; i < dom.getChildCount(); i++ )
+        {
+            Xpp3Dom child = dom.getChild( i );
+            Xpp3Dom name = child.getChild( "name" );
+            Xpp3Dom value = child.getChild( "value" );
+            if ( name != null && name.getValue() != null )
+            {
+                headers.put( name.getValue(), ( value != null ) ? value.getValue() : null );
+            }
+        }
+        return Collections.unmodifiableMap( headers );
     }
 
     private File getDefaultLocalRepoDir()

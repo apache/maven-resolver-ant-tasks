@@ -209,21 +209,33 @@
       <version>1.16</version>
     </dependency>
     <dependency>
-      <groupId>org.sonatype.sisu</groupId>
-      <artifactId>sisu-inject-plexus</artifactId>
-      <version>2.3.0</version>
+      <groupId>org.eclipse.sisu</groupId>
+      <artifactId>org.eclipse.sisu.plexus</artifactId>
+      <version>0.0.0.M5</version>
       <exclusions>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>javax.enterprise</groupId>
+          <artifactId>cdi-api</artifactId>
+        </exclusion>
         <exclusion>
           <groupId>org.codehaus.plexus</groupId>
           <artifactId>plexus-classworlds</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>org.sonatype.sisu</groupId>
-          <artifactId>sisu-inject-bean</artifactId>
+          <groupId>org.codehaus.plexus</groupId>
+          <artifactId>plexus-utils</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>org.sonatype.sisu.inject</groupId>
-          <artifactId>guice-plexus-shim</artifactId>
+          <groupId>org.eclipse.sisu</groupId>
+          <artifactId>org.eclipse.sisu.inject</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.sonatype.sisu</groupId>
+          <artifactId>sisu-guice</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -299,6 +311,7 @@
                   </excludes>
                   <includes>
                     <include>org.eclipse.aether</include>
+                    <include>org.eclipse.sisu</include>
                     <!-- CQ #5627 -->
                     <include>org.slf4j:slf4j-api:1.6.2</include>
                     <!-- CQ #5642 -->
@@ -315,8 +328,6 @@
                     <include>org.codehaus.plexus:plexus-utils:2.1</include>
                     <!-- CQ #7208 -->
                     <include>org.codehaus.plexus:plexus-interpolation:1.16</include>
-                    <!-- CQ #5635 -->
-                    <include>org.sonatype.sisu:sisu-inject-plexus:2.3.0</include>
                     <!-- CQ #5645 -->
                     <include>org.sonatype.plexus:plexus-sec-dispatcher:1.3</include>
                     <!-- CQ #5646 -->
@@ -329,7 +340,7 @@
                     <include>org.apache.maven:maven-settings:3.1.0</include>
                     <!-- CQ #7441 -->
                     <include>org.apache.maven:maven-settings-builder:3.1.0</include>
-                    <!-- CQ #7442	 -->
+                    <!-- CQ #7442 -->
                     <include>org.apache.maven:maven-repository-metadata:3.1.0</include>
                     <!-- CQ #7443 -->
                     <include>org.apache.maven:maven-aether-provider:3.1.0</include>
@@ -365,7 +376,7 @@
               <shadedClassifierName>uber</shadedClassifierName>
               <filters>
                 <filter>
-                  <artifact>org.sonatype.sisu:sisu-inject-plexus</artifact>
+                  <artifact>org.eclipse.sisu:org.eclipse.sisu.plexus</artifact>
                   <includes>
                     <include>org/codehaus/plexus/logging/*LogEnabled*</include>
                     <include>org/codehaus/plexus/logging/Logger*</include>

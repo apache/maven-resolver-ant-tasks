@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 Sonatype, Inc.
+ * Copyright (c) 2010, 2013 Sonatype, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -35,7 +35,7 @@ public class DeployTest
         super.setUp();
         distRepoPath = new File( "target/dist-repo" );
         System.setProperty( "project.distrepo.url", distRepoPath.toURI().toString() );
-        TestFileUtils.delete( distRepoPath );
+        TestFileUtils.deleteFile( distRepoPath );
 
         configureProject( "src/test/ant/Deploy.xml" );
     }
@@ -45,7 +45,7 @@ public class DeployTest
         throws Exception
     {
         super.tearDown();
-        TestFileUtils.delete( distRepoPath );
+        TestFileUtils.deleteFile( distRepoPath );
     }
 
     public void testDeployGlobalPom()

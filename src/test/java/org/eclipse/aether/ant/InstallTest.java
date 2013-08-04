@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 Sonatype, Inc.
+ * Copyright (c) 2010, 2013 Sonatype, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,7 +27,7 @@ public class InstallTest
         throws Exception
     {
         super.setUp();
-        TestFileUtils.delete( new File( defaultLocalRepository, "test" ) );
+        TestFileUtils.deleteFile( new File( defaultLocalRepository, "test" ) );
 
         configureProject( "src/test/ant/Install.xml" );
     }
@@ -37,7 +37,7 @@ public class InstallTest
         throws Exception
     {
         super.tearDown();
-        TestFileUtils.delete( new File( defaultLocalRepository, "test" ) );
+        TestFileUtils.deleteFile( new File( defaultLocalRepository, "test" ) );
     }
 
     public void testInstallGlobalPom()
@@ -86,7 +86,7 @@ public class InstallTest
         throws IOException
     {
         File repoPath = new File( BUILD_DIR, "local-repo-custom" );
-        TestFileUtils.delete( repoPath );
+        TestFileUtils.deleteFile( repoPath );
 
         executeTarget( "testCustomRepo" );
         long tstamp = System.currentTimeMillis();
@@ -96,7 +96,7 @@ public class InstallTest
 
         assertUpdatedFile( tstamp, repoPath, "test/test/0.1-SNAPSHOT/test-0.1-SNAPSHOT.pom" );
         assertUpdatedFile( tstamp, repoPath, "test/test/0.1-SNAPSHOT/test-0.1-SNAPSHOT-ant.xml" );
-        TestFileUtils.delete( repoPath );
+        TestFileUtils.deleteFile( repoPath );
     }
 
     private void assertUpdatedFile( long tstamp, File repoPath, String path )

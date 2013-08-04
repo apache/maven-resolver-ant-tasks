@@ -97,7 +97,7 @@
   <properties>
     <surefire.redirectTestOutputToFile>true</surefire.redirectTestOutputToFile>
     <mavenVersion>3.1.0</mavenVersion>
-    <aetherVersion>0.9.0.M2</aetherVersion>
+    <aetherVersion>0.9.0.M3</aetherVersion>
   </properties>
 
   <dependencyManagement>
@@ -146,16 +146,26 @@
     </dependency>
     <dependency>
       <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-connector-file</artifactId>
+      <artifactId>aether-connector-basic</artifactId>
       <version>${aetherVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-connector-asynchttpclient</artifactId>
+      <artifactId>aether-transport-classpath</artifactId>
       <version>${aetherVersion}</version>
     </dependency>
     <dependency>
-      <!-- This shuts off annoying warnings from ahc's logging -->
+      <groupId>org.eclipse.aether</groupId>
+      <artifactId>aether-transport-file</artifactId>
+      <version>${aetherVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.aether</groupId>
+      <artifactId>aether-transport-http</artifactId>
+      <version>${aetherVersion}</version>
+    </dependency>
+    <dependency>
+      <!-- This shuts off annoying warnings from slf4j-api -->
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-nop</artifactId>
       <version>1.6.2</version>
@@ -289,11 +299,12 @@
                   </excludes>
                   <includes>
                     <include>org.eclipse.aether</include>
-                    <include>org.sonatype.aether</include>
                     <!-- CQ #5627 -->
                     <include>org.slf4j:slf4j-api:1.6.2</include>
                     <!-- CQ #5642 -->
                     <include>org.slf4j:slf4j-nop:1.6.2</include>
+                    <!-- CQ #7347 -->
+                    <include>org.slf4j:jcl-over-slf4j:1.6.2</include>
                     <!-- CQ #5643 -->
                     <include>org.apache.ant:ant:1.8.2</include>
                     <!-- CQ #5628 -->
@@ -304,10 +315,6 @@
                     <include>org.codehaus.plexus:plexus-utils:2.1</include>
                     <!-- CQ #7208 -->
                     <include>org.codehaus.plexus:plexus-interpolation:1.16</include>
-                    <!-- CQ #5633 -->
-                    <include>com.ning:async-http-client:1.6.5</include>
-                    <!-- CQ #6817 -->
-                    <include>io.netty:netty:3.4.4.Final</include>
                     <!-- CQ #5635 -->
                     <include>org.sonatype.sisu:sisu-inject-plexus:2.3.0</include>
                     <!-- CQ #5645 -->
@@ -326,6 +333,12 @@
                     <include>org.apache.maven:maven-repository-metadata:3.1.0</include>
                     <!-- CQ #7443 -->
                     <include>org.apache.maven:maven-aether-provider:3.1.0</include>
+                    <!-- CQ #7344 -->
+                    <include>org.apache.httpcomponents:httpclient:4.2.5</include>
+                    <!-- CQ #7345 -->
+                    <include>org.apache.httpcomponents:httpcore:4.2.4</include>
+                    <!-- CQ #7346 -->
+                    <include>commons-codec:commons-codec:1.6</include>
                     <!-- CQ #5653 -->
                     <include>org.apache.ant:ant-launcher:1.8.2:*:test</include>
                     <include>org.apache.ant:ant-testutil:1.8.2:*:test</include>

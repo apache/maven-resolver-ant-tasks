@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 Sonatype, Inc.
+ * Copyright (c) 2010, 2013 Sonatype, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -68,20 +68,20 @@ public class ResolveTest
         throws IOException
     {
         File dir = new File( BUILD_DIR, "resolve-custom-layout" );
-        TestFileUtils.delete( dir );
+        TestFileUtils.deleteFile( dir );
         executeTarget( "testResolveCustomFileLayout" );
 
         assertThat( "aether-api was not saved with custom file layout",
                     new File( dir, "org.sonatype.aether/aether-api/org/sonatype/aether/jar" ).exists() );
 
-        TestFileUtils.delete( dir );
+        TestFileUtils.deleteFile( dir );
     }
 
     public void testResolveAttachments()
         throws IOException
     {
         File dir = new File( BUILD_DIR, "resolve-attachments" );
-        TestFileUtils.delete( dir );
+        TestFileUtils.deleteFile( dir );
         executeTarget( "testResolveAttachments" );
         
         File jdocDir = new File(dir, "javadoc");
@@ -98,7 +98,7 @@ public class ResolveTest
                     everyItem( endsWith( "sources.jar" ) ) );
 
 
-        TestFileUtils.delete( dir );
+        TestFileUtils.deleteFile( dir );
     }
 
     public void testResolvePath()

@@ -69,8 +69,7 @@ import org.eclipse.aether.ant.util.SettingsUtils;
 import org.eclipse.aether.collection.CollectRequest;
 import org.eclipse.aether.collection.CollectResult;
 import org.eclipse.aether.collection.DependencyCollectionException;
-import org.eclipse.aether.connector.async.AsyncRepositoryConnectorFactory;
-import org.eclipse.aether.connector.file.FileRepositoryConnectorFactory;
+import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory;
 import org.eclipse.aether.impl.DefaultServiceLocator;
 import org.eclipse.aether.impl.RemoteRepositoryManager;
 import org.eclipse.aether.repository.AuthenticationSelector;
@@ -78,7 +77,11 @@ import org.eclipse.aether.repository.LocalRepositoryManager;
 import org.eclipse.aether.repository.MirrorSelector;
 import org.eclipse.aether.repository.ProxySelector;
 import org.eclipse.aether.spi.connector.RepositoryConnectorFactory;
+import org.eclipse.aether.spi.connector.transport.TransporterFactory;
 import org.eclipse.aether.spi.log.Logger;
+import org.eclipse.aether.transport.classpath.ClasspathTransporterFactory;
+import org.eclipse.aether.transport.file.FileTransporterFactory;
+import org.eclipse.aether.transport.http.HttpTransporterFactory;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
 import org.eclipse.aether.util.repository.ConservativeAuthenticationSelector;
 import org.eclipse.aether.util.repository.DefaultAuthenticationSelector;
@@ -150,8 +153,10 @@ public class AntRepoSys
         locator.setErrorHandler( new AntServiceLocatorErrorHandler( project ) );
         locator.setServices( Logger.class, new AntLogger( project ) );
         locator.setServices( ModelBuilder.class, modelBuilder );
-        locator.addService( RepositoryConnectorFactory.class, FileRepositoryConnectorFactory.class );
-        locator.addService( RepositoryConnectorFactory.class, AsyncRepositoryConnectorFactory.class );
+        locator.addService( RepositoryConnectorFactory.class, BasicRepositoryConnectorFactory.class );
+        locator.addService( TransporterFactory.class, FileTransporterFactory.class );
+        locator.addService( TransporterFactory.class, HttpTransporterFactory.class );
+        locator.addService( TransporterFactory.class, ClasspathTransporterFactory.class );
     }
 
     private void initDefaults()

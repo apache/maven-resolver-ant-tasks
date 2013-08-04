@@ -394,9 +394,10 @@
                   <shadedPattern>org.eclipse.aether.ant.org.sonatype.plexus</shadedPattern>
                 </relocation>
                 <relocation>
-                  <pattern>org.apache.maven</pattern>
-                  <shadedPattern>org.eclipse.aether.ant.org.apache.maven</shadedPattern>
+                  <pattern>org.apache</pattern>
+                  <shadedPattern>org.eclipse.aether.ant.org.apache</shadedPattern>
                   <excludes>
+                    <exclude>org.apache.tools.**</exclude>
                     <exclude>org.apache.maven.model.pom-*</exclude>
                   </excludes>
                 </relocation>
@@ -405,16 +406,8 @@
                   <shadedPattern>org.eclipse.aether.ant.org.codehaus</shadedPattern>
                 </relocation>
                 <relocation>
-                  <pattern>org.jboss</pattern>
-                  <shadedPattern>org.eclipse.aether.ant.org.jboss</shadedPattern>
-                </relocation>
-                <relocation>
                   <pattern>org.slf4j</pattern>
                   <shadedPattern>org.eclipse.aether.ant.org.slf4j</shadedPattern>
-                </relocation>
-                <relocation>
-                  <pattern>com.ning</pattern>
-                  <shadedPattern>org.eclipse.aether.ant.com.ning</shadedPattern>
                 </relocation>
               </relocations>
             </configuration>

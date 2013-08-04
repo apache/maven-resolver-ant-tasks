@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ ~ Copyright (c) 2013 Sonatype, Inc.
+ ~ All rights reserved. This program and the accompanying materials
+ ~ are made available under the terms of the Eclipse Public License v1.0
+ ~ which accompanies this distribution, and is available at
+ ~ http://www.eclipse.org/legal/epl-v10.html
+ ~
+ ~ Contributors:
+ ~    Sonatype, Inc. - initial API and implementation
+-->
+
+<assembly>
+  <id>bin-incubation</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <fileSets>
+    <fileSet>
+      <directory>target</directory>
+      <outputDirectory>.</outputDirectory>
+      <includes>
+        <include>*-uber.jar</include>
+        <include>*-uber.jar.asc</include>
+      </includes>
+      <excludes>
+        <exclude>*-sources.*</exclude>
+        <exclude>*-javadoc.*</exclude>
+      </excludes>
+    </fileSet>
+    <fileSet>
+      <directory>.</directory>
+      <includes>
+        <include>*.html</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+</assembly>

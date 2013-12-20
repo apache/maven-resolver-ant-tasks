@@ -76,6 +76,20 @@ public abstract class AntBuildsTest
     }
 
     @Override
+    protected void tearDown()
+        throws Exception
+    {
+        try
+        {
+            ProjectWorkspaceReader.dropInstance();
+        }
+        finally
+        {
+            super.tearDown();
+        }
+    }
+
+    @Override
     public void configureProject( String filename, int logLevel )
         throws BuildException
     {

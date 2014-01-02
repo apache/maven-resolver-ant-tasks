@@ -37,6 +37,8 @@ public abstract class AntBuildsTest
 
     protected File localRepoDir;
 
+    protected File distRepoDir;
+
     protected String getProjectDirName()
     {
         String name = getClass().getSimpleName();
@@ -63,10 +65,12 @@ public abstract class AntBuildsTest
 
         projectDir = new File( new File( BASE_DIR, "src/test/resources/ant" ), getProjectDirName() );
         localRepoDir = new File( BUILD_DIR, "local-repo" );
+        distRepoDir = new File( BUILD_DIR, "dist-repo" );
 
         System.setProperty( "project.dir", projectDir.getAbsolutePath() );
         System.setProperty( "build.dir", BUILD_DIR.getAbsolutePath() );
         System.setProperty( "maven.repo.local", localRepoDir.getAbsolutePath() );
+        System.setProperty( "project.distrepo.url", distRepoDir.toURI().toString() );
         setUpProperties();
 
         configureProject( new File( projectDir, "ant.xml" ).getAbsolutePath(), Project.MSG_VERBOSE );

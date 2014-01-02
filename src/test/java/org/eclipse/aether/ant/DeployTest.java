@@ -24,15 +24,6 @@ public class DeployTest
     extends AntBuildsTest
 {
 
-    private File distRepoDir;
-
-    @Override
-    protected void setUpProperties()
-    {
-        distRepoDir = new File( BUILD_DIR, "dist-repo" );
-        System.setProperty( "project.distrepo.url", distRepoDir.toURI().toString() );
-    }
-
     public void testDeployGlobalPom()
     {
         executeTarget( "testDeployGlobalPom" );

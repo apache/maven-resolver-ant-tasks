@@ -29,11 +29,12 @@
 
   <aether:localrepo dir="${build.dir}/local-repo"/>
 
-  <aether:remoterepo id="rso" url="http://repository.sonatype.org/content/groups/public" type="default"
+  <aether:remoterepo id="ossrh" url="http://oss.sonatype.org/content/groups/staging" type="default"
                      releases="true" snapshots="true" updates="daily" checksums="fail"/>
 
   <aether:remoterepos id="aether.repositories">
-    <aether:remoterepo refid="rso"/>
+    <aether:remoterepo refid="central"/>
+    <aether:remoterepo refid="ossrh"/>
   </aether:remoterepos>
 
   <aether:pom file="pom.xml" id="pom"/>

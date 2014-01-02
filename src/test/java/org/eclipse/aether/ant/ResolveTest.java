@@ -18,20 +18,11 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
 
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
 
 public class ResolveTest
     extends AntBuildsTest
 {
-
-    @Override
-    protected void setUp()
-        throws Exception
-    {
-        super.setUp();
-        configureProject( "src/test/ant/Resolve.xml", Project.MSG_VERBOSE );
-    }
 
     public void testResolveGlobalPom()
     {

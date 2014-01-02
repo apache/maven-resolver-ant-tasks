@@ -20,14 +20,6 @@ public class InstallTest
     extends AntBuildsTest
 {
 
-    @Override
-    protected void setUp()
-        throws Exception
-    {
-        super.setUp();
-        configureProject( "src/test/ant/Install.xml" );
-    }
-
     public void testInstallGlobalPom()
     {
         executeTarget( "testInstallGlobalPom" );
@@ -35,7 +27,7 @@ public class InstallTest
 
         assertLogContaining( "Installing" );
         
-        assertUpdatedFile( tstamp, localRepoDir, "test/test/0.1-SNAPSHOT/test-0.1-SNAPSHOT.pom" );
+        assertUpdatedFile( tstamp, localRepoDir, "test/dummy/0.1-SNAPSHOT/dummy-0.1-SNAPSHOT.pom" );
     }
 
     public void testInstallOverrideGlobalPom()
@@ -55,7 +47,7 @@ public class InstallTest
 
         assertLogContaining( "Installing" );
 
-        assertUpdatedFile( tstamp, localRepoDir, "test/test/0.1-SNAPSHOT/test-0.1-SNAPSHOT.pom" );
+        assertUpdatedFile( tstamp, localRepoDir, "test/dummy/0.1-SNAPSHOT/dummy-0.1-SNAPSHOT.pom" );
         assertUpdatedFile( tstamp, localRepoDir, "test/other/0.1-SNAPSHOT/other-0.1-SNAPSHOT.pom" );
     }
 
@@ -66,8 +58,8 @@ public class InstallTest
 
         assertLogContaining( "Installing" );
 
-        assertUpdatedFile( tstamp, localRepoDir, "test/test/0.1-SNAPSHOT/test-0.1-SNAPSHOT.pom" );
-        assertUpdatedFile( tstamp, localRepoDir, "test/test/0.1-SNAPSHOT/test-0.1-SNAPSHOT-ant.xml" );
+        assertUpdatedFile( tstamp, localRepoDir, "test/dummy/0.1-SNAPSHOT/dummy-0.1-SNAPSHOT.pom" );
+        assertUpdatedFile( tstamp, localRepoDir, "test/dummy/0.1-SNAPSHOT/dummy-0.1-SNAPSHOT-ant.xml" );
     }
 
     public void testCustomRepo()
@@ -81,8 +73,8 @@ public class InstallTest
         System.out.println( getLog() );
         assertLogContaining( "Installing" );
 
-        assertUpdatedFile( tstamp, repoPath, "test/test/0.1-SNAPSHOT/test-0.1-SNAPSHOT.pom" );
-        assertUpdatedFile( tstamp, repoPath, "test/test/0.1-SNAPSHOT/test-0.1-SNAPSHOT-ant.xml" );
+        assertUpdatedFile( tstamp, repoPath, "test/dummy/0.1-SNAPSHOT/dummy-0.1-SNAPSHOT.pom" );
+        assertUpdatedFile( tstamp, repoPath, "test/dummy/0.1-SNAPSHOT/dummy-0.1-SNAPSHOT-ant.xml" );
     }
 
     private void assertUpdatedFile( long tstamp, File repoPath, String path )

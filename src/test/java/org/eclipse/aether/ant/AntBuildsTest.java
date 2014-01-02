@@ -16,6 +16,7 @@ import java.io.PrintStream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.DefaultLogger;
+import org.apache.tools.ant.Project;
 import org.eclipse.aether.internal.test.util.TestFileUtils;
 
 public abstract class AntBuildsTest
@@ -28,11 +29,29 @@ public abstract class AntBuildsTest
 
     static
     {
-        BASE_DIR = new File( "." ).getAbsoluteFile();
+        BASE_DIR = new File( "" ).getAbsoluteFile();
         BUILD_DIR = new File( BASE_DIR, "target/ant" );
     }
 
+    protected File projectDir;
+
     protected File localRepoDir;
+
+    protected String getProjectDirName()
+    {
+        String name = getClass().getSimpleName();
+        if ( name.endsWith( "Test" ) )
+        {
+            name = name.substring( 0, name.length() - 4 );
+        }
+        return name;
+    }
+
+    protected void setUpProperties()
+        throws Exception
+    {
+        // hook for subclasses to set further system properties for the project to pick up
+    }
 
     @Override
     protected void setUp()
@@ -42,12 +61,15 @@ public abstract class AntBuildsTest
 
         TestFileUtils.deleteFile( BUILD_DIR );
 
-        File projectDir = new File( BASE_DIR, "src/test/ant" );
+        projectDir = new File( new File( BASE_DIR, "src/test/resources/ant" ), getProjectDirName() );
         localRepoDir = new File( BUILD_DIR, "local-repo" );
 
         System.setProperty( "project.dir", projectDir.getAbsolutePath() );
         System.setProperty( "build.dir", BUILD_DIR.getAbsolutePath() );
         System.setProperty( "maven.repo.local", localRepoDir.getAbsolutePath() );
+        setUpProperties();
+
+        configureProject( new File( projectDir, "ant.xml" ).getAbsolutePath(), Project.MSG_VERBOSE );
     }
 
     @Override

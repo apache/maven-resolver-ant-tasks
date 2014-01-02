@@ -27,13 +27,10 @@ public class DeployTest
     private File distRepoDir;
 
     @Override
-    protected void setUp()
-        throws Exception
+    protected void setUpProperties()
     {
-        super.setUp();
         distRepoDir = new File( BUILD_DIR, "dist-repo" );
         System.setProperty( "project.distrepo.url", distRepoDir.toURI().toString() );
-        configureProject( "src/test/ant/Deploy.xml" );
     }
 
     public void testDeployGlobalPom()
@@ -43,7 +40,7 @@ public class DeployTest
 
         assertLogContaining( "Uploading" );
         
-        assertUpdatedFile( tstamp, distRepoDir, "test/test/0.1-SNAPSHOT/maven-metadata.xml" );
+        assertUpdatedFile( tstamp, distRepoDir, "test/dummy/0.1-SNAPSHOT/maven-metadata.xml" );
     }
 
     public void testDeployOverrideGlobalPom()
@@ -63,7 +60,7 @@ public class DeployTest
 
         assertLogContaining( "Uploading" );
 
-        assertUpdatedFile( tstamp, distRepoDir, "test/test/0.1-SNAPSHOT/maven-metadata.xml" );
+        assertUpdatedFile( tstamp, distRepoDir, "test/dummy/0.1-SNAPSHOT/maven-metadata.xml" );
         assertUpdatedFile( tstamp, distRepoDir, "test/other/0.1-SNAPSHOT/maven-metadata.xml" );
     }
 
@@ -73,7 +70,7 @@ public class DeployTest
 
         assertLogContaining( "Uploading" );
 
-        File dir = new File(distRepoDir, "test/test/0.1-SNAPSHOT/" );
+        File dir = new File(distRepoDir, "test/dummy/0.1-SNAPSHOT/" );
         String[] files = dir.list();
         assertThat( "attached artifact not found: " + Arrays.toString( files ), files,
                     hasItemInArray( endsWith( "-ant.xml" ) ) );

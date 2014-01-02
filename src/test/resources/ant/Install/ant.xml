@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
- ~ Copyright (c) 2010, 2011 Sonatype, Inc.
+ ~ Copyright (c) 2010, 2014 Sonatype, Inc.
  ~ All rights reserved. This program and the accompanying materials
  ~ are made available under the terms of the Eclipse Public License v1.0
  ~ which accompanies this distribution, and is available at
@@ -12,7 +12,7 @@
 -->
 
 <!DOCTYPE project [
-       <!ENTITY common SYSTEM "common.xml">
+       <!ENTITY common SYSTEM "../common.xml">
 ]>
 
 <project xmlns:repo="antlib:org.eclipse.aether.ant">
@@ -20,12 +20,12 @@
   &common;
 
   <repo:pom file="${project.dir}/dummy-pom.xml" id="pom"/>
-  <repo:artifact classifier="ant" file="${project.dir}/common.xml" id="ant"/>
+  <repo:artifact classifier="ant" file="${project.dir}/ant.xml" id="ant"/>
 
   <target name="setUp">
     <touch file="${project.dir}/dummy-pom.xml"/>
     <touch file="${project.dir}/other-pom.xml"/>
-    <touch file="${project.dir}/common.xml"/>
+    <touch file="${project.dir}/ant.xml"/>
   </target>
 
   <target name="testInstallGlobalPom" depends="setUp">

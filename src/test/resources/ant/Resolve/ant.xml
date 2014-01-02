@@ -12,7 +12,7 @@
 -->
 
 <!DOCTYPE project [
-       <!ENTITY common SYSTEM "common.xml">
+       <!ENTITY common SYSTEM "../common.xml">
 ]>
 
 <project xmlns:repo="antlib:org.eclipse.aether.ant">

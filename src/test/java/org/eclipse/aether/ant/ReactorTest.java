@@ -13,7 +13,6 @@ package org.eclipse.aether.ant;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.tools.ant.Project;
 import org.eclipse.aether.ant.ProjectWorkspaceReader;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
@@ -21,17 +20,6 @@ import org.eclipse.aether.artifact.DefaultArtifact;
 public class ReactorTest
     extends AntBuildsTest
 {
-
-    private File pomDir;
-
-    @Override
-    protected void setUp()
-        throws Exception
-    {
-        super.setUp();
-        pomDir = new File( "src/test/ant/reactor" ).getAbsoluteFile();
-        configureProject( "src/test/ant/Reactor.xml", Project.MSG_VERBOSE );
-    }
 
     private Artifact artifact( String coords )
     {
@@ -45,7 +33,7 @@ public class ReactorTest
         ProjectWorkspaceReader reader = ProjectWorkspaceReader.getInstance();
         File found = reader.findArtifact( artifact( "test:test:pom:0.1-SNAPSHOT" ) );
         assertNotNull( found );
-        assertEquals( new File( pomDir, "pom1.xml" ), found.getAbsoluteFile() );
+        assertEquals( new File( projectDir, "pom1.xml" ), found.getAbsoluteFile() );
     }
 
     public void testArtifact()
@@ -55,11 +43,11 @@ public class ReactorTest
         ProjectWorkspaceReader reader = ProjectWorkspaceReader.getInstance();
         File found = reader.findArtifact( artifact( "test:test:pom:0.1-SNAPSHOT" ) );
         assertNotNull( found );
-        assertEquals( new File( pomDir, "pom1.xml" ), found.getAbsoluteFile() );
+        assertEquals( new File( projectDir, "pom1.xml" ), found.getAbsoluteFile() );
 
         found = reader.findArtifact( artifact( "test:test:xml:0.1-SNAPSHOT" ) );
         assertNotNull( found );
-        assertEquals( new File( pomDir, "pom1.xml" ), found.getAbsoluteFile() );
+        assertEquals( new File( projectDir, "pom1.xml" ), found.getAbsoluteFile() );
     }
 
     public void testArtifactInMemoryPom()
@@ -72,7 +60,7 @@ public class ReactorTest
 
         found = reader.findArtifact( artifact( "test:test:xml:0.1-SNAPSHOT" ) );
         assertNotNull( found );
-        assertEquals( new File( pomDir, "pom1.xml" ), found.getAbsoluteFile() );
+        assertEquals( new File( projectDir, "pom1.xml" ), found.getAbsoluteFile() );
     }
 
     public void testResolveArtifact()
@@ -80,7 +68,7 @@ public class ReactorTest
     {
         executeTarget( "testResolveArtifact" );
         String prop = project.getProperty( "resolve.test:test:jar" );
-        assertEquals( new File( "src/test/ant/reactor/pom1.xml" ).getAbsolutePath(), prop );
+        assertEquals( new File( projectDir, "pom1.xml" ).getAbsolutePath(), prop );
     }
 
     public void testResolveArtifactInMemoryPom()
@@ -88,7 +76,7 @@ public class ReactorTest
     {
         executeTarget( "testResolveArtifactInMemoryPom" );
         String prop = project.getProperty( "resolve.test:test:jar" );
-        assertEquals( new File( "src/test/ant/reactor/pom1.xml" ).getAbsolutePath(), prop );
+        assertEquals( new File( projectDir, "pom1.xml" ).getAbsolutePath(), prop );
         assertLogContaining( "The POM for test:test:jar:0.1-SNAPSHOT is missing, no dependency information available" );
     }
 }

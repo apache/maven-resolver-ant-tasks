@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2012 Sonatype, Inc.
+ * Copyright (c) 2010, 2014 Sonatype, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -44,72 +44,42 @@ public class ProjectWorkspaceReaderTest
         return new DefaultArtifact( coords );
     }
 
+    private File getFile( String name )
+    {
+        return new File( "src/test/resources/ProjectWorkspaceReader", name );
+    }
+
     @Test
     public void testFindPom()
     {
         Pom pom = new Pom();
         pom.setProject( project );
-        pom.setFile( new File( "src/test/ant/dummy-pom.xml" ) );
-        
-        reader.addPom( pom );
-        
-        assertEquals( new File( "src/test/ant/dummy-pom.xml" ),
-                      reader.findArtifact( artifact( "test:test:pom:0.1-SNAPSHOT" ) ) );
-    }
-
-    @Test
-    public void testFindNoPom()
-    {
-        assertNull( reader.findArtifact( artifact( "test:test:pom:0.1-SNAPSHOT" ) ) );
-
-        Pom pom = new Pom();
-        pom.setProject( project );
-        pom.setFile( new File( "src/test/ant/dummy-pom.xml" ) );
+        pom.setFile( getFile( "dummy-pom.xml" ) );
 
         reader.addPom( pom );
 
+        assertEquals( pom.getFile(), reader.findArtifact( artifact( "test:dummy:pom:0.1-SNAPSHOT" ) ) );
         assertNull( reader.findArtifact( artifact( "unavailable:test:pom:0.1-SNAPSHOT" ) ) );
-    }
-
-    @Test
-    public void testFindNoArtifact()
-    {
-        assertNull( reader.findArtifact( artifact( "test:test:jar:0.1-SNAPSHOT" ) ) );
-
-        Pom pom = new Pom();
-        pom.setProject( project );
-        pom.setFile( new File( "src/test/ant/dummy-pom.xml" ) );
-
-        reader.addPom( pom );
-
-        org.eclipse.aether.ant.types.Artifact artifact = new org.eclipse.aether.ant.types.Artifact();
-        artifact.setProject( project );
-        artifact.addPom( pom );
-        artifact.setFile( new File( "src/test/ant/common.xml" ) );
-
-        reader.addArtifact( artifact );
-
-        assertNull( reader.findArtifact( artifact( "unavailable:test:jar:0.1-SNAPSHOT" ) ) );
     }
 
     @Test
     public void testFindArtifact()
     {
-        assertNull( reader.findArtifact( artifact( "test:test:jar:0.1-SNAPSHOT" ) ) );
-
         Pom pom = new Pom();
         pom.setProject( project );
-        pom.setFile( new File( "src/test/ant/dummy-pom.xml" ) );
+        pom.setFile( getFile( "dummy-pom.xml" ) );
 
         reader.addPom( pom );
 
         org.eclipse.aether.ant.types.Artifact artifact = new org.eclipse.aether.ant.types.Artifact();
         artifact.setProject( project );
         artifact.addPom( pom );
-        artifact.setFile( new File( "src/test/ant/common.xml" ) );
+        artifact.setFile( getFile( "dummy-file.txt" ) );
 
         reader.addArtifact( artifact );
 
-        assertNull( reader.findArtifact( artifact( "test:test:jar:0.1-SNAPSHOT" ) ) );
+        assertEquals( artifact.getFile(), reader.findArtifact( artifact( "test:dummy:txt:0.1-SNAPSHOT" ) ) );
+        assertNull( reader.findArtifact( artifact( "unavailable:test:jar:0.1-SNAPSHOT" ) ) );
     }
+
 }

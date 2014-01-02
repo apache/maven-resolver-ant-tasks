@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2013 Sonatype, Inc.
+ * Copyright (c) 2010, 2014 Sonatype, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,8 +16,6 @@ import static org.hamcrest.Matchers.*;
 import java.io.File;
 import java.io.IOException;
 
-import org.eclipse.aether.internal.test.util.TestFileUtils;
-
 public class InstallTest
     extends AntBuildsTest
 {
@@ -27,17 +25,7 @@ public class InstallTest
         throws Exception
     {
         super.setUp();
-        TestFileUtils.deleteFile( new File( defaultLocalRepository, "test" ) );
-
         configureProject( "src/test/ant/Install.xml" );
-    }
-
-    @Override
-    protected void tearDown()
-        throws Exception
-    {
-        super.tearDown();
-        TestFileUtils.deleteFile( new File( defaultLocalRepository, "test" ) );
     }
 
     public void testInstallGlobalPom()
@@ -47,7 +35,7 @@ public class InstallTest
 
         assertLogContaining( "Installing" );
         
-        assertUpdatedFile( tstamp, defaultLocalRepository, "test/test/0.1-SNAPSHOT/test-0.1-SNAPSHOT.pom" );
+        assertUpdatedFile( tstamp, localRepoDir, "test/test/0.1-SNAPSHOT/test-0.1-SNAPSHOT.pom" );
     }
 
     public void testInstallOverrideGlobalPom()
@@ -57,7 +45,7 @@ public class InstallTest
 
         assertLogContaining( "Installing" );
 
-        assertUpdatedFile( tstamp, defaultLocalRepository, "test/other/0.1-SNAPSHOT/other-0.1-SNAPSHOT.pom" );
+        assertUpdatedFile( tstamp, localRepoDir, "test/other/0.1-SNAPSHOT/other-0.1-SNAPSHOT.pom" );
     }
 
     public void testInstallOverrideGlobalPomByRef()
@@ -67,8 +55,8 @@ public class InstallTest
 
         assertLogContaining( "Installing" );
 
-        assertUpdatedFile( tstamp, defaultLocalRepository, "test/test/0.1-SNAPSHOT/test-0.1-SNAPSHOT.pom" );
-        assertUpdatedFile( tstamp, defaultLocalRepository, "test/other/0.1-SNAPSHOT/other-0.1-SNAPSHOT.pom" );
+        assertUpdatedFile( tstamp, localRepoDir, "test/test/0.1-SNAPSHOT/test-0.1-SNAPSHOT.pom" );
+        assertUpdatedFile( tstamp, localRepoDir, "test/other/0.1-SNAPSHOT/other-0.1-SNAPSHOT.pom" );
     }
 
     public void testDefaultRepo()
@@ -78,15 +66,14 @@ public class InstallTest
 
         assertLogContaining( "Installing" );
 
-        assertUpdatedFile( tstamp, defaultLocalRepository, "test/test/0.1-SNAPSHOT/test-0.1-SNAPSHOT.pom" );
-        assertUpdatedFile( tstamp, defaultLocalRepository, "test/test/0.1-SNAPSHOT/test-0.1-SNAPSHOT-ant.xml" );
+        assertUpdatedFile( tstamp, localRepoDir, "test/test/0.1-SNAPSHOT/test-0.1-SNAPSHOT.pom" );
+        assertUpdatedFile( tstamp, localRepoDir, "test/test/0.1-SNAPSHOT/test-0.1-SNAPSHOT-ant.xml" );
     }
 
     public void testCustomRepo()
         throws IOException
     {
         File repoPath = new File( BUILD_DIR, "local-repo-custom" );
-        TestFileUtils.deleteFile( repoPath );
 
         executeTarget( "testCustomRepo" );
         long tstamp = System.currentTimeMillis();
@@ -96,7 +83,6 @@ public class InstallTest
 
         assertUpdatedFile( tstamp, repoPath, "test/test/0.1-SNAPSHOT/test-0.1-SNAPSHOT.pom" );
         assertUpdatedFile( tstamp, repoPath, "test/test/0.1-SNAPSHOT/test-0.1-SNAPSHOT-ant.xml" );
-        TestFileUtils.deleteFile( repoPath );
     }
 
     private void assertUpdatedFile( long tstamp, File repoPath, String path )

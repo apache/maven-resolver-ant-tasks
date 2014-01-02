@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2013 Sonatype, Inc.
+ * Copyright (c) 2010, 2014 Sonatype, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,8 +16,6 @@ import static org.hamcrest.Matchers.*;
 import java.io.File;
 import java.util.Arrays;
 
-import org.eclipse.aether.internal.test.util.TestFileUtils;
-
 /*
  * still missing:
  * - deploy snapshots/releases into correct repos
@@ -26,26 +24,16 @@ public class DeployTest
     extends AntBuildsTest
 {
 
-    private File distRepoPath;
+    private File distRepoDir;
 
     @Override
     protected void setUp()
         throws Exception
     {
         super.setUp();
-        distRepoPath = new File( "target/dist-repo" );
-        System.setProperty( "project.distrepo.url", distRepoPath.toURI().toString() );
-        TestFileUtils.deleteFile( distRepoPath );
-
+        distRepoDir = new File( BUILD_DIR, "dist-repo" );
+        System.setProperty( "project.distrepo.url", distRepoDir.toURI().toString() );
         configureProject( "src/test/ant/Deploy.xml" );
-    }
-
-    @Override
-    protected void tearDown()
-        throws Exception
-    {
-        super.tearDown();
-        TestFileUtils.deleteFile( distRepoPath );
     }
 
     public void testDeployGlobalPom()
@@ -55,7 +43,7 @@ public class DeployTest
 
         assertLogContaining( "Uploading" );
         
-        assertUpdatedFile( tstamp, distRepoPath, "test/test/0.1-SNAPSHOT/maven-metadata.xml" );
+        assertUpdatedFile( tstamp, distRepoDir, "test/test/0.1-SNAPSHOT/maven-metadata.xml" );
     }
 
     public void testDeployOverrideGlobalPom()
@@ -65,7 +53,7 @@ public class DeployTest
 
         assertLogContaining( "Uploading" );
 
-        assertUpdatedFile( tstamp, distRepoPath, "test/other/0.1-SNAPSHOT/maven-metadata.xml" );
+        assertUpdatedFile( tstamp, distRepoDir, "test/other/0.1-SNAPSHOT/maven-metadata.xml" );
     }
 
     public void testDeployOverrideGlobalPomByRef()
@@ -75,8 +63,8 @@ public class DeployTest
 
         assertLogContaining( "Uploading" );
 
-        assertUpdatedFile( tstamp, distRepoPath, "test/test/0.1-SNAPSHOT/maven-metadata.xml" );
-        assertUpdatedFile( tstamp, distRepoPath, "test/other/0.1-SNAPSHOT/maven-metadata.xml" );
+        assertUpdatedFile( tstamp, distRepoDir, "test/test/0.1-SNAPSHOT/maven-metadata.xml" );
+        assertUpdatedFile( tstamp, distRepoDir, "test/other/0.1-SNAPSHOT/maven-metadata.xml" );
     }
 
     public void testDeployAttachedArtifact()
@@ -85,7 +73,7 @@ public class DeployTest
 
         assertLogContaining( "Uploading" );
 
-        File dir = new File(distRepoPath, "test/test/0.1-SNAPSHOT/" );
+        File dir = new File(distRepoDir, "test/test/0.1-SNAPSHOT/" );
         String[] files = dir.list();
         assertThat( "attached artifact not found: " + Arrays.toString( files ), files,
                     hasItemInArray( endsWith( "-ant.xml" ) ) );

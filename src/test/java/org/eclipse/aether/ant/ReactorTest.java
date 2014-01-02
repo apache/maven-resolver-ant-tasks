@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2012 Sonatype, Inc.
+ * Copyright (c) 2010, 2014 Sonatype, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -31,14 +31,6 @@ public class ReactorTest
         super.setUp();
         pomDir = new File( "src/test/ant/reactor" ).getAbsoluteFile();
         configureProject( "src/test/ant/Reactor.xml", Project.MSG_VERBOSE );
-    }
-
-    @Override
-    protected void tearDown()
-        throws Exception
-    {
-        super.tearDown();
-        ProjectWorkspaceReader.dropInstance();
     }
 
     private Artifact artifact( String coords )

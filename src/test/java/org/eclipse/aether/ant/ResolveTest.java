@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2013 Sonatype, Inc.
+ * Copyright (c) 2010, 2014 Sonatype, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,7 +20,6 @@ import java.util.Map;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
-import org.eclipse.aether.internal.test.util.TestFileUtils;
 
 public class ResolveTest
     extends AntBuildsTest
@@ -60,28 +59,24 @@ public class ResolveTest
 
         String prop = getProject().getProperty( "test.resolve.path.org.sonatype.aether:aether-api:jar" );
         assertThat( "aether-api was not resolved as a property", prop, notNullValue() );
-        assertThat( "aether-api was not resolved to default local repository", prop,
-                    containsString( "resolvetest-local-repo" ) );
+        assertThat( "aether-api was not resolved to default local repository", prop.replace( '\\', '/' ),
+                    endsWith( "local-repo-custom/org/sonatype/aether/aether-api/1.11/aether-api-1.11.jar" ) );
     }
 
     public void testResolveCustomFileLayout()
         throws IOException
     {
         File dir = new File( BUILD_DIR, "resolve-custom-layout" );
-        TestFileUtils.deleteFile( dir );
         executeTarget( "testResolveCustomFileLayout" );
 
         assertThat( "aether-api was not saved with custom file layout",
                     new File( dir, "org.sonatype.aether/aether-api/org/sonatype/aether/jar" ).exists() );
-
-        TestFileUtils.deleteFile( dir );
     }
 
     public void testResolveAttachments()
         throws IOException
     {
         File dir = new File( BUILD_DIR, "resolve-attachments" );
-        TestFileUtils.deleteFile( dir );
         executeTarget( "testResolveAttachments" );
         
         File jdocDir = new File(dir, "javadoc");
@@ -96,9 +91,6 @@ public class ResolveTest
                     new File( sourcesDir, "org.sonatype.aether-aether-api-sources.jar" ).exists() );
         assertThat( "found non-sources files", Arrays.asList( sourcesDir.list() ),
                     everyItem( endsWith( "sources.jar" ) ) );
-
-
-        TestFileUtils.deleteFile( dir );
     }
 
     public void testResolvePath()

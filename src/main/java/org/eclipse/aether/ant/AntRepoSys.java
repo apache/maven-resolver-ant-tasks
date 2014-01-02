@@ -206,9 +206,7 @@ public class AntRepoSys
 
         Map<Object, Object> configProps = new LinkedHashMap<Object, Object>();
         configProps.put( ConfigurationProperties.USER_AGENT, getUserAgent() );
-        configProps.putAll( System.getProperties() );
         configProps.putAll( (Map<?, ?>) project.getProperties() );
-        configProps.putAll( (Map<?, ?>) project.getUserProperties() );
         processServerConfiguration( configProps );
         session.setConfigProperties( configProps );
 

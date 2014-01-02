@@ -101,9 +101,9 @@ public class AntRepoSys
 
     private static final SettingsDecrypter settingsDecrypter = new AntSettingsDecryptorFactory().newInstance();
 
-    private Project project;
+    private final Project project;
 
-    private DefaultServiceLocator locator;
+    private final DefaultServiceLocator locator;
 
     private RepositorySystem repoSys;
 
@@ -115,11 +115,11 @@ public class AntRepoSys
 
     private Settings settings;
 
-    private List<Mirror> mirrors = new CopyOnWriteArrayList<Mirror>();
+    private final List<Mirror> mirrors = new CopyOnWriteArrayList<Mirror>();
 
-    private List<Proxy> proxies = new CopyOnWriteArrayList<Proxy>();
+    private final List<Proxy> proxies = new CopyOnWriteArrayList<Proxy>();
 
-    private List<Authentication> authentications = new CopyOnWriteArrayList<Authentication>();
+    private final List<Authentication> authentications = new CopyOnWriteArrayList<Authentication>();
 
     private LocalRepository localRepository;
 

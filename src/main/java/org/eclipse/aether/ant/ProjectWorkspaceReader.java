@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2012 Sonatype, Inc.
+ * Copyright (c) 2010, 2014 Sonatype, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,9 +12,9 @@ package org.eclipse.aether.ant;
 
 import java.io.File;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.maven.model.Model;
 import org.eclipse.aether.ant.types.Pom;
@@ -22,6 +22,7 @@ import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.repository.WorkspaceReader;
 import org.eclipse.aether.repository.WorkspaceRepository;
+import org.eclipse.aether.util.artifact.ArtifactIdUtils;
 
 /**
  * Workspace reader caching available POMs and artifacts for ant builds.
@@ -34,18 +35,19 @@ public class ProjectWorkspaceReader
     implements WorkspaceReader
 {
 
-    private static ProjectWorkspaceReader instance;
+    private static volatile ProjectWorkspaceReader instance;
 
-    private static Object lock = new Object();
+    private static final Object LOCK = new Object();
 
-    private Map<String, File> artifacts = Collections.synchronizedMap( new HashMap<String, File>() );
+    private Map<String, File> artifacts = new ConcurrentHashMap<String, File>();
 
     public void addPom( Pom pom )
     {
         if ( pom.getFile() != null )
         {
             Model model = pom.getModel( pom );
-            String coords = coords( new DefaultArtifact( model.getGroupId(), model.getArtifactId(), null, "pom", model.getVersion() ) );
+            String coords =
+                coords( new DefaultArtifact( model.getGroupId(), model.getArtifactId(), null, "pom", model.getVersion() ) );
             artifacts.put( coords, pom.getFile() );
         }
     }
@@ -63,8 +65,7 @@ public class ProjectWorkspaceReader
                 Model model = pom.getModel( pom );
                 aetherArtifact =
                     new DefaultArtifact( model.getGroupId(), model.getArtifactId(), artifact.getClassifier(),
-                                             artifact.getType(),
-                                             model.getVersion() );
+                                         artifact.getType(), model.getVersion() );
             }
             else
             {
@@ -80,13 +81,7 @@ public class ProjectWorkspaceReader
 
     private String coords( Artifact artifact )
     {
-        StringBuilder buffer = new StringBuilder( 128 );
-        buffer.append( artifact.getGroupId() );
-        buffer.append( ':' ).append( artifact.getArtifactId() );
-        buffer.append( ':' ).append( artifact.getExtension() );
-        buffer.append( ':' ).append( artifact.getClassifier() );
-        buffer.append( ':' ).append( artifact.getVersion() );
-        return buffer.toString();
+        return ArtifactIdUtils.toId( artifact );
     }
 
     public WorkspaceRepository getRepository()
@@ -110,22 +105,20 @@ public class ProjectWorkspaceReader
 
     public static ProjectWorkspaceReader getInstance()
     {
-        if ( instance != null )
+        if ( instance == null )
         {
-            return instance;
-        }
-
-        synchronized ( lock )
-        {
-            if ( instance == null )
+            synchronized ( LOCK )
             {
-                instance = new ProjectWorkspaceReader();
+                if ( instance == null )
+                {
+                    instance = new ProjectWorkspaceReader();
+                }
             }
-            return instance;
         }
+        return instance;
     }
 
-    public static void dropInstance()
+    static void dropInstance()
     {
         instance = null;
     }

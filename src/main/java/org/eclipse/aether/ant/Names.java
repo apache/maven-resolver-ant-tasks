@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 Sonatype, Inc.
+ * Copyright (c) 2010, 2014 Sonatype, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,9 +10,13 @@
  *******************************************************************************/
 package org.eclipse.aether.ant;
 
-public class Names
+public final class Names
 {
 
+    private Names()
+    {
+        // hide constructor
+    }
 
     public static final String ID = "aether";
 

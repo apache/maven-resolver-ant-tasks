@@ -37,7 +37,7 @@ public class ResolveTest
     {
         executeTarget( "testResolveGlobalPom" );
 
-        String prop = getProject().getProperty( "test.resolve.path.org.sonatype.aether:aether-api:jar" );
+        String prop = getProject().getProperty( "test.resolve.path.org.eclipse.aether:aether-api:jar" );
         assertThat( "aether-api was not resolved as a property", prop, notNullValue() );
         assertThat( "aether-api was not resolved to default local repository", prop,
                     allOf( containsString( "aether-api" ), endsWith( ".jar" ) ) );
@@ -47,7 +47,7 @@ public class ResolveTest
     {
         executeTarget( "testResolveOverrideGlobalPom" );
 
-        String prop = getProject().getProperty( "test.resolve.path.org.sonatype.aether:aether-api:jar" );
+        String prop = getProject().getProperty( "test.resolve.path.org.eclipse.aether:aether-api:jar" );
         assertThat( "aether-api was not resolved as a property", prop, notNullValue() );
         assertThat( "aether-api was not resolved to default local repository", prop,
                     allOf( containsString( "aether-api" ), endsWith( ".jar" ) ) );
@@ -57,10 +57,10 @@ public class ResolveTest
     {
         executeTarget( "testResolveGlobalPomIntoOtherLocalRepo" );
 
-        String prop = getProject().getProperty( "test.resolve.path.org.sonatype.aether:aether-api:jar" );
+        String prop = getProject().getProperty( "test.resolve.path.org.eclipse.aether:aether-api:jar" );
         assertThat( "aether-api was not resolved as a property", prop, notNullValue() );
         assertThat( "aether-api was not resolved to default local repository", prop.replace( '\\', '/' ),
-                    endsWith( "local-repo-custom/org/sonatype/aether/aether-api/1.11/aether-api-1.11.jar" ) );
+                    endsWith( "local-repo-custom/org/eclipse/aether/aether-api/0.9.0.M3/aether-api-0.9.0.M3.jar" ) );
     }
 
     public void testResolveCustomFileLayout()
@@ -70,7 +70,7 @@ public class ResolveTest
         executeTarget( "testResolveCustomFileLayout" );
 
         assertThat( "aether-api was not saved with custom file layout",
-                    new File( dir, "org.sonatype.aether/aether-api/org/sonatype/aether/jar" ).exists() );
+                    new File( dir, "org.eclipse.aether/aether-api/org/eclipse/aether/jar" ).exists() );
     }
 
     public void testResolveAttachments()
@@ -82,13 +82,13 @@ public class ResolveTest
         File jdocDir = new File(dir, "javadoc");
         
         assertThat( "aether-api-javadoc was not saved with custom file layout",
-                    new File( jdocDir, "org.sonatype.aether-aether-api-javadoc.jar" ).exists() );
+                    new File( jdocDir, "org.eclipse.aether-aether-api-javadoc.jar" ).exists() );
 
         assertThat( "found non-javadoc files", Arrays.asList( jdocDir.list() ), everyItem( endsWith( "javadoc.jar" ) ) );
 
         File sourcesDir = new File( dir, "sources" );
         assertThat( "aether-api-sources was not saved with custom file layout",
-                    new File( sourcesDir, "org.sonatype.aether-aether-api-sources.jar" ).exists() );
+                    new File( sourcesDir, "org.eclipse.aether-aether-api-sources.jar" ).exists() );
         assertThat( "found non-sources files", Arrays.asList( sourcesDir.list() ),
                     everyItem( endsWith( "sources.jar" ) ) );
     }

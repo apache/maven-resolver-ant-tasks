@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
- ~ Copyright (c) 2010, 2011 Sonatype, Inc.
+ ~ Copyright (c) 2010, 2014 Sonatype, Inc.
  ~ All rights reserved. This program and the accompanying materials
  ~ are made available under the terms of the Eclipse Public License v1.0
  ~ which accompanies this distribution, and is available at
@@ -26,17 +26,17 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <aetherVersion>1.11</aetherVersion>
+    <aetherVersion>0.9.0.M3</aetherVersion>
   </properties>
 
   <dependencies>
     <dependency>
-      <groupId>org.sonatype.aether</groupId>
+      <groupId>org.eclipse.aether</groupId>
       <artifactId>aether-api</artifactId>
       <version>${aetherVersion}</version>
     </dependency>
     <dependency>
-      <groupId>org.sonatype.aether</groupId>
+      <groupId>org.eclipse.aether</groupId>
       <artifactId>aether-system</artifactId>
       <version>${aetherVersion}</version>
       <type>pom</type>

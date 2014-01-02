@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2013 Sonatype, Inc.
+ * Copyright (c) 2010, 2014 Sonatype, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -125,8 +125,6 @@ public class AntRepoSys
 
     private Pom defaultPom;
 
-    private File mavenRepoDirFromProperty;
-
     private static <T> boolean eq( T o1, T o2 )
     {
         return ( o1 == null ) ? o2 == null : o1.equals( o2 );
@@ -174,22 +172,6 @@ public class AntRepoSys
         repos.setProject( project );
         repos.addRemoterepo( repo );
         project.addReference( Names.ID_DEFAULT_REPOS, repos );
-
-        // resolve maven.repo.local only once relative to project, as the basedir may change for <ant> tasks
-        String localRepoResolved = project.getProperty( "maven.repo.local.resolved" );
-        if ( localRepoResolved != null )
-        {
-            mavenRepoDirFromProperty = new File( localRepoResolved );
-        }
-        else
-        {
-            String mavenRepoProperty = project.getProperty( "maven.repo.local" );
-            if ( mavenRepoProperty != null )
-            {
-                mavenRepoDirFromProperty = project.resolveFile( mavenRepoProperty );
-                project.setProperty( "maven.repo.local.resolved", mavenRepoDirFromProperty.getAbsolutePath() );
-            }
-        }
     }
 
     public synchronized RepositorySystem getSystem()
@@ -322,9 +304,10 @@ public class AntRepoSys
 
     private File getDefaultLocalRepoDir()
     {
-        if ( mavenRepoDirFromProperty != null )
+        String dir = project.getProperty( "maven.repo.local" );
+        if ( dir != null )
         {
-            return mavenRepoDirFromProperty;
+            return project.resolveFile( dir );
         }
 
         Settings settings = getSettings();

@@ -55,4 +55,16 @@
     </repo:resolve>
   </target>
 
+  <target name="testResolveVersionRange">
+    <repo:pom file="${project.dir}/pom1.xml" id="pom"/>
+    <repo:artifact pomref="pom" file="${project.dir}/pom1.xml" type="jar"/>
+
+    <repo:resolve>
+      <dependencies>
+        <dependency groupId="test" artifactId="test" version="[0,)"/>
+      </dependencies>
+      <properties prefix="resolve"/>
+    </repo:resolve>
+  </target>
+
 </project>

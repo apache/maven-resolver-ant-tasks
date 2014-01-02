@@ -11,7 +11,7 @@
 package org.eclipse.aether.ant;
 
 import java.io.File;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,16 +39,18 @@ public class ProjectWorkspaceReader
 
     private static final Object LOCK = new Object();
 
-    private Map<String, File> artifacts = new ConcurrentHashMap<String, File>();
+    private Map<String, Artifact> artifacts = new ConcurrentHashMap<String, Artifact>();
 
     public void addPom( Pom pom )
     {
         if ( pom.getFile() != null )
         {
             Model model = pom.getModel( pom );
-            String coords =
-                coords( new DefaultArtifact( model.getGroupId(), model.getArtifactId(), null, "pom", model.getVersion() ) );
-            artifacts.put( coords, pom.getFile() );
+            Artifact aetherArtifact =
+                new DefaultArtifact( model.getGroupId(), model.getArtifactId(), null, "pom", model.getVersion() );
+            aetherArtifact = aetherArtifact.setFile( pom.getFile() );
+            String coords = coords( aetherArtifact );
+            artifacts.put( coords, aetherArtifact );
         }
     }
 
@@ -56,10 +58,8 @@ public class ProjectWorkspaceReader
     {
         if ( artifact.getPom() != null )
         {
-            String coords;
-
             Pom pom = artifact.getPom();
-            DefaultArtifact aetherArtifact;
+            Artifact aetherArtifact;
             if ( pom.getFile() != null )
             {
                 Model model = pom.getModel( pom );
@@ -73,9 +73,10 @@ public class ProjectWorkspaceReader
                     new DefaultArtifact( pom.getGroupId(), pom.getArtifactId(), artifact.getClassifier(),
                                          artifact.getType(), pom.getVersion() );
             }
+            aetherArtifact = aetherArtifact.setFile( artifact.getFile() );
 
-            coords = coords( aetherArtifact );
-            artifacts.put( coords, artifact.getFile() );
+            String coords = coords( aetherArtifact );
+            artifacts.put( coords, aetherArtifact );
         }
     }
 
@@ -91,12 +92,22 @@ public class ProjectWorkspaceReader
 
     public File findArtifact( Artifact artifact )
     {
-        return artifacts.get( coords( artifact ) );
+        artifact = artifacts.get( coords( artifact ) );
+        return ( artifact != null ) ? artifact.getFile() : null;
     }
 
     public List<String> findVersions( Artifact artifact )
     {
-        return Collections.emptyList();
+        List<String> versions = new ArrayList<String>();
+        String key = ArtifactIdUtils.toVersionlessId( artifact );
+        for ( Artifact art : artifacts.values() )
+        {
+            if ( key.equals( ArtifactIdUtils.toVersionlessId( art ) ) )
+            {
+                versions.add( art.getVersion() );
+            }
+        }
+        return versions;
     }
 
     ProjectWorkspaceReader()

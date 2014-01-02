@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.aether.ant;
 
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 import java.io.File;
@@ -80,6 +81,35 @@ public class ProjectWorkspaceReaderTest
 
         assertEquals( artifact.getFile(), reader.findArtifact( artifact( "test:dummy:txt:0.1-SNAPSHOT" ) ) );
         assertNull( reader.findArtifact( artifact( "unavailable:test:jar:0.1-SNAPSHOT" ) ) );
+    }
+
+    @Test
+    public void testFindVersions()
+    {
+        Pom pom1 = new Pom();
+        pom1.setProject( project );
+        pom1.setCoords( "test:dummy:1-SNAPSHOT" );
+
+        org.eclipse.aether.ant.types.Artifact artifact1 = new org.eclipse.aether.ant.types.Artifact();
+        artifact1.setProject( project );
+        artifact1.addPom( pom1 );
+        artifact1.setFile( getFile( "dummy-file.txt" ) );
+
+        reader.addArtifact( artifact1 );
+
+        Pom pom2 = new Pom();
+        pom2.setProject( project );
+        pom2.setCoords( "test:dummy:2-SNAPSHOT" );
+
+        org.eclipse.aether.ant.types.Artifact artifact2 = new org.eclipse.aether.ant.types.Artifact();
+        artifact2.setProject( project );
+        artifact2.addPom( pom2 );
+        artifact2.setFile( getFile( "dummy-file.txt" ) );
+
+        reader.addArtifact( artifact2 );
+
+        assertThat( reader.findVersions( artifact( "test:dummy:txt:[0,)" ) ),
+                    containsInAnyOrder( "1-SNAPSHOT", "2-SNAPSHOT" ) );
     }
 
 }

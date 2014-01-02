@@ -79,4 +79,13 @@ public class ReactorTest
         assertEquals( new File( projectDir, "pom1.xml" ).getAbsolutePath(), prop );
         assertLogContaining( "The POM for test:test:jar:0.1-SNAPSHOT is missing, no dependency information available" );
     }
+
+    public void testResolveVersionRange()
+        throws IOException
+    {
+        executeTarget( "testResolveVersionRange" );
+        String prop = project.getProperty( "resolve.test:test:jar" );
+        assertEquals( new File( projectDir, "pom1.xml" ).getAbsolutePath(), prop );
+    }
+
 }

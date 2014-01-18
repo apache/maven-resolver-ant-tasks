@@ -99,10 +99,9 @@ public class ProjectWorkspaceReader
     public List<String> findVersions( Artifact artifact )
     {
         List<String> versions = new ArrayList<String>();
-        String key = ArtifactIdUtils.toVersionlessId( artifact );
         for ( Artifact art : artifacts.values() )
         {
-            if ( key.equals( ArtifactIdUtils.toVersionlessId( art ) ) )
+            if ( ArtifactIdUtils.equalsVersionlessId( artifact, art ) )
             {
                 versions.add( art.getVersion() );
             }

@@ -232,7 +232,7 @@
     <dependency>
       <groupId>org.eclipse.sisu</groupId>
       <artifactId>org.eclipse.sisu.plexus</artifactId>
-      <version>0.0.0.M5</version>
+      <version>0.1.1</version>
       <exclusions>
         <exclusion>
           <groupId>com.google.guava</groupId>

@@ -26,33 +26,36 @@ public class DeployTest
 
     public void testDeployGlobalPom()
     {
+        long min = System.currentTimeMillis();
         executeTarget( "testDeployGlobalPom" );
-        long tstamp = System.currentTimeMillis();
+        long max = System.currentTimeMillis();
 
         assertLogContaining( "Uploading" );
         
-        assertUpdatedFile( tstamp, distRepoDir, "test/dummy/0.1-SNAPSHOT/maven-metadata.xml" );
+        assertUpdatedFile( min, max, distRepoDir, "test/dummy/0.1-SNAPSHOT/maven-metadata.xml" );
     }
 
     public void testDeployOverrideGlobalPom()
     {
+        long min = System.currentTimeMillis();
         executeTarget( "testDeployOverrideGlobalPom" );
-        long tstamp = System.currentTimeMillis();
+        long max = System.currentTimeMillis();
 
         assertLogContaining( "Uploading" );
 
-        assertUpdatedFile( tstamp, distRepoDir, "test/other/0.1-SNAPSHOT/maven-metadata.xml" );
+        assertUpdatedFile( min, max, distRepoDir, "test/other/0.1-SNAPSHOT/maven-metadata.xml" );
     }
 
     public void testDeployOverrideGlobalPomByRef()
     {
-        long tstamp = System.currentTimeMillis();
+        long min = System.currentTimeMillis();
         executeTarget( "testDeployOverrideGlobalPomByRef" );
+        long max = System.currentTimeMillis();
 
         assertLogContaining( "Uploading" );
 
-        assertUpdatedFile( tstamp, distRepoDir, "test/dummy/0.1-SNAPSHOT/maven-metadata.xml" );
-        assertUpdatedFile( tstamp, distRepoDir, "test/other/0.1-SNAPSHOT/maven-metadata.xml" );
+        assertUpdatedFile( min, max, distRepoDir, "test/dummy/0.1-SNAPSHOT/maven-metadata.xml" );
+        assertUpdatedFile( min, max, distRepoDir, "test/other/0.1-SNAPSHOT/maven-metadata.xml" );
     }
 
     public void testDeployAttachedArtifact()
@@ -67,13 +70,13 @@ public class DeployTest
                     hasItemInArray( endsWith( "-ant.xml" ) ) );
     }
 
-    private void assertUpdatedFile( long tstamp, File repoPath, String path )
+    private void assertUpdatedFile( long min, long max, File repoPath, String path )
     {
         File file = new File( repoPath, path );
+        min = (min / 1000) * 1000;
+        max = ((max + 999) / 1000) * 1000;
         assertThat( "File does not exist in default repo: " + file.getAbsolutePath(), file.exists() );
-        assertThat( "Files were not updated for 1s before/after timestamp",
-                    file.lastModified(),
-                    allOf( greaterThanOrEqualTo( ( ( tstamp - 500 ) / 1000 ) * 1000 ),
-                           lessThanOrEqualTo( tstamp + 2000 ) ) );
+        assertThat( "Files were not updated for 1s before/after timestamp", file.lastModified(),
+                    allOf( greaterThanOrEqualTo( min ), lessThanOrEqualTo( max ) ) );
     }
 }

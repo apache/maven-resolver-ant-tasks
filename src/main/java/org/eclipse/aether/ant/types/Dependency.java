@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 Sonatype, Inc.
+ * Copyright (c) 2010, 2014 Sonatype, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -235,8 +235,8 @@ public class Dependency
         Matcher m = p.matcher( coords );
         if ( !m.matches() )
         {
-            throw new BuildException( "Bad dependency coordinates"
-                + ", expected format is <groupId>:<artifactId>:<version>[[:<type>[:<classifier>]]:<scope>]" );
+            throw new BuildException( "Bad dependency coordinates '" + coords
+                + "', expected format is <groupId>:<artifactId>:<version>[[:<type>[:<classifier>]]:<scope>]" );
         }
         groupId = m.group( 1 );
         artifactId = m.group( 2 );

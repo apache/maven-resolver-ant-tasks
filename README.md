@@ -189,7 +189,7 @@ This task is able to assemble the collected dependencies in three different ways
 * Properties: `<properties>` will set properties with the given prefix and the coordinates to the path to the resolved file.
 
 These targets may also be mentioned more than once for the same resolve task,
-but only one set of <dependencies/> is allowed.
+but only one `<dependencies>` element is allowed.
 
     <resolve failOnMissingAttachments="true">
         <dependencies>

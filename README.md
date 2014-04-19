@@ -132,7 +132,7 @@ Dependencies are used to to create classpaths or filesets. They are used by
 the `<resolve>`-task, which collects the artifacts belonging to the dependencies
 transitively.
 
-    <dependency coords="g:a:v"/>
+    <dependency coords="g:a:v:scope"/>
 
     <dependency groupId="g" artifactId="a" version="v" classifier="c" type="jar" scope="runtime">
         <exclusion coords="g:a"/>
@@ -143,6 +143,11 @@ transitively.
         <dependency refid="first"/>
         <dependency refid="second"/>
         <exclusion coords="g:a"/> <!-- global exclusion for all dependencies of this group -->
+    </dependencies>
+
+    <dependencies>
+        <dependency coords="test:artifact:1.0:runtime"/>
+        <dependencies refid="deps"/> <!-- nested dependency collection merged into this one -->
     </dependencies>
 
     <dependencies id="depsFromPom" pomRef="pom"/>

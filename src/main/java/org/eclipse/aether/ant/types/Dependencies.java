@@ -25,15 +25,18 @@ import org.apache.tools.ant.types.Reference;
  */
 public class Dependencies
     extends DataType
+    implements DependencyContainer
 {
 
     private File file;
 
     private Pom pom;
 
-    private List<Dependency> dependencies = new ArrayList<Dependency>();
+    private List<DependencyContainer> containers = new ArrayList<DependencyContainer>();
 
     private List<Exclusion> exclusions = new ArrayList<Exclusion>();
+
+    private boolean nestedDependencies;
 
     protected Dependencies getRef()
     {
@@ -53,16 +56,20 @@ public class Dependencies
                 throw new BuildException( "A <pom> used for dependency resolution has to be backed by a pom.xml file" );
             }
             Map<String, String> ids = new HashMap<String, String>();
-            for ( Dependency dependency : dependencies )
+            for ( DependencyContainer container : containers )
             {
-                dependency.validate( task );
-                String id = dependency.getVersionlessKey();
-                String collision = ids.put( id, dependency.getVersion() );
-                if ( collision != null )
+                container.validate( task );
+                if ( container instanceof Dependency )
                 {
-                    throw new BuildException( "You must not declare multiple <dependency> elements"
-                        + " with the same coordinates but got " + id + " -> " + collision + " vs "
-                        + dependency.getVersion() );
+                    Dependency dependency = (Dependency) container;
+                    String id = dependency.getVersionlessKey();
+                    String collision = ids.put( id, dependency.getVersion() );
+                    if ( collision != null )
+                    {
+                        throw new BuildException( "You must not declare multiple <dependency> elements"
+                            + " with the same coordinates but got " + id + " -> " + collision + " vs "
+                            + dependency.getVersion() );
+                    }
                 }
             }
         }
@@ -70,7 +77,7 @@ public class Dependencies
 
     public void setRefid( Reference ref )
     {
-        if ( pom != null || !exclusions.isEmpty() || !dependencies.isEmpty() )
+        if ( pom != null || !exclusions.isEmpty() || !containers.isEmpty() )
         {
             throw noChildrenAllowed();
         }
@@ -130,21 +137,37 @@ public class Dependencies
         {
             throw new BuildException( "You must not specify both a text file and a POM to list dependencies" );
         }
+        if ( ( file != null || pom != null ) && nestedDependencies )
+        {
+            throw new BuildException( "You must not specify both a file/POM and nested dependency collections" );
+        }
     }
 
     public void addDependency( Dependency dependency )
     {
         checkChildrenAllowed();
-        this.dependencies.add( dependency );
+        containers.add( dependency );
     }
 
-    public List<Dependency> getDependencies()
+    public void addDependencies( Dependencies dependencies )
+    {
+        checkChildrenAllowed();
+        if ( dependencies == this )
+        {
+            throw circularReference();
+        }
+        containers.add( dependencies );
+        nestedDependencies = true;
+        checkExternalSources();
+    }
+
+    public List<DependencyContainer> getDependencyContainers()
     {
         if ( isReference() )
         {
-            return getRef().getDependencies();
+            return getRef().getDependencyContainers();
         }
-        return dependencies;
+        return containers;
     }
 
     public void addExclusion( Exclusion exclusion )

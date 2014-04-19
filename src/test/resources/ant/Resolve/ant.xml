@@ -63,7 +63,7 @@
   <target name="testResolveAttachments">
     <repo:resolve>
       <dependencies>
-        <dependency groupid="org.eclipse.aether" artifactid="aether-impl" version="0.9.0.M3" />
+        <dependency groupid="org.eclipse.aether" artifactid="aether-impl" version="0.9.0.v20140226" />
       </dependencies>
       <files dir="${build.dir}/resolve-attachments/" layout="javadoc/{groupId}-{artifactId}-{classifier}.{extension}" attachments="javadoc"/>
       <files dir="${build.dir}/resolve-attachments/" layout="sources/{groupId}-{artifactId}-{classifier}.{extension}" attachments="sources"/>
@@ -81,6 +81,21 @@
   <target name="testResolveDepsFromFile">
     <repo:resolve>
       <dependencies file="${project.dir}/dependencies.txt">
+        <exclusion coords="org.eclipse.aether:aether-api"/>
+      </dependencies>
+      <properties prefix="test.resolve.path" classpath="runtime"/>
+    </repo:resolve>
+  </target>
+
+  <target name="testResolveNestedDependencyCollections">
+    <repo:resolve>
+      <dependencies>
+        <dependencies>
+          <dependency groupid="org.eclipse.aether" artifactid="aether-spi" version="0.9.0.v20140226" />
+        </dependencies>
+        <dependencies>
+          <dependency groupid="org.eclipse.aether" artifactid="aether-util" version="0.9.0.v20140226" />
+        </dependencies>
         <exclusion coords="org.eclipse.aether:aether-api"/>
       </dependencies>
       <properties prefix="test.resolve.path" classpath="runtime"/>

@@ -61,6 +61,7 @@ import org.eclipse.aether.ant.listeners.AntTransferListener;
 import org.eclipse.aether.ant.types.Authentication;
 import org.eclipse.aether.ant.types.Dependencies;
 import org.eclipse.aether.ant.types.Dependency;
+import org.eclipse.aether.ant.types.DependencyContainer;
 import org.eclipse.aether.ant.types.Exclusion;
 import org.eclipse.aether.ant.types.LocalRepository;
 import org.eclipse.aether.ant.types.Mirror;
@@ -617,64 +618,7 @@ public class AntRepoSys
 
         if ( dependencies != null )
         {
-            List<Exclusion> globalExclusions = dependencies.getExclusions();
-            Collection<String> ids = new HashSet<String>();
-
-            for ( Dependency dep : dependencies.getDependencies() )
-            {
-                ids.add( dep.getVersionlessKey() );
-                collectRequest.addDependency( ConverterUtils.toDependency( dep, globalExclusions, session ) );
-            }
-
-            if ( dependencies.getPom() != null )
-            {
-                Model model = dependencies.getPom().getModel( task );
-                for ( org.apache.maven.model.Dependency dep : model.getDependencies() )
-                {
-                    Dependency dependency = new Dependency();
-                    dependency.setArtifactId( dep.getArtifactId() );
-                    dependency.setClassifier( dep.getClassifier() );
-                    dependency.setGroupId( dep.getGroupId() );
-                    dependency.setScope( dep.getScope() );
-                    dependency.setType( dep.getType() );
-                    dependency.setVersion( dep.getVersion() );
-                    if ( ids.contains( dependency.getVersionlessKey() ) )
-                    {
-                        project.log( "Ignoring dependency " + dependency.getVersionlessKey() + " from " + model.getId()
-                            + ", already declared locally", Project.MSG_VERBOSE );
-                        continue;
-                    }
-                    if ( dep.getSystemPath() != null && dep.getSystemPath().length() > 0 )
-                    {
-                        dependency.setSystemPath( task.getProject().resolveFile( dep.getSystemPath() ) );
-                    }
-                    for ( org.apache.maven.model.Exclusion exc : dep.getExclusions() )
-                    {
-                        Exclusion exclusion = new Exclusion();
-                        exclusion.setGroupId( exc.getGroupId() );
-                        exclusion.setArtifactId( exc.getArtifactId() );
-                        exclusion.setClassifier( "*" );
-                        exclusion.setExtension( "*" );
-                        dependency.addExclusion( exclusion );
-                    }
-                    collectRequest.addDependency( ConverterUtils.toDependency( dependency, globalExclusions, session ) );
-                }
-            }
-
-            if ( dependencies.getFile() != null )
-            {
-                List<Dependency> deps = readDependencies( dependencies.getFile() );
-                for ( Dependency dependency : deps )
-                {
-                    if ( ids.contains( dependency.getVersionlessKey() ) )
-                    {
-                        project.log( "Ignoring dependency " + dependency.getVersionlessKey() + " from "
-                                         + dependencies.getFile() + ", already declared locally", Project.MSG_VERBOSE );
-                        continue;
-                    }
-                    collectRequest.addDependency( ConverterUtils.toDependency( dependency, globalExclusions, session ) );
-                }
-            }
+            populateCollectRequest( collectRequest, task, session, dependencies, Collections.<Exclusion> emptyList() );
         }
 
         task.getProject().log( "Collecting dependencies", Project.MSG_VERBOSE );
@@ -690,6 +634,83 @@ public class AntRepoSys
         }
 
         return result;
+    }
+
+    private void populateCollectRequest( CollectRequest collectRequest, Task task, RepositorySystemSession session,
+                                         Dependencies dependencies, List<Exclusion> exclusions )
+    {
+        List<Exclusion> globalExclusions = exclusions;
+        if ( !dependencies.getExclusions().isEmpty() )
+        {
+            globalExclusions = new ArrayList<Exclusion>( exclusions );
+            globalExclusions.addAll( dependencies.getExclusions() );
+        }
+
+        Collection<String> ids = new HashSet<String>();
+
+        for ( DependencyContainer container : dependencies.getDependencyContainers() )
+        {
+            if ( container instanceof Dependency )
+            {
+                Dependency dep = (Dependency) container;
+                ids.add( dep.getVersionlessKey() );
+                collectRequest.addDependency( ConverterUtils.toDependency( dep, globalExclusions, session ) );
+            }
+            else
+            {
+                populateCollectRequest( collectRequest, task, session, (Dependencies) container, globalExclusions );
+            }
+        }
+
+        if ( dependencies.getPom() != null )
+        {
+            Model model = dependencies.getPom().getModel( task );
+            for ( org.apache.maven.model.Dependency dep : model.getDependencies() )
+            {
+                Dependency dependency = new Dependency();
+                dependency.setArtifactId( dep.getArtifactId() );
+                dependency.setClassifier( dep.getClassifier() );
+                dependency.setGroupId( dep.getGroupId() );
+                dependency.setScope( dep.getScope() );
+                dependency.setType( dep.getType() );
+                dependency.setVersion( dep.getVersion() );
+                if ( ids.contains( dependency.getVersionlessKey() ) )
+                {
+                    project.log( "Ignoring dependency " + dependency.getVersionlessKey() + " from " + model.getId()
+                        + ", already declared locally", Project.MSG_VERBOSE );
+                    continue;
+                }
+                if ( dep.getSystemPath() != null && dep.getSystemPath().length() > 0 )
+                {
+                    dependency.setSystemPath( task.getProject().resolveFile( dep.getSystemPath() ) );
+                }
+                for ( org.apache.maven.model.Exclusion exc : dep.getExclusions() )
+                {
+                    Exclusion exclusion = new Exclusion();
+                    exclusion.setGroupId( exc.getGroupId() );
+                    exclusion.setArtifactId( exc.getArtifactId() );
+                    exclusion.setClassifier( "*" );
+                    exclusion.setExtension( "*" );
+                    dependency.addExclusion( exclusion );
+                }
+                collectRequest.addDependency( ConverterUtils.toDependency( dependency, globalExclusions, session ) );
+            }
+        }
+
+        if ( dependencies.getFile() != null )
+        {
+            List<Dependency> deps = readDependencies( dependencies.getFile() );
+            for ( Dependency dependency : deps )
+            {
+                if ( ids.contains( dependency.getVersionlessKey() ) )
+                {
+                    project.log( "Ignoring dependency " + dependency.getVersionlessKey() + " from "
+                                     + dependencies.getFile() + ", already declared locally", Project.MSG_VERBOSE );
+                    continue;
+                }
+                collectRequest.addDependency( ConverterUtils.toDependency( dependency, globalExclusions, session ) );
+            }
+        }
     }
 
     private List<Dependency> readDependencies( File file )

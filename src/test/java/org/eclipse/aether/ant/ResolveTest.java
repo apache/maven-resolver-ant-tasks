@@ -108,4 +108,16 @@ public class ResolveTest
         assertThat( "aether-api was resolved as a property", prop, nullValue() );
     }
 
+    public void testResolveNestedDependencyCollections()
+    {
+        executeTarget( "testResolveNestedDependencyCollections" );
+
+        String prop = getProject().getProperty( "test.resolve.path.org.eclipse.aether:aether-spi:jar" );
+        assertThat( "aether-spi was not resolved as a property", prop, notNullValue() );
+        prop = getProject().getProperty( "test.resolve.path.org.eclipse.aether:aether-util:jar" );
+        assertThat( "aether-util was not resolved as a property", prop, notNullValue() );
+        prop = getProject().getProperty( "test.resolve.path.org.eclipse.aether:aether-api:jar" );
+        assertThat( "aether-api was resolved as a property", prop, nullValue() );
+    }
+
 }

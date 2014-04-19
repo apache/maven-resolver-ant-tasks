@@ -26,6 +26,7 @@ import org.apache.tools.ant.types.Reference;
  */
 public class Dependency
     extends DataType
+    implements DependencyContainer
 {
 
     private String groupId;

@@ -10,7 +10,12 @@
  *******************************************************************************/
 package org.eclipse.aether.ant;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -635,6 +640,8 @@ public class AntRepoSys
                     dependency.setVersion( dep.getVersion() );
                     if ( ids.contains( dependency.getVersionlessKey() ) )
                     {
+                        project.log( "Ignoring dependency " + dependency.getVersionlessKey() + " from " + model.getId()
+                            + ", already declared locally", Project.MSG_VERBOSE );
                         continue;
                     }
                     if ( dep.getSystemPath() != null && dep.getSystemPath().length() > 0 )
@@ -649,6 +656,21 @@ public class AntRepoSys
                         exclusion.setClassifier( "*" );
                         exclusion.setExtension( "*" );
                         dependency.addExclusion( exclusion );
+                    }
+                    collectRequest.addDependency( ConverterUtils.toDependency( dependency, globalExclusions, session ) );
+                }
+            }
+
+            if ( dependencies.getFile() != null )
+            {
+                List<Dependency> deps = readDependencies( dependencies.getFile() );
+                for ( Dependency dependency : deps )
+                {
+                    if ( ids.contains( dependency.getVersionlessKey() ) )
+                    {
+                        project.log( "Ignoring dependency " + dependency.getVersionlessKey() + " from "
+                                         + dependencies.getFile() + ", already declared locally", Project.MSG_VERBOSE );
+                        continue;
                     }
                     collectRequest.addDependency( ConverterUtils.toDependency( dependency, globalExclusions, session ) );
                 }
@@ -668,6 +690,43 @@ public class AntRepoSys
         }
 
         return result;
+    }
+
+    private List<Dependency> readDependencies( File file )
+    {
+        List<Dependency> dependencies = new ArrayList<Dependency>();
+        try
+        {
+            BufferedReader reader = new BufferedReader( new InputStreamReader( new FileInputStream( file ), "UTF-8" ) );
+            try
+            {
+                for ( String line = reader.readLine(); line != null; line = reader.readLine() )
+                {
+                    int comment = line.indexOf( '#' );
+                    if ( comment >= 0 )
+                    {
+                        line = line.substring( 0, comment );
+                    }
+                    line = line.trim();
+                    if ( line.length() <= 0 )
+                    {
+                        continue;
+                    }
+                    Dependency dependency = new Dependency();
+                    dependency.setCoords( line );
+                    dependencies.add( dependency );
+                }
+            }
+            finally
+            {
+                reader.close();
+            }
+        }
+        catch ( IOException e )
+        {
+            throw new BuildException( "Cannot read " + file, e );
+        }
+        return dependencies;
     }
 
 }

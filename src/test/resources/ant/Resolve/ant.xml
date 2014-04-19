@@ -78,4 +78,13 @@
     <echo>${tostring:out}</echo>
   </target>
 
+  <target name="testResolveDepsFromFile">
+    <repo:resolve>
+      <dependencies file="${project.dir}/dependencies.txt">
+        <exclusion coords="org.eclipse.aether:aether-api"/>
+      </dependencies>
+      <properties prefix="test.resolve.path" classpath="runtime"/>
+    </repo:resolve>
+  </target>
+
 </project>

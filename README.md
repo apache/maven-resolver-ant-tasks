@@ -145,6 +145,16 @@ transitively.
         <exclusion coords="g:a"/> <!-- global exclusion for all dependencies of this group -->
     </dependencies>
 
+    <dependencies id="depsFromPom" pomRef="pom"/>
+
+    <dependencies id="depsFromPlainTextFile" file="dependencies.txt"/>
+    <!--
+    Each non-empty line of that text file declares one dependency, using the same syntax as for the `coords` attribute
+    of the `<dependency>` element, i.e.
+    <groupId>:<artifactId>:<version>[[:<type>[:<classifier>]]:<scope>]
+    Everything after the first hash (#) character on a line is considered a comment.
+    -->
+
 
 ## Tasks
 

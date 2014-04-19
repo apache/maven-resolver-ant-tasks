@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2011 Sonatype, Inc.
+ * Copyright (c) 2010, 2014 Sonatype, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.aether.ant.types;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,8 @@ import org.apache.tools.ant.types.Reference;
 public class Dependencies
     extends DataType
 {
+
+    private File file;
 
     private Pom pom;
 
@@ -74,6 +77,22 @@ public class Dependencies
         super.setRefid( ref );
     }
 
+    public void setFile( File file )
+    {
+        checkAttributesAllowed();
+        this.file = file;
+        checkExternalSources();
+    }
+
+    public File getFile()
+    {
+        if ( isReference() )
+        {
+            return getRef().getFile();
+        }
+        return file;
+    }
+
     public void addPom( Pom pom )
     {
         checkChildrenAllowed();
@@ -82,6 +101,7 @@ public class Dependencies
             throw new BuildException( "You must not specify multiple <pom> elements" );
         }
         this.pom = pom;
+        checkExternalSources();
     }
 
     public Pom getPom()
@@ -101,6 +121,15 @@ public class Dependencies
             pom.setProject( getProject() );
         }
         pom.setRefid( ref );
+        checkExternalSources();
+    }
+
+    private void checkExternalSources()
+    {
+        if ( file != null && pom != null )
+        {
+            throw new BuildException( "You must not specify both a text file and a POM to list dependencies" );
+        }
     }
 
     public void addDependency( Dependency dependency )

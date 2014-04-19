@@ -96,4 +96,16 @@ public class ResolveTest
                     hasItemInArray( allOf( containsString( "aether-api" ), endsWith( ".jar" ) ) ) );
     }
 
+    public void testResolveDepsFromFile()
+    {
+        executeTarget( "testResolveDepsFromFile" );
+
+        String prop = getProject().getProperty( "test.resolve.path.org.eclipse.aether:aether-spi:jar" );
+        assertThat( "aether-spi was not resolved as a property", prop, notNullValue() );
+        assertThat( "aether-spi was not resolved to default local repository", prop,
+                    allOf( containsString( "aether-spi" ), endsWith( ".jar" ) ) );
+        prop = getProject().getProperty( "test.resolve.path.org.eclipse.aether:aether-api:jar" );
+        assertThat( "aether-api was resolved as a property", prop, nullValue() );
+    }
+
 }

@@ -56,12 +56,19 @@ import org.eclipse.aether.DefaultRepositoryCache;
 import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.collection.CollectRequest;
 import org.eclipse.aether.collection.CollectResult;
 import org.eclipse.aether.collection.DependencyCollectionException;
 import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory;
+import org.eclipse.aether.deployment.DeployRequest;
+import org.eclipse.aether.deployment.DeploymentException;
 import org.eclipse.aether.impl.DefaultServiceLocator;
 import org.eclipse.aether.impl.RemoteRepositoryManager;
+import org.eclipse.aether.installation.InstallRequest;
+import org.eclipse.aether.installation.InstallationException;
+import org.eclipse.aether.internal.ant.types.Artifact;
+import org.eclipse.aether.internal.ant.types.Artifacts;
 import org.eclipse.aether.internal.ant.types.Authentication;
 import org.eclipse.aether.internal.ant.types.Dependencies;
 import org.eclipse.aether.internal.ant.types.Dependency;
@@ -73,9 +80,6 @@ import org.eclipse.aether.internal.ant.types.Pom;
 import org.eclipse.aether.internal.ant.types.Proxy;
 import org.eclipse.aether.internal.ant.types.RemoteRepositories;
 import org.eclipse.aether.internal.ant.types.RemoteRepository;
-import org.eclipse.aether.internal.ant.util.AetherUtils;
-import org.eclipse.aether.internal.ant.util.ConverterUtils;
-import org.eclipse.aether.internal.ant.util.SettingsUtils;
 import org.eclipse.aether.repository.AuthenticationSelector;
 import org.eclipse.aether.repository.LocalRepositoryManager;
 import org.eclipse.aether.repository.MirrorSelector;
@@ -746,6 +750,67 @@ public class AntRepoSys
             throw new BuildException( "Cannot read " + file, e );
         }
         return dependencies;
+    }
+
+    public void install( Task task, Pom pom, Artifacts artifacts )
+    {
+        RepositorySystemSession session = getSession( task, null );
+
+        InstallRequest request = new InstallRequest();
+        request.setArtifacts( toArtifacts( task, session, pom, artifacts ) );
+
+        try
+        {
+            getSystem().install( session, request );
+        }
+        catch ( InstallationException e )
+        {
+            throw new BuildException( "Could not install artifacts: " + e.getMessage(), e );
+        }
+    }
+
+    public void deploy( Task task, Pom pom, Artifacts artifacts, RemoteRepository releaseRepository,
+                        RemoteRepository snapshotRepository )
+    {
+        RepositorySystemSession session = getSession( task, null );
+
+        DeployRequest request = new DeployRequest();
+        request.setArtifacts( toArtifacts( task, session, pom, artifacts ) );
+        boolean snapshot = request.getArtifacts().iterator().next().isSnapshot();
+        RemoteRepository distRepo = ( snapshot && snapshotRepository != null ) ? snapshotRepository : releaseRepository;
+        request.setRepository( ConverterUtils.toDistRepository( distRepo, session ) );
+
+        try
+        {
+            getSystem().deploy( session, request );
+        }
+        catch ( DeploymentException e )
+        {
+            throw new BuildException( "Could not deploy artifacts: " + e.getMessage(), e );
+        }
+    }
+
+    private List<org.eclipse.aether.artifact.Artifact> toArtifacts( Task task, RepositorySystemSession session,
+                                                                    Pom pom, Artifacts artifacts )
+    {
+        Model model = pom.getModel( task );
+        File pomFile = pom.getFile();
+
+        List<org.eclipse.aether.artifact.Artifact> results = new ArrayList<org.eclipse.aether.artifact.Artifact>();
+
+        org.eclipse.aether.artifact.Artifact pomArtifact =
+            new DefaultArtifact( model.getGroupId(), model.getArtifactId(), "pom", model.getVersion() ).setFile( pomFile );
+        results.add( pomArtifact );
+
+        for ( Artifact artifact : artifacts.getArtifacts() )
+        {
+            org.eclipse.aether.artifact.Artifact buildArtifact =
+                new DefaultArtifact( model.getGroupId(), model.getArtifactId(), artifact.getClassifier(),
+                                     artifact.getType(), model.getVersion() ).setFile( artifact.getFile() );
+            results.add( buildArtifact );
+        }
+
+        return results;
     }
 
 }

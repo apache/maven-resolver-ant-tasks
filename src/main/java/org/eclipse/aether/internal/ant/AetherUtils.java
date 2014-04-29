@@ -8,15 +8,14 @@
  * Contributors:
  *    Sonatype, Inc. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.aether.internal.ant.util;
+package org.eclipse.aether.internal.ant;
 
 import java.io.File;
 
 import org.apache.tools.ant.Project;
-import org.eclipse.aether.internal.ant.Names;
 import org.eclipse.aether.internal.ant.types.RemoteRepositories;
 
-public class AetherUtils
+class AetherUtils
 {
 
     public static File findGlobalSettings( Project project )

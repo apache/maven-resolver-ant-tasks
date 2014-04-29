@@ -8,7 +8,7 @@
  * Contributors:
  *    Sonatype, Inc. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.aether.internal.ant.util;
+package org.eclipse.aether.internal.ant;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,7 +39,7 @@ import org.eclipse.aether.util.repository.AuthenticationBuilder;
 /**
  * Utility methods to convert between Aether and Ant objects.
  */
-public class ConverterUtils
+class ConverterUtils
 {
 
     private static org.eclipse.aether.artifact.Artifact toArtifact( Dependency dependency, ArtifactTypeRegistry types )

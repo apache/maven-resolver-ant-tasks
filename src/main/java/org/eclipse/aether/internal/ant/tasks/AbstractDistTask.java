@@ -11,9 +11,7 @@
 package org.eclipse.aether.internal.ant.tasks;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.maven.model.Model;
@@ -21,12 +19,10 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Reference;
-import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.internal.ant.AntRepoSys;
 import org.eclipse.aether.internal.ant.types.Artifact;
 import org.eclipse.aether.internal.ant.types.Artifacts;
 import org.eclipse.aether.internal.ant.types.Pom;
-import org.eclipse.aether.RepositorySystemSession;
 
 /**
  */
@@ -112,28 +108,6 @@ public abstract class AbstractDistTask
                     + artifact.toString() );
             }
         }
-    }
-
-    protected List<org.eclipse.aether.artifact.Artifact> toArtifacts( RepositorySystemSession session )
-    {
-        Model model = getPom().getModel( this );
-        File pomFile = getPom().getFile();
-
-        List<org.eclipse.aether.artifact.Artifact> results = new ArrayList<org.eclipse.aether.artifact.Artifact>();
-
-        org.eclipse.aether.artifact.Artifact pomArtifact =
-            new DefaultArtifact( model.getGroupId(), model.getArtifactId(), "pom", model.getVersion() ).setFile( pomFile );
-        results.add( pomArtifact );
-
-        for ( Artifact artifact : getArtifacts().getArtifacts() )
-        {
-            org.eclipse.aether.artifact.Artifact buildArtifact =
-                new DefaultArtifact( model.getGroupId(), model.getArtifactId(), artifact.getClassifier(),
-                                     artifact.getType(), model.getVersion() ).setFile( artifact.getFile() );
-            results.add( buildArtifact );
-        }
-
-        return results;
     }
 
     protected Artifacts getArtifacts()

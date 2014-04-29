@@ -12,13 +12,8 @@ package org.eclipse.aether.internal.ant.tasks;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Reference;
-import org.eclipse.aether.RepositorySystem;
-import org.eclipse.aether.RepositorySystemSession;
-import org.eclipse.aether.deployment.DeployRequest;
-import org.eclipse.aether.deployment.DeploymentException;
 import org.eclipse.aether.internal.ant.AntRepoSys;
 import org.eclipse.aether.internal.ant.types.RemoteRepository;
-import org.eclipse.aether.internal.ant.util.ConverterUtils;
 
 /**
  */
@@ -94,27 +89,7 @@ public class Deploy
     {
         validate();
 
-        AntRepoSys sys = AntRepoSys.getInstance( getProject() );
-
-        RepositorySystemSession session = sys.getSession( this, null );
-        RepositorySystem system = sys.getSystem();
-
-        DeployRequest request = new DeployRequest();
-
-        request.setArtifacts( toArtifacts( session ) );
-
-        boolean snapshot = request.getArtifacts().iterator().next().isSnapshot();
-        RemoteRepository distRepo = ( snapshot && snapshotRepository != null ) ? snapshotRepository : repository;
-        request.setRepository( ConverterUtils.toDistRepository( distRepo, session ) );
-
-        try
-        {
-            system.deploy( session, request );
-        }
-        catch ( DeploymentException e )
-        {
-            throw new BuildException( "Could not deploy artifacts: " + e.getMessage(), e );
-        }
+        AntRepoSys.getInstance( getProject() ).deploy( this, getPom(), getArtifacts(), repository, snapshotRepository );
     }
 
 }

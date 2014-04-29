@@ -11,10 +11,6 @@
 package org.eclipse.aether.internal.ant.tasks;
 
 import org.apache.tools.ant.BuildException;
-import org.eclipse.aether.RepositorySystem;
-import org.eclipse.aether.RepositorySystemSession;
-import org.eclipse.aether.installation.InstallRequest;
-import org.eclipse.aether.installation.InstallationException;
 import org.eclipse.aether.internal.ant.AntRepoSys;
 
 /**
@@ -29,22 +25,7 @@ public class Install
     {
         validate();
 
-        AntRepoSys sys = AntRepoSys.getInstance( getProject() );
-
-        RepositorySystemSession session = sys.getSession( this, null );
-        RepositorySystem system = sys.getSystem();
-
-        InstallRequest request = new InstallRequest();
-        request.setArtifacts( toArtifacts( session ) );
-
-        try
-        {
-            system.install( session, request );
-        }
-        catch ( InstallationException e )
-        {
-            throw new BuildException( "Could not install artifacts: " + e.getMessage(), e );
-        }
+        AntRepoSys.getInstance( getProject() ).install( this, getPom(), getArtifacts() );
     }
 
 }

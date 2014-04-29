@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--
- ~ Copyright (c) 2010, 2011 Sonatype, Inc.
+ ~ Copyright (c) 2010, 2014 Sonatype, Inc.
  ~ All rights reserved. This program and the accompanying materials
  ~ are made available under the terms of the Eclipse Public License v1.0
  ~ which accompanies this distribution, and is available at
@@ -13,21 +13,21 @@
 
 <antlib>
 
-  <typedef name="authentication"       classname="org.eclipse.aether.ant.types.Authentication"/>
-  <typedef name="proxy"                classname="org.eclipse.aether.ant.types.Proxy"/>
-  <typedef name="mirror"               classname="org.eclipse.aether.ant.types.Mirror"/>
-  <typedef name="localrepo"            classname="org.eclipse.aether.ant.types.LocalRepository"/>
-  <typedef name="remoterepo"           classname="org.eclipse.aether.ant.types.RemoteRepository"/>
-  <typedef name="remoterepos"          classname="org.eclipse.aether.ant.types.RemoteRepositories"/>
-  <typedef name="dependency"           classname="org.eclipse.aether.ant.types.Dependency"/>
-  <typedef name="dependencies"         classname="org.eclipse.aether.ant.types.Dependencies"/>
-  <typedef name="artifact"             classname="org.eclipse.aether.ant.types.Artifact"/>
-  <typedef name="artifacts"            classname="org.eclipse.aether.ant.types.Artifacts"/>
-  <typedef name="settings"             classname="org.eclipse.aether.ant.types.Settings"/>
+  <typedef name="authentication"       classname="org.eclipse.aether.internal.ant.types.Authentication"/>
+  <typedef name="proxy"                classname="org.eclipse.aether.internal.ant.types.Proxy"/>
+  <typedef name="mirror"               classname="org.eclipse.aether.internal.ant.types.Mirror"/>
+  <typedef name="localrepo"            classname="org.eclipse.aether.internal.ant.types.LocalRepository"/>
+  <typedef name="remoterepo"           classname="org.eclipse.aether.internal.ant.types.RemoteRepository"/>
+  <typedef name="remoterepos"          classname="org.eclipse.aether.internal.ant.types.RemoteRepositories"/>
+  <typedef name="dependency"           classname="org.eclipse.aether.internal.ant.types.Dependency"/>
+  <typedef name="dependencies"         classname="org.eclipse.aether.internal.ant.types.Dependencies"/>
+  <typedef name="artifact"             classname="org.eclipse.aether.internal.ant.types.Artifact"/>
+  <typedef name="artifacts"            classname="org.eclipse.aether.internal.ant.types.Artifacts"/>
+  <typedef name="settings"             classname="org.eclipse.aether.internal.ant.types.Settings"/>
 
-  <taskdef name="resolve"              classname="org.eclipse.aether.ant.tasks.Resolve"/>
-  <taskdef name="install"              classname="org.eclipse.aether.ant.tasks.Install"/>
-  <taskdef name="deploy"               classname="org.eclipse.aether.ant.tasks.Deploy"/>
-  <taskdef name="pom"                  classname="org.eclipse.aether.ant.types.Pom"/>
+  <taskdef name="resolve"              classname="org.eclipse.aether.internal.ant.tasks.Resolve"/>
+  <taskdef name="install"              classname="org.eclipse.aether.internal.ant.tasks.Install"/>
+  <taskdef name="deploy"               classname="org.eclipse.aether.internal.ant.tasks.Deploy"/>
+  <taskdef name="pom"                  classname="org.eclipse.aether.internal.ant.types.Pom"/>
 
 </antlib>

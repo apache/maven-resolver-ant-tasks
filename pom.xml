@@ -72,7 +72,7 @@
 
   <ciManagement>
     <system>Hudson</system>
-    <url>https://builds.sonatype.org/job/aether-ant-nightly</url>
+    <url>https://hudson.eclipse.org/aether/job/aether-ant/</url>
   </ciManagement>
 
   <distributionManagement>

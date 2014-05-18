@@ -26,6 +26,8 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.resources.FileResource;
+import org.apache.tools.ant.types.resources.Resources;
 import org.apache.tools.ant.util.FileUtils;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
@@ -168,7 +170,7 @@ public class Resolve
                 }
             }
 
-            group.processResults( results );
+            group.processResults( results, session );
         }
     }
 
@@ -193,7 +195,7 @@ public class Resolve
 
         }
 
-        public abstract void process( Artifact artifact );
+        public abstract void process( Artifact artifact, RepositorySystemSession session );
 
         public void setScopes( String scopes )
         {
@@ -272,7 +274,7 @@ public class Resolve
             }
         }
 
-        public void process( Artifact artifact )
+        public void process( Artifact artifact, RepositorySystemSession session )
         {
             if ( path == null )
             {
@@ -297,9 +299,11 @@ public class Resolve
 
         private File dir;
 
-        private Layout layout = new Layout( DEFAULT_LAYOUT );
+        private Layout layout;
 
         private FileSet fileset;
+
+        private Resources resources;
 
         public void setRefId( String refId )
         {
@@ -331,6 +335,10 @@ public class Resolve
         public void setDir( File dir )
         {
             this.dir = dir;
+            if ( dir != null && layout == null )
+            {
+                layout = new Layout( DEFAULT_LAYOUT );
+            }
         }
 
         public void setLayout( String layout )
@@ -345,9 +353,13 @@ public class Resolve
                 throw new BuildException( "You must either specify the 'refid' for the resource collection"
                     + " or a 'dir' to copy the files to" );
             }
+            if ( dir == null && layout != null )
+            {
+                throw new BuildException( "You must not specify a 'layout' unless 'dir' is also specified" );
+            }
         }
 
-        public void process( Artifact artifact )
+        public void process( Artifact artifact, RepositorySystemSession session )
         {
             if ( dir != null )
             {
@@ -386,6 +398,20 @@ public class Resolve
                 {
                     Resolve.this.log( "Omit to copy " + src + " to " + dst + ", seems unchanged", Project.MSG_VERBOSE );
                 }
+            }
+            else
+            {
+                if ( resources == null )
+                {
+                    resources = new Resources();
+                    resources.setProject( getProject() );
+                    getProject().addReference( refid, resources );
+                }
+
+                FileResource resource = new FileResource( artifact.getFile() );
+                resource.setBaseDir( session.getLocalRepository().getBasedir() );
+                resource.setProject( getProject() );
+                resources.add( resource );
             }
         }
 
@@ -426,7 +452,7 @@ public class Resolve
             }
         }
 
-        public void process( Artifact artifact )
+        public void process( Artifact artifact, RepositorySystemSession session )
         {
             StringBuilder buffer = new StringBuilder( 256 );
             if ( prefix != null && prefix.length() > 0 )
@@ -518,7 +544,7 @@ public class Resolve
             return requests;
         }
 
-        public void processResults( List<ArtifactResult> results )
+        public void processResults( List<ArtifactResult> results, RepositorySystemSession session )
         {
             for ( ArtifactResult result : results )
             {
@@ -531,7 +557,7 @@ public class Resolve
                     if ( consumer.accept( result.getRequest().getDependencyNode(),
                                           Collections.<DependencyNode> emptyList() ) )
                     {
-                        consumer.process( result.getArtifact() );
+                        consumer.process( result.getArtifact(), session );
                     }
                 }
             }

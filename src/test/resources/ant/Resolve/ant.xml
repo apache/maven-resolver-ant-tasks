@@ -102,4 +102,13 @@
     </repo:resolve>
   </target>
 
+  <target name="testResolveResourceCollectionOnly">
+    <repo:resolve>
+      <dependencies>
+        <dependency groupid="org.eclipse.aether" artifactid="aether-spi" version="0.9.0.v20140226" />
+      </dependencies>
+      <files refid="files"/>
+    </repo:resolve>
+  </target>
+
 </project>

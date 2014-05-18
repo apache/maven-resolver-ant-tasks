@@ -16,9 +16,12 @@ import static org.hamcrest.Matchers.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.FileResource;
 
 public class ResolveTest
     extends AntBuildsTest
@@ -118,6 +121,21 @@ public class ResolveTest
         assertThat( "aether-util was not resolved as a property", prop, notNullValue() );
         prop = getProject().getProperty( "test.resolve.path.org.eclipse.aether:aether-api:jar" );
         assertThat( "aether-api was resolved as a property", prop, nullValue() );
+    }
+
+    public void testResolveResourceCollectionOnly()
+    {
+        executeTarget( "testResolveResourceCollectionOnly" );
+
+        ResourceCollection resources = (ResourceCollection) getProject().getReference( "files" );
+        assertThat( resources, is( notNullValue() ) );
+        assertThat( resources.size(), is( 2 ) );
+        assertThat( resources.isFilesystemOnly(), is( true ) );
+        Iterator<?> it = resources.iterator();
+        FileResource file = (FileResource) it.next();
+        assertThat( file.getFile().getName(), is( "aether-spi-0.9.0.v20140226.jar" ) );
+        file = (FileResource) it.next();
+        assertThat( file.getFile().getName(), is( "aether-api-0.9.0.v20140226.jar" ) );
     }
 
 }

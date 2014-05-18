@@ -190,7 +190,7 @@ this id.
 This task is able to assemble the collected dependencies in three different ways:
 
 * Classpath: The `<path>` element defines a classpath with all resolved dependencies.
-* Files: `<files>` will assemble a fileset containing all resolved dependencies.
+* Files: `<files>` will assemble a resource collection containing all resolved dependencies and/or copy the files to some directory.
 * Properties: `<properties>` will set properties with the given prefix and the coordinates to the path to the resolved file.
 
 These targets may also be mentioned more than once for the same resolve task,
@@ -229,8 +229,8 @@ classpath="compile" equals scope="provided,system,compile"). Valid values are
         <path refid="tp" classpath="test"/>
     </resolve>
 
-The layout attribute of the `<files>` element recognizes the following placeholders to refer to the coordinates of the
-currently processed artifact:
+The layout attribute of the `<files>` element is only allowed when the dir attribute is also given and recognizes the
+following placeholders to refer to the coordinates of the currently processed artifact:
 
 * {groupId}, e.g. "org.eclipse.aether"
 * {groupIdDirs}, e.g. "org/eclipse/aether"

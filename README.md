@@ -38,9 +38,9 @@ Some settings defined in the settings file or in the POM can also be changed ins
 
 Proxy definitions are used throughout the whole session. There may be multiple
 proxies set. The proxy to use will be chosen by evaluating the nonProxyHosts on
-each proxy definition.
+each proxy definition, the first matching proxy will be used for a given remote connection.
 
-    <proxy host="" port="" type="http" nonProxyHosts="foo,bar"/>
+    <proxy host="proxy.mycorp.com" port="8080" type="http" nonProxyHosts="127.*|localhost|*.mycorp.com"/>
 
 ### Authentication
 

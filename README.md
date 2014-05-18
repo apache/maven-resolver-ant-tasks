@@ -62,9 +62,9 @@ Only one local repository can be used at a time.
 
 Remote repositories may be defined directly:
 
-    <remoterepo id="rso" url="http://repository.sonatype.org/" type="default" releases="true" snapshots="false" updates="always" checksums="fail"/>
+    <remoterepo id="ossrh" url="https://oss.sonatype.org/content/repositories/snapshots/" type="default" releases="false" snapshots="true" updates="always" checksums="fail"/>
 
-    <remoterepo id="rao" url="http://repository.apache.org/">
+    <remoterepo id="rao" url="https://repository.apache.org/content/groups/public/">
         <releases enabled="true" updates="daily" checksums="warn"/>
         <snapshots enabled="false"/>
         <authentication refid="auth"/>
@@ -76,7 +76,7 @@ Multiple repositories may be used as a group in every place that is legal for a
 remote repository:
 
     <remoterepos id="all">
-        <remoterepo refid="rso"/>
+        <remoterepo refid="ossrh"/>
         <remoterepo refid="rao"/>
         <remoterepo refid="distrepo"/>
     </remoterepos>
@@ -232,11 +232,11 @@ classpath="compile" equals scope="provided,system,compile"). Valid values are
 The layout attribute of the `<files>` element recognizes the following placeholders to refer to the coordinates of the
 currently processed artifact:
 
-* {groupId}, e.g. "org.sonatype.aether"
-* {groupIdDirs}, e.g. "org/sonatype/aether"
+* {groupId}, e.g. "org.eclipse.aether"
+* {groupIdDirs}, e.g. "org/eclipse/aether"
 * {artifactId}, e.g. "aether-api"
-* {version}, e.g. "1.12-20110419.181353-123"
-* {baseVersion}, e.g. "1.12-SNAPSHOT"
+* {version}, e.g. "1.0.0-20140518.181353-123"
+* {baseVersion}, e.g. "1.0.0-SNAPSHOT"
 * {extension}, e.g. "jar"
 * {classifier}, e.g. "sources"
 

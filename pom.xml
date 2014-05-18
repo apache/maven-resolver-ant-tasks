@@ -700,5 +700,22 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>ossrh-staging-repo</id>
+      <repositories>
+        <repository>
+          <id>ossrh-staging</id>
+          <url>http://oss.sonatype.org/content/groups/staging/</url>
+          <releases>
+            <enabled>true</enabled>
+            <checksumPolicy>fail</checksumPolicy>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <checksumPolicy>fail</checksumPolicy>
+          </snapshots>
+        </repository>
+      </repositories>
+    </profile>
   </profiles>
 </project>

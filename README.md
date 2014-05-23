@@ -1,7 +1,9 @@
 # Aether Ant Tasks
 
 The Aether Ant Tasks enable build scripts for [Apache Ant](http://ant.apache.org/) 1.7+ to use 
-[Eclipse Aether](http://www.eclipse.org/aether) to resolve dependencies and install and deploy locally built artifacts.
+[Eclipse Aether](http://www.eclipse.org/aether) combined to
+[Apache Maven Aether Provider](http://maven.apache.org/ref/current/maven-aether-provider/) to resolve dependencies
+and install and deploy locally built artifacts.
 
 To integrate the tasks into your build file, copy the JAR into your project's lib directory and use the following
 snippet to load it:

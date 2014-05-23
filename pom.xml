@@ -20,7 +20,7 @@
 
   <name>Aether Ant Tasks</name>
   <description>
-    Ant tasks handling Maven artifacts using Aether.
+    Ant tasks handling Maven artifacts using Aether and Maven Aether Provider.
   </description>
   <url>http://www.eclipse.org/aether/</url>
   <inceptionYear>2010</inceptionYear>

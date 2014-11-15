@@ -118,7 +118,7 @@
     <sonatypeOssDistMgmtSnapshotsId>sonatype-nexus-snapshots</sonatypeOssDistMgmtSnapshotsId>
     <sonatypeOssDistMgmtSnapshotsUrl>https://oss.sonatype.org/content/repositories/snapshots/</sonatypeOssDistMgmtSnapshotsUrl>
     <mavenVersion>3.1.0</mavenVersion>
-    <aetherVersion>1.0.0.v20140518</aetherVersion>
+    <aetherVersion>1.0.1.v20141111</aetherVersion>
   </properties>
 
   <dependencyManagement>

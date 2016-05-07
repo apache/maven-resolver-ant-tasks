@@ -1,14 +1,23 @@
-/*******************************************************************************
- * Copyright (c) 2010, 2014 Sonatype, Inc.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *    Sonatype, Inc. - initial API and implementation
- *******************************************************************************/
 package org.eclipse.aether.internal.ant;
+
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * 
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -101,13 +110,13 @@ import org.eclipse.aether.util.repository.DefaultProxySelector;
 public class AntRepoSys
 {
 
-    private static boolean OS_WINDOWS = Os.isFamily( "windows" );
+    private static final boolean OS_WINDOWS = Os.isFamily( "windows" );
 
-    private static final ModelBuilder modelBuilder = new DefaultModelBuilderFactory().newInstance();
+    private static final ModelBuilder MODEL_BUILDER = new DefaultModelBuilderFactory().newInstance();
 
-    private static final SettingsBuilder settingsBuilder = new DefaultSettingsBuilderFactory().newInstance();
+    private static final SettingsBuilder SETTINGS_BUILDER = new DefaultSettingsBuilderFactory().newInstance();
 
-    private static final SettingsDecrypter settingsDecrypter = new AntSettingsDecryptorFactory().newInstance();
+    private static final SettingsDecrypter SETTINGS_DECRYPTER = new AntSettingsDecryptorFactory().newInstance();
 
     private final Project project;
 
@@ -158,7 +167,7 @@ public class AntRepoSys
         locator = MavenRepositorySystemUtils.newServiceLocator();
         locator.setErrorHandler( new AntServiceLocatorErrorHandler( project ) );
         locator.setServices( Logger.class, new AntLogger( project ) );
-        locator.setServices( ModelBuilder.class, modelBuilder );
+        locator.setServices( ModelBuilder.class, MODEL_BUILDER );
         locator.addService( RepositoryConnectorFactory.class, BasicRepositoryConnectorFactory.class );
         locator.addService( TransporterFactory.class, FileTransporterFactory.class );
         locator.addService( TransporterFactory.class, HttpTransporterFactory.class );
@@ -360,7 +369,7 @@ public class AntRepoSys
 
             try
             {
-                settings = settingsBuilder.build( request ).getEffectiveSettings();
+                settings = SETTINGS_BUILDER.build( request ).getEffectiveSettings();
             }
             catch ( SettingsBuildingException e )
             {
@@ -368,7 +377,7 @@ public class AntRepoSys
             }
 
             SettingsDecryptionResult result =
-                settingsDecrypter.decrypt( new DefaultSettingsDecryptionRequest( settings ) );
+                SETTINGS_DECRYPTER.decrypt( new DefaultSettingsDecryptionRequest( settings ) );
             settings.setServers( result.getServers() );
             settings.setProxies( result.getProxies() );
         }
@@ -540,7 +549,7 @@ public class AntRepoSys
             request.setProfiles( SettingsUtils.convert( settings.getProfiles() ) );
             request.setActiveProfileIds( settings.getActiveProfiles() );
             request.setModelResolver( modelResolver );
-            return modelBuilder.build( request ).getEffectiveModel();
+            return MODEL_BUILDER.build( request ).getEffectiveModel();
         }
         catch ( ModelBuildingException e )
         {
@@ -620,7 +629,7 @@ public class AntRepoSys
 
         if ( dependencies != null )
         {
-            populateCollectRequest( collectRequest, task, session, dependencies, Collections.<Exclusion> emptyList() );
+            populateCollectRequest( collectRequest, task, session, dependencies, Collections.<Exclusion>emptyList() );
         }
 
         task.getProject().log( "Collecting dependencies", Project.MSG_VERBOSE );

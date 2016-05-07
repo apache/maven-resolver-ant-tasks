@@ -23,7 +23,7 @@
        <!ENTITY common SYSTEM "../common.xml">
 ]>
 
-<project xmlns:repo="antlib:org.eclipse.aether.ant">
+<project xmlns:repo="antlib:org.apache.maven.aether.ant">
 
   &common;
   

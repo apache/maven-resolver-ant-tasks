@@ -8,8 +8,8 @@ and install and deploy locally built artifacts.
 To integrate the tasks into your build file, copy the JAR into your project's lib directory and use the following
 snippet to load it:
 
-    <project xmlns:aether="antlib:org.eclipse.aether.ant" ...>
-      <taskdef uri="antlib:org.eclipse.aether.ant" resource="org/eclipse/aether/ant/antlib.xml">
+    <project xmlns:aether="antlib:org.apache.maven.aether.ant" ...>
+      <taskdef uri="antlib:org.apache.maven.aether.ant" resource="org/apache/maven/aether/ant/antlib.xml">
         <classpath>
           <fileset dir="lib" includes="aether-ant-tasks-*.jar"/>
         </classpath>

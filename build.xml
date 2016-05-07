@@ -19,7 +19,7 @@
   under the License.
 -->
 
-<project xmlns:aether="antlib:org.eclipse.aether.ant" default="deploy">
+<project xmlns:aether="antlib:org.apache.maven.aether.ant" default="deploy">
 
   <!--
   This is an example Ant build file using the Aether Ant Tasks to compile, test, install and deploy the
@@ -27,7 +27,7 @@
   aether-ant-task.jar which this build file will load below.
   -->
 
-  <taskdef uri="antlib:org.eclipse.aether.ant" resource="org/eclipse/aether/ant/antlib.xml">
+  <taskdef uri="antlib:org.apache.maven.aether.ant" resource="org/apache/maven/aether/ant/antlib.xml">
     <classpath>
       <fileset dir="target" includes="aether-ant-tasks-*uber.jar"/>
     </classpath>

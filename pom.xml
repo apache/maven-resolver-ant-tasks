@@ -64,7 +64,7 @@
   <properties>
     <mavenVersion>3.1.0</mavenVersion>
     <aetherVersion>1.0.1.v20141111</aetherVersion>
-    <maven.site.path>aether-archives/aether-ant-tasksLATEST</maven.site.path>
+    <maven.site.path>aether-archives/aether-ant-tasks-LATEST</maven.site.path>
     <checkstyle.violation.ignore>LineLength,MagicNumber</checkstyle.violation.ignore>
   </properties>
 

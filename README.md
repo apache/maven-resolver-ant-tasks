@@ -1,8 +1,8 @@
 # Aether Ant Tasks
 
 The Aether Ant Tasks enable build scripts for [Apache Ant](http://ant.apache.org/) 1.7+ to use 
-[Eclipse Aether](http://www.eclipse.org/aether) combined to
-[Apache Maven Aether Provider](http://maven.apache.org/ref/current/maven-aether-provider/) to resolve dependencies
+[Maven Aether](/aether/) combined to
+[Apache Maven Aether Provider](/ref/current/maven-aether-provider/) to resolve dependencies
 and install and deploy locally built artifacts.
 
 To integrate the tasks into your build file, copy the JAR into your project's lib directory and use the following
@@ -21,7 +21,7 @@ See the build.xml in the project sources for a complete example build script.
 
 ## Settings
 
-The Ant tasks are tightly integrated with the usual [Apache Maven settings.xml](http://maven.apache.org/settings.html).
+The Ant tasks are tightly integrated with the usual [Apache Maven settings.xml](/settings.html).
 By default, the usual ${user.home}/.m2/settings.xml is used for user settings. 
 
 For the global settings, different paths will be tried:
@@ -241,4 +241,3 @@ following placeholders to refer to the coordinates of the currently processed ar
 * {baseVersion}, e.g. "1.0.0-SNAPSHOT"
 * {extension}, e.g. "jar"
 * {classifier}, e.g. "sources"
-

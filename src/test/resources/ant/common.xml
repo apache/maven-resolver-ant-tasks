@@ -17,4 +17,4 @@
   under the License.
 -->
 
-<taskdef uri="antlib:org.apache.maven.aether.ant" resource="org/eclipse/aether/ant/antlib.xml"/>
+<taskdef uri="antlib:org.apache.maven.resolver.ant" resource="org/apache/maven/resolver/ant/antlib.xml"/>

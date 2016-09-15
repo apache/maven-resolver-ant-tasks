@@ -29,31 +29,31 @@
     <version>27</version>
   </parent>
 
-  <groupId>org.apache.maven.aether</groupId>
-  <artifactId>aether-ant-tasks</artifactId>
+  <groupId>org.apache.maven.resolver</groupId>
+  <artifactId>maven-resolver-ant-tasks</artifactId>
   <version>1.1.0-SNAPSHOT</version>
 
-  <name>Aether Ant Tasks</name>
+  <name>Maven Artifact Resolver Ant Tasks</name>
   <description>
-    Ant tasks handling Maven artifacts using Aether and Maven Aether Provider.
+    Ant tasks handling Maven artifacts using Maven Artifact Resolver and Maven Resolver Provider.
   </description>
-  <url>http://maven.apache.org/aether-ant-tasks/</url>
+  <url>http://maven.apache.org/resolver-ant-tasks/</url>
   <inceptionYear>2010</inceptionYear>
 
   <scm>
-    <connection>scm:git:https://git-wip-us.apache.org/repos/asf/maven-aether.git</connection>
-    <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/maven-aether.git</developerConnection>
-    <url>https://github.com/apache/maven-aether/tree/${project.scm.tag}</url>
+    <connection>scm:git:https://git-wip-us.apache.org/repos/asf/maven-resolver.git</connection>
+    <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/maven-resolver.git</developerConnection>
+    <url>https://github.com/apache/maven-resolver/tree/${project.scm.tag}</url>
     <tag>ant-tasks</tag>
   </scm>
-  <!--issueManagement>
+  <issueManagement>
     <system>jira</system>
-    <url>https://issues.apache.org/jira/browse/</url>
+    <url>https://issues.apache.org/jira/browse/MRESOLVER</url>
   </issueManagement>
   <ciManagement>
     <system>Jenkins</system>
-    <url>https://builds.apache.org/job/</url>
-  </ciManagement-->
+    <url>https://builds.apache.org/job/maven-resolver-ant-tasks</url>
+  </ciManagement>
   <distributionManagement>
     <site>
       <id>apache.website</id>
@@ -64,7 +64,7 @@
   <properties>
     <mavenVersion>3.1.0</mavenVersion>
     <aetherVersion>1.0.1.v20141111</aetherVersion>
-    <maven.site.path>aether-archives/aether-ant-tasks-LATEST</maven.site.path>
+    <maven.site.path>resolver-archives/resolver-ant-tasks-LATEST</maven.site.path>
     <checkstyle.violation.ignore>LineLength,MagicNumber</checkstyle.violation.ignore>
   </properties>
 
@@ -291,18 +291,18 @@
               <relocations>
                 <relocation>
                   <pattern>org.eclipse.aether</pattern>
-                  <shadedPattern>org.apache.maven.aether.internal.ant.org.eclipse.aether</shadedPattern>
+                  <shadedPattern>org.apache.maven.resolver.internal.ant.org.eclipse.aether</shadedPattern>
                   <excludes>
                     <exclude>org.eclipse.aether.ant.**</exclude>
                   </excludes>
                 </relocation>
                 <relocation>
                   <pattern>org.sonatype.plexus</pattern>
-                  <shadedPattern>org.apache.maven.aether.internal.ant.org.sonatype.plexus</shadedPattern>
+                  <shadedPattern>org.apache.maven.resolver.internal.ant.org.sonatype.plexus</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.apache</pattern>
-                  <shadedPattern>org.apache.maven.aether.internal.ant.org.apache</shadedPattern>
+                  <shadedPattern>org.apache.maven.resolver.internal.ant.org.apache</shadedPattern>
                   <excludes>
                     <exclude>org.apache.tools.**</exclude>
                     <exclude>org.apache.maven.aether.**</exclude>
@@ -310,11 +310,11 @@
                 </relocation>
                 <relocation>
                   <pattern>org.codehaus</pattern>
-                  <shadedPattern>org.apache.maven.aether.internal.ant.org.codehaus</shadedPattern>
+                  <shadedPattern>org.apache.maven.resolver.internal.ant.org.codehaus</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.slf4j</pattern>
-                  <shadedPattern>org.apache.maven.aether.internal.ant.org.slf4j</shadedPattern>
+                  <shadedPattern>org.apache.maven.resolver.internal.ant.org.slf4j</shadedPattern>
                 </relocation>
               </relocations>
             </configuration>

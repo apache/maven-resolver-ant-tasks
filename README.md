@@ -1,17 +1,17 @@
-# Aether Ant Tasks
+# Maven Artifact Resolver Ant Tasks
 
-The Aether Ant Tasks enable build scripts for [Apache Ant](http://ant.apache.org/) 1.7+ to use 
-[Maven Aether](/aether/) combined to
+The Maven Artifact Resolver Ant Tasks enable build scripts for [Apache Ant](http://ant.apache.org/) 1.7+ to use 
+[Maven Artifact Resolver](/resolver/) combined to
 [Apache Maven Aether Provider](/ref/current/maven-aether-provider/) to resolve dependencies
 and install and deploy locally built artifacts.
 
 To integrate the tasks into your build file, copy the JAR into your project's lib directory and use the following
 snippet to load it:
 
-    <project xmlns:aether="antlib:org.apache.maven.aether.ant" ...>
-      <taskdef uri="antlib:org.apache.maven.aether.ant" resource="org/apache/maven/aether/ant/antlib.xml">
+    <project xmlns:aether="antlib:org.apache.maven.resolver.ant" ...>
+      <taskdef uri="antlib:org.apache.maven.resolver.ant" resource="org/apache/maven/resolver/ant/antlib.xml">
         <classpath>
-          <fileset dir="lib" includes="aether-ant-tasks-*.jar"/>
+          <fileset dir="lib" includes="maven-resolver-ant-tasks-*.jar"/>
         </classpath>
       </taskdef>
       ...
@@ -234,9 +234,9 @@ classpath="compile" equals scope="provided,system,compile"). Valid values are
 The layout attribute of the `<files>` element is only allowed when the dir attribute is also given and recognizes the
 following placeholders to refer to the coordinates of the currently processed artifact:
 
-* {groupId}, e.g. "org.eclipse.aether"
-* {groupIdDirs}, e.g. "org/eclipse/aether"
-* {artifactId}, e.g. "aether-api"
+* {groupId}, e.g. "org.apache.maven.resolver"
+* {groupIdDirs}, e.g. "org/apache/maven/resolver"
+* {artifactId}, e.g. "maven-resolver-api"
 * {version}, e.g. "1.0.0-20140518.181353-123"
 * {baseVersion}, e.g. "1.0.0-SNAPSHOT"
 * {extension}, e.g. "jar"

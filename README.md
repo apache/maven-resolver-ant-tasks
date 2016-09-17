@@ -17,20 +17,20 @@ snippet to load it:
       ...
     </project>
 
-See the build.xml in the project sources for a complete example build script.
+See the `build.xml` in the project sources for a complete example build script.
 
 ## Settings
 
 The Ant tasks are tightly integrated with the usual [Apache Maven settings.xml](/settings.html).
-By default, the usual ${user.home}/.m2/settings.xml is used for user settings. 
+By default, the usual `${user.home}/.m2/settings.xml` is used for user settings. 
 
 For the global settings, different paths will be tried:
 
-* ${ant.home}/etc/settings.xml
-* ${maven.home}/conf/settings.xml
-* $M2_HOME/conf/settings.xml
+* `${ant.home}/etc/settings.xml`
+* `${maven.home}/conf/settings.xml`
+* `$M2_HOME/conf/settings.xml`
 
-The <settings/> definition is used to change that:
+The `<settings/>` definition is used to change that:
     
     <settings file="my-settings.xml" globalfile="myglobal-settings.xml"/>
 
@@ -39,7 +39,7 @@ Some settings defined in the settings file or in the POM can also be changed ins
 ### Proxy Settings
 
 Proxy definitions are used throughout the whole session. There may be multiple
-proxies set. The proxy to use will be chosen by evaluating the nonProxyHosts on
+proxies set. The proxy to use will be chosen by evaluating the `nonProxyHosts` on
 each proxy definition, the first matching proxy will be used for a given remote connection.
 
     <proxy host="proxy.mycorp.com" port="8080" type="http" nonProxyHosts="127.*|localhost|*.mycorp.com"/>
@@ -48,7 +48,7 @@ each proxy definition, the first matching proxy will be used for a given remote 
 
 Authentication elements are used to access remote repositories. Every
 authentication definition will be added globally and chosen based on the
-'servers' attribute. If this attribute is not set, an authentication has to be
+`servers` attribute. If this attribute is not set, an authentication has to be
 referenced explicitly to be used.
 
     <authentication username="login" password="pw" id="auth"/>
@@ -98,12 +98,12 @@ To suppress any network activity and only use already cached artifacts/metadata,
 
 ## Project
 
-Project settings deal with locally availabe information about the build.
+Project settings deal with locally available information about the build.
 
 ### POM
 
 The POM is the data type used to determine the target for the install and
-deploy tasks. If you define a POM without an id based on a full pom.xml file,
+deploy tasks. If you define a POM without an id based on a full `pom.xml` file,
 that POM will be used by default for install and deploy.
 
     <pom file="pom.xml" id="pom"/>
@@ -113,9 +113,9 @@ that POM will be used by default for install and deploy.
 #### Properties
 
 If a POM is set via a file parameter its effective model is made available as properties to the Ant project.
-The properties are prefixed with the ref id of the `<pom>` element, e.g. ${pom.version} for the example above.
-Likewise, project properties defined in the POM are accessible via the prefix "pom.properties.". If no id has been
-assigned, the properties use the prefix "pom." by default.
+The properties are prefixed with the ref id of the `<pom>` element, e.g. `${pom.version}` for the example above.
+Likewise, project properties defined in the POM are accessible via the prefix `pom.properties.`. If no id has been
+assigned, the properties use the prefix `pom.` by default.
 
 ### Output Artifacts
 
@@ -218,11 +218,11 @@ but only one `<dependencies>` element is allowed.
     </resolve>
 
 Scope filters can be set on every target, enumerating included and/or excluded
-scope names. Exclusions are denoted by prefixing the scope name with '-' or '!' (e.g. 'provided,!system').
+scope names. Exclusions are denoted by prefixing the scope name with `-` or `!` (e.g. `provided,!system`).
 
-The classpath attribute is a shortcut for the scope filters (e.g.
-classpath="compile" equals scope="provided,system,compile"). Valid values are
-"compile", "runtime", "test".
+The `classpath` attribute is a shortcut for the scope filters (e.g.
+`classpath="compile"` equals `scope="provided,system,compile"`). Valid values are
+"`compile`", "`runtime`", "`test`".
 
     <resolve>
         <dependencies pomRef="pom"/>
@@ -231,13 +231,13 @@ classpath="compile" equals scope="provided,system,compile"). Valid values are
         <path refid="tp" classpath="test"/>
     </resolve>
 
-The layout attribute of the `<files>` element is only allowed when the dir attribute is also given and recognizes the
+The layout attribute of the `<files>` element is only allowed when the `dir` attribute is also given and recognizes the
 following placeholders to refer to the coordinates of the currently processed artifact:
 
-* {groupId}, e.g. "org.apache.maven.resolver"
-* {groupIdDirs}, e.g. "org/apache/maven/resolver"
-* {artifactId}, e.g. "maven-resolver-api"
-* {version}, e.g. "1.0.0-20140518.181353-123"
-* {baseVersion}, e.g. "1.0.0-SNAPSHOT"
-* {extension}, e.g. "jar"
-* {classifier}, e.g. "sources"
+* `{groupId}`, e.g. "org.apache.maven.resolver"
+* `{groupIdDirs}`, e.g. "org/apache/maven/resolver"
+* `{artifactId}`, e.g. "maven-resolver-api"
+* `{version}`, e.g. "1.0.0-20140518.181353-123"
+* `{baseVersion}`, e.g. "1.0.0-SNAPSHOT"
+* `{extension}`, e.g. "jar"
+* `{classifier}`, e.g. "sources"

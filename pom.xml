@@ -36,9 +36,9 @@
 
   <name>Maven Artifact Resolver Ant Tasks</name>
   <description>
-    Ant tasks handling Maven artifacts using Maven Artifact Resolver and Maven Resolver Provider.
+    Ant tasks handling Maven artifacts using Maven Artifact Resolver and Maven Artifact Resolver Provider.
   </description>
-  <url>http://maven.apache.org/resolver-ant-tasks/</url>
+  <url>https://maven.apache.org/resolver-ant-tasks/</url>
   <inceptionYear>2010</inceptionYear>
 
   <scm>
@@ -63,8 +63,9 @@
   </distributionManagement>
 
   <properties>
-    <mavenVersion>3.1.0</mavenVersion>
-    <aetherVersion>1.0.1.v20141111</aetherVersion>
+    <mavenVersion>3.5.0</mavenVersion>
+    <resolverVersion>1.0.3</resolverVersion>
+    <javaVersion>7</javaVersion>
     <maven.site.path>resolver-archives/resolver-ant-tasks-LATEST</maven.site.path>
     <checkstyle.violation.ignore>LineLength,MagicNumber</checkstyle.violation.ignore>
   </properties>
@@ -74,7 +75,7 @@
       <dependency>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-utils</artifactId>
-        <version>2.1</version>
+        <version>3.0.24</version>
       </dependency>
       <dependency>
         <groupId>org.sonatype.plexus</groupId>
@@ -99,39 +100,39 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-api</artifactId>
-      <version>${aetherVersion}</version>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-api</artifactId>
+      <version>${resolverVersion}</version>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-util</artifactId>
-      <version>${aetherVersion}</version>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-util</artifactId>
+      <version>${resolverVersion}</version>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-impl</artifactId>
-      <version>${aetherVersion}</version>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-impl</artifactId>
+      <version>${resolverVersion}</version>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-connector-basic</artifactId>
-      <version>${aetherVersion}</version>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-connector-basic</artifactId>
+      <version>${resolverVersion}</version>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-transport-classpath</artifactId>
-      <version>${aetherVersion}</version>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-transport-classpath</artifactId>
+      <version>${resolverVersion}</version>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-transport-file</artifactId>
-      <version>${aetherVersion}</version>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-transport-file</artifactId>
+      <version>${resolverVersion}</version>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-transport-http</artifactId>
-      <version>${aetherVersion}</version>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-transport-http</artifactId>
+      <version>${resolverVersion}</version>
     </dependency>
     <dependency>
       <!-- This shuts off annoying warnings from slf4j-api -->
@@ -142,7 +143,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
-      <artifactId>maven-aether-provider</artifactId>
+      <artifactId>maven-resolver-provider</artifactId>
       <version>${mavenVersion}</version>
       <exclusions>
         <exclusion>
@@ -238,9 +239,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.aether</groupId>
-      <artifactId>aether-test-util</artifactId>
-      <version>${aetherVersion}</version>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-test-util</artifactId>
+      <version>${resolverVersion}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

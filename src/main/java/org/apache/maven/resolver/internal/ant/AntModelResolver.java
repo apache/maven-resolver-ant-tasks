@@ -25,6 +25,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Parent;
 import org.apache.maven.model.Repository;
 import org.apache.maven.model.building.FileModelSource;
 import org.apache.maven.model.building.ModelSource;
@@ -152,6 +154,27 @@ class AntModelResolver
         File pomFile = pomArtifact.getFile();
 
         return new FileModelSource( pomFile );
+    }
+
+    @Override
+    public ModelSource resolveModel( Parent parent )
+        throws UnresolvableModelException
+    {
+        return resolveModel( parent.getGroupId(), parent.getArtifactId(), parent.getVersion() );
+    }
+
+    @Override
+    public ModelSource resolveModel( Dependency dependency )
+        throws UnresolvableModelException
+    {
+        return resolveModel( dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion() );
+    }
+
+    @Override
+    public void addRepository( Repository repository, boolean replace )
+        throws InvalidRepositoryException
+    {
+        addRepository( repository );
     }
 
 }

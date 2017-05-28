@@ -40,7 +40,7 @@
   <resolver:remoterepo id="ossrh" url="http://oss.sonatype.org/content/groups/staging" type="default"
                      releases="true" snapshots="true" updates="daily" checksums="fail"/>
 
-  <resolver:remoterepos id="aether.repositories">
+  <resolver:remoterepos id="resolver.repositories">
     <resolver:remoterepo refid="central"/>
     <resolver:remoterepo refid="ossrh"/>
   </resolver:remoterepos>

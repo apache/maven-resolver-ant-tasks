@@ -2,13 +2,13 @@
 
 The Maven Artifact Resolver Ant Tasks enable build scripts for [Apache Ant](http://ant.apache.org/) 1.7+ to use 
 [Maven Artifact Resolver](/resolver/) combined to
-[Apache Maven Aether Provider](/ref/current/maven-aether-provider/) to resolve dependencies
+[Apache Maven Artifact Resolver Provider](/ref/current/maven-resolver-provider/) to resolve dependencies
 and install and deploy locally built artifacts.
 
 To integrate the tasks into your build file, copy the JAR into your project's lib directory and use the following
 snippet to load it:
 
-    <project xmlns:aether="antlib:org.apache.maven.resolver.ant" ...>
+    <project xmlns:resolver="antlib:org.apache.maven.resolver.ant" ...>
       <taskdef uri="antlib:org.apache.maven.resolver.ant" resource="org/apache/maven/resolver/ant/antlib.xml">
         <classpath>
           <fileset dir="lib" includes="maven-resolver-ant-tasks-*.jar"/>
@@ -93,7 +93,7 @@ remote repository:
 
 To suppress any network activity and only use already cached artifacts/metadata, you can use a boolean property:
 
-    <property name="aether.offline" value="true"/>
+    <property name="resolver.offline" value="true"/>
 
 
 ## Project
@@ -184,7 +184,7 @@ You need to set a POM that references a file for the deploy task to work, as tha
 
 The `<resolve>`-task is used to collect and resolve dependencies from remote
 servers. If no repositories are set explicitly for the task, the repositories
-referenced by "aether.repositories" are used. This contains only central by
+referenced by "resolver.repositories" are used. This contains only central by
 default, but can be overridden by supplying another repository definition with
 this id. 
 

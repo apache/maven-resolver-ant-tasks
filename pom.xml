@@ -41,11 +41,11 @@
   <url>https://maven.apache.org/resolver-ant-tasks/</url>
   <inceptionYear>2010</inceptionYear>
 
-  <scm>
-    <connection>scm:git:https://git-wip-us.apache.org/repos/asf/maven-resolver.git</connection>
-    <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/maven-resolver.git</developerConnection>
-    <url>https://github.com/apache/maven-resolver/tree/${project.scm.tag}</url>
-    <tag>ant-tasks</tag>
+ <scm>
+    <connection>scm:git:https://gitbox.apache.org/repos/asf/maven-resolver-ant-tasks.git</connection>
+    <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/maven-resolver-ant-tasks.git</developerConnection>
+    <url>https://github.com/apache/maven-resolver-ant-tasks/</url>
+    <tag>HEAD</tag>
   </scm>
   <issueManagement>
     <system>jira</system>

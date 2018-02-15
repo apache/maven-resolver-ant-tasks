@@ -63,7 +63,7 @@
 
   <properties>
     <mavenVersion>3.5.0</mavenVersion>
-    <resolverVersion>1.1.0</resolverVersion>
+    <resolverVersion>1.1.1</resolverVersion>
     <javaVersion>7</javaVersion>
     <maven.site.path>resolver-archives/resolver-ant-tasks-LATEST</maven.site.path>
     <checkstyle.violation.ignore>LineLength,MagicNumber</checkstyle.violation.ignore>

@@ -305,7 +305,7 @@
                   <shadedPattern>org.apache.maven.resolver.internal.ant.org.apache</shadedPattern>
                   <excludes>
                     <exclude>org.apache.tools.**</exclude>
-                    <exclude>org.apache.maven.aether.**</exclude>
+                    <exclude>org.apache.maven.resolver.**</exclude>
                   </excludes>
                 </relocation>
                 <relocation>

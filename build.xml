@@ -82,7 +82,7 @@
         <pom refid="pom"/>
       </dependencies>
       <path refid="cp.compile.test" classpath="test"/>
-      <path refid="cp.runtime.test" scopes="compile,test"/>
+      <path refid="cp.runtime.test" scopes="compile,runtime,test"/>
     </resolver:resolve>
 
     <path id="cp.test">

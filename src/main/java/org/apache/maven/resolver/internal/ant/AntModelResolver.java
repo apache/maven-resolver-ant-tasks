@@ -8,9 +8,9 @@ package org.apache.maven.resolver.internal.ant;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *  http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -46,7 +46,7 @@ import org.eclipse.aether.resolution.ArtifactResolutionException;
 /**
  * A model resolver to assist building of dependency POMs. This resolver gives priority to those repositories that have
  * been initially specified and repositories discovered in dependency POMs are recessively merged into the search chain.
- * 
+ *
  */
 class AntModelResolver
     implements ModelResolver
@@ -64,7 +64,7 @@ class AntModelResolver
 
     private final Set<String> repositoryIds;
 
-    public AntModelResolver( RepositorySystemSession session, String context, RepositorySystem repoSys,
+    AntModelResolver( RepositorySystemSession session, String context, RepositorySystem repoSys,
                              RemoteRepositoryManager remoteRepositoryManager, List<RemoteRepository> repositories )
     {
         this.session = session;

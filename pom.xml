@@ -137,7 +137,7 @@
       <!-- This shuts off annoying warnings from slf4j-api -->
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-nop</artifactId>
-      <version>1.6.2</version>
+      <version>1.7.25</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>

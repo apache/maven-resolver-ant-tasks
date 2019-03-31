@@ -63,6 +63,7 @@
   <properties>
     <mavenVersion>3.5.0</mavenVersion>
     <resolverVersion>1.3.3</resolverVersion>
+    <antVersion>1.8.4</antVersion>
     <javaVersion>7</javaVersion>
     <maven.site.path>resolver-archives/resolver-ant-tasks-LATEST</maven.site.path>
     <checkstyle.violation.ignore>LineLength,MagicNumber</checkstyle.violation.ignore>
@@ -88,7 +89,7 @@
       <!-- NOTE: The target runtime is actually Ant 1.7+ but for compilation we need some newer APIs -->
       <groupId>org.apache.ant</groupId>
       <artifactId>ant</artifactId>
-      <version>1.8.2</version>
+      <version>${antVersion}</version>
       <scope>provided</scope>
       <exclusions>
         <exclusion>
@@ -215,13 +216,13 @@
     <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant-testutil</artifactId>
-      <version>1.8.2</version>
+      <version>${antVersion}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant-launcher</artifactId>
-      <version>1.8.2</version>
+      <version>${antVersion}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -350,7 +351,7 @@
               <dependency>
                 <groupId>org.apache.ant</groupId>
                 <artifactId>ant-junit</artifactId>
-                <version>1.8.2</version>
+                <version>${antVersion}</version>
               </dependency>
             </dependencies>
           </plugin>

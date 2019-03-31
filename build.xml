@@ -68,7 +68,7 @@
     </resolver:resolve>
 
     <javac classpathref="cp.compile.main" srcdir="src/main/java" destdir="${build.dir}/classes" 
-           includeAntRuntime="false" source="1.5" target="1.5" encoding="UTF-8" fork="true"/>
+           includeAntRuntime="false" source="7" target="7" encoding="UTF-8" fork="true"/>
   </target>
 
   <target name="process-test-resources" depends="compile">
@@ -91,7 +91,7 @@
     </path>
 
     <javac classpathref="cp.test" srcdir="src/test/java" destdir="${build.dir}/test-classes"
-           includeAntRuntime="false" source="1.5" target="1.5" encoding="UTF-8" fork="true"/>
+           includeAntRuntime="false" source="7" target="7" encoding="UTF-8" fork="true"/>
   </target>
 
   <target name="test" depends="test-compile">

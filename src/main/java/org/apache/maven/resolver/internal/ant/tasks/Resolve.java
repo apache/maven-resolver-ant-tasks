@@ -294,7 +294,8 @@ public class Resolve
                 path = new org.apache.tools.ant.types.Path( getProject() );
                 getProject().addReference( refid, path );
             }
-            path.setLocation( artifact.getFile() );
+            File file = artifact.getFile();
+            path.add( new FileResource( file.getParentFile(), file.getName() ) );
         }
 
     }

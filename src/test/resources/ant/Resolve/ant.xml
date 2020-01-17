@@ -27,7 +27,7 @@
 
   &common;
 
-  <repo:remoterepo id="remote" url="http://repo1.maven.org/maven2" type="default" releases="true" snapshots="true" updates="always" checksums="fail"/>
+  <repo:remoterepo id="remote" url="https://repo1.maven.org/maven2" type="default" releases="true" snapshots="true" updates="always" checksums="fail"/>
   <repo:remoterepos id="resolver.repositories">
     <repo:remoterepo refid="remote"/>
   </repo:remoterepos>

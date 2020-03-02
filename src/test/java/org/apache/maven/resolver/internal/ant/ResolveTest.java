@@ -8,9 +8,9 @@ package org.apache.maven.resolver.internal.ant;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *  http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -76,14 +76,23 @@ public class ResolveTest
                     new File( dir, "org.eclipse.aether/aether-api/org/eclipse/aether/jar" ).exists() );
     }
 
+    public void testResolvePomWithManagedDeps()
+    {
+        executeTarget( "testResolvePomWithManagedDeps" );
+
+        String prop = getProject().getProperty( "test.resolve.path.org.apache.maven.resolver:maven-resolver-api:jar" );
+        assertThat( "maven-resolver-api was not resolved to managed version", prop.replace( '\\', '/' ),
+                    endsWith( "org/apache/maven/resolver/maven-resolver-api/1.4.1/maven-resolver-api-1.4.1.jar" ) );
+    }
+
     public void testResolveAttachments()
         throws IOException
     {
         File dir = new File( BUILD_DIR, "resolve-attachments" );
         executeTarget( "testResolveAttachments" );
-        
+
         File jdocDir = new File(dir, "javadoc");
-        
+
         assertThat( "aether-api-javadoc was not saved with custom file layout",
                     new File( jdocDir, "org.eclipse.aether-aether-api-javadoc.jar" ).exists() );
 

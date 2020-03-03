@@ -77,6 +77,15 @@
     </repo:resolve>
   </target>
 
+  <target name="testResolvePomWithScopedAndManagement">
+    <repo:resolve>
+      <dependencies>
+        <pom file="${project.dir}/with-scoped-and-management.pom"/>
+      </dependencies>
+      <properties prefix="test.resolve.path" classpath="runtime"/>
+    </repo:resolve>
+  </target>
+
   <target name="testResolveAttachments">
     <repo:resolve>
       <dependencies>

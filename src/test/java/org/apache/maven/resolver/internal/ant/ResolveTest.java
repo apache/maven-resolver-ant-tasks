@@ -85,6 +85,14 @@ public class ResolveTest
                     endsWith( "org/apache/maven/resolver/maven-resolver-api/1.4.1/maven-resolver-api-1.4.1.jar" ) );
     }
 
+    public void testResolvePomWithScopedAndManagement()
+    {
+        executeTarget( "testResolvePomWithScopedAndManagement" );
+
+        assertNull( getProject().getProperty( "test.resolve.path.org.apache.maven.resolver:maven-resolver-util:jar" ) );
+        assertNull( getProject().getProperty( "test.resolve.path.org.apache.maven.resolver:maven-resolver-api:jar" ) );
+    }
+
     public void testResolveAttachments()
         throws IOException
     {

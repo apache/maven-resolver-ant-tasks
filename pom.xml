@@ -246,6 +246,17 @@
     </dependency>
   </dependencies>
 
+  <repositories>
+    <repository><!-- useful to resolve maven-shade-plugin 3.2.3-SNAPSHOT -->
+      <id>apache.snapshots</id>
+      <name>Apache Snapshot Repository</name>
+      <url>https://repository.apache.org/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+  </repositories>
+
   <build>
     <plugins>
       <plugin>
@@ -261,6 +272,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
+        <version>3.2.3-SNAPSHOT</version>
         <executions>
           <execution>
             <phase>package</phase>

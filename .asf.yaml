@@ -1,0 +1,10 @@
+# see https://s.apache.org/asfyaml
+github:
+  description: "Apache Maven Artifact Resolver Ant Tasks"
+  homepage: https://maven.apache.org/resolver-ant-tasks/
+  labels:
+    - java
+    - build-management
+    - apache-maven
+    - maven
+    - apache-ant

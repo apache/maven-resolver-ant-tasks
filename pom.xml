@@ -30,7 +30,7 @@
 
   <groupId>org.apache.maven.resolver</groupId>
   <artifactId>maven-resolver-ant-tasks</artifactId>
-  <version>1.2.1</version>
+  <version>1.2.2-SNAPSHOT</version>
 
   <name>Maven Artifact Resolver Ant Tasks</name>
   <description>
@@ -67,7 +67,7 @@
     <javaVersion>7</javaVersion>
     <maven.site.path>resolver-archives/resolver-ant-tasks-LATEST</maven.site.path>
     <checkstyle.violation.ignore>LineLength,MagicNumber</checkstyle.violation.ignore>
-    <project.build.outputTimestamp>2020-05-29T20:58:06Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2020-05-29T21:01:45Z</project.build.outputTimestamp>
   </properties>
 
   <dependencyManagement>

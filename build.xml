@@ -37,12 +37,12 @@
 
   <resolver:localrepo dir="${build.dir}/local-repo"/>
 
-  <resolver:remoterepo id="ossrh" url="http://oss.sonatype.org/content/groups/staging" type="default"
+  <resolver:remoterepo id="rao" url="https://repository.apache.org/content/groups/snapshots" type="default"
                      releases="true" snapshots="true" updates="daily" checksums="fail"/>
 
   <resolver:remoterepos id="resolver.repositories">
     <resolver:remoterepo refid="central"/>
-    <resolver:remoterepo refid="ossrh"/>
+    <resolver:remoterepo refid="rao"/>
   </resolver:remoterepos>
 
   <resolver:pom file="pom.xml" id="pom"/>
@@ -67,7 +67,7 @@
       <path refid="cp.compile.main" classpath="compile"/>
     </resolver:resolve>
 
-    <javac classpathref="cp.compile.main" srcdir="src/main/java" destdir="${build.dir}/classes" 
+    <javac classpathref="cp.compile.main" srcdir="src/main/java" destdir="${build.dir}/classes"
            includeAntRuntime="false" source="7" target="7" encoding="UTF-8" fork="true"/>
   </target>
 

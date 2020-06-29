@@ -352,7 +352,7 @@ public class AntRepoSys
         }
 
         org.eclipse.aether.repository.LocalRepository repo =
-            new org.eclipse.aether.repository.LocalRepository( repoDir );
+            new org.eclipse.aether.repository.LocalRepository( repoDir, "simple" );
 
         return getSystem().newLocalRepositoryManager( session, repo );
     }

@@ -62,7 +62,7 @@
 
   <properties>
     <mavenVersion>3.6.3</mavenVersion>
-    <resolverVersion>1.4.2</resolverVersion>
+    <resolverVersion>1.6.1</resolverVersion>
     <antVersion>1.8.4</antVersion>
     <javaVersion>7</javaVersion>
     <maven.site.path>resolver-archives/resolver-ant-tasks-LATEST</maven.site.path>

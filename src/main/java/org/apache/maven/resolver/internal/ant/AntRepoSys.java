@@ -58,6 +58,10 @@ import org.apache.maven.resolver.internal.ant.types.Pom;
 import org.apache.maven.resolver.internal.ant.types.Proxy;
 import org.apache.maven.resolver.internal.ant.types.RemoteRepositories;
 import org.apache.maven.resolver.internal.ant.types.RemoteRepository;
+import org.apache.maven.resolver.internal.ant.types.RemoteRepository.Policy;
+import org.apache.maven.settings.Profile;
+import org.apache.maven.settings.Repository;
+import org.apache.maven.settings.RepositoryPolicy;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.Settings;
 import org.apache.maven.settings.building.DefaultSettingsBuilderFactory;
@@ -185,6 +189,7 @@ public class AntRepoSys
         repo = new RemoteRepository();
         repo.setProject( project );
         repo.setRefid( new Reference( project, Names.ID_CENTRAL ) );
+
         RemoteRepositories repos = new RemoteRepositories();
         repos.setProject( project );
         repos.addRemoterepo( repo );
@@ -458,6 +463,77 @@ public class AntRepoSys
         return new ConservativeAuthenticationSelector( selector );
     }
 
+    private RemoteRepositories getRemoteRepositories()
+    {
+        RemoteRepositories remoteRepositories = new RemoteRepositories();
+        remoteRepositories.setProject( project );
+
+        Settings settings = getSettings();
+        List<String> activeProfiles = settings.getActiveProfiles();
+        for ( String profileId : activeProfiles )
+        {
+            Profile profile = settings.getProfilesAsMap().get( profileId );
+            for ( Repository repository : profile.getRepositories() )
+            {
+                String id = repository.getId();
+                RemoteRepository repo = new RemoteRepository();
+                repo.setProject( project );
+                repo.setId( id );
+                repo.setUrl( repository.getUrl() );
+                if ( repository.getReleases() != null )
+                {
+                    RepositoryPolicy repositoryPolicy = repository.getReleases();
+                    Policy policy = new Policy();
+                    policy.setEnabled( repositoryPolicy.isEnabled() );
+                    if ( repositoryPolicy.getChecksumPolicy() != null )
+                    {
+                        policy.setChecksums( repositoryPolicy.getChecksumPolicy() );
+                    }
+                    if ( repositoryPolicy.getUpdatePolicy() != null )
+                    {
+                        policy.setUpdates( repositoryPolicy.getUpdatePolicy() );
+                    }
+                    repo.addReleases( policy );
+                }
+                if ( repository.getSnapshots() != null )
+                {
+                    RepositoryPolicy repositoryPolicy = repository.getSnapshots();
+                    Policy policy = new Policy();
+                    policy.setEnabled( repositoryPolicy.isEnabled() );
+                    if ( repositoryPolicy.getChecksumPolicy() != null )
+                    {
+                        policy.setChecksums( repositoryPolicy.getChecksumPolicy() );
+                    }
+                    if ( repositoryPolicy.getUpdatePolicy() != null )
+                    {
+                        policy.setUpdates( repositoryPolicy.getUpdatePolicy() );
+                    }
+                    repo.addSnapshots( policy );
+                }
+                project.addReference( id, repo );
+
+                repo = new RemoteRepository();
+                repo.setProject( project );
+                repo.setRefid( new Reference( project, id ) );
+                remoteRepositories.addRemoterepo( repo );
+            }
+        }
+
+        return remoteRepositories;
+    }
+
+    private RemoteRepositories getMergedRepositories() {
+        RemoteRepositories defaultRepositories = AetherUtils.getDefaultRepositories( project );
+        RemoteRepositories settingsRepositories = getRemoteRepositories();
+
+        RemoteRepositories mergedRepositories = new RemoteRepositories();
+        mergedRepositories.setProject( project );
+        mergedRepositories.addRemoterepos( defaultRepositories );
+        mergedRepositories.addRemoterepos( settingsRepositories );
+
+        return mergedRepositories;
+    }
+
     public synchronized void setUserSettings( File file )
     {
         if ( !eq( this.userSettings, file ) )
@@ -519,7 +595,7 @@ public class AntRepoSys
         RepositorySystemSession session = getSession( task, null );
 
         remoteRepositories =
-            remoteRepositories == null ? AetherUtils.getDefaultRepositories( project ) : remoteRepositories;
+            remoteRepositories == null ? getMergedRepositories() : remoteRepositories;
 
         List<org.eclipse.aether.repository.RemoteRepository> repositories =
             ConverterUtils.toRepositories( task.getProject(), session, remoteRepositories, getRemoteRepoMan() );
@@ -613,7 +689,7 @@ public class AntRepoSys
         RepositorySystemSession session = getSession( task, localRepository );
 
         remoteRepositories =
-            remoteRepositories == null ? AetherUtils.getDefaultRepositories( project ) : remoteRepositories;
+            remoteRepositories == null ? getMergedRepositories() : remoteRepositories;
 
         List<org.eclipse.aether.repository.RemoteRepository> repos =
             ConverterUtils.toRepositories( project, session, remoteRepositories, getRemoteRepoMan() );

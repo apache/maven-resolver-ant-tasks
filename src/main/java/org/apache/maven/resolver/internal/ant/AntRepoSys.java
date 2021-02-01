@@ -522,7 +522,8 @@ public class AntRepoSys
         return remoteRepositories;
     }
 
-    private RemoteRepositories getMergedRepositories() {
+    private RemoteRepositories getMergedRepositories()
+    {
         RemoteRepositories defaultRepositories = AetherUtils.getDefaultRepositories( project );
         RemoteRepositories settingsRepositories = getRemoteRepositories();
 

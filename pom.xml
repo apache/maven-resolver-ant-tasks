@@ -61,7 +61,7 @@
   </distributionManagement>
 
   <properties>
-    <mavenVersion>3.6.3</mavenVersion>
+    <mavenVersion>3.8.1</mavenVersion>
     <resolverVersion>1.7.0-SNAPSHOT</resolverVersion>
     <antVersion>1.8.4</antVersion>
     <sisuVersion>0.3.4</sisuVersion>
@@ -327,7 +327,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.2.3</version>
+        <version>3.2.4</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -340,21 +340,23 @@
               <shadedClassifierName>uber</shadedClassifierName>
               <filters>
                 <filter>
-                  <artifact>org.eclipse.sisu:org.eclipse.sisu.plexus</artifact>
-                  <includes>
-                    <include>org/codehaus/plexus/logging/*LogEnabled*</include>
-                    <include>org/codehaus/plexus/logging/Logger*</include>
-                  </includes>
-                </filter>
-                <filter>
                   <artifact>*:*</artifact>
                   <excludes>
                     <exclude>licenses/**</exclude>
+                    <exclude>META-INF/MANIFEST.MF</exclude>
+                    <exclude>META-INF/DEPENDENCIES</exclude>
+                    <exclude>META-INF/LICENSE</exclude>
+                    <exclude>META-INF/LICENSE.txt</exclude>
+                    <exclude>META-INF/NOTICE</exclude>
+                    <exclude>META-INF/NOTICE.txt</exclude>
                   </excludes>
                 </filter>
               </filters>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ComponentsXmlResourceTransformer" />
+                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                  <resource>META-INF/sisu/javax.inject.Named</resource>
+                </transformer>
               </transformers>
               <relocations>
                 <relocation>

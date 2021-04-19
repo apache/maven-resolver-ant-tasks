@@ -19,6 +19,9 @@ package org.codehaus.plexus.logging;
  * under the License.
  */
 
+/**
+ * Just a dummy class as Sec Dispatcher extends this Plexus Container class, but does not log.
+ */
 public class AbstractLogEnabled
 {
   // dummy class

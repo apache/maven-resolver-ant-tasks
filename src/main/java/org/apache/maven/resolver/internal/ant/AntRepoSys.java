@@ -40,7 +40,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
-import com.google.inject.Module;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.DefaultModelBuilderFactory;
 import org.apache.maven.model.building.DefaultModelBuildingRequest;
@@ -179,7 +178,7 @@ public class AntRepoSys
                     }
                 },
                 new MavenResolverModule()
-            ));
+            ) );
     }
 
     private void initDefaults()

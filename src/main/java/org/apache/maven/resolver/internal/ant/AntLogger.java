@@ -19,18 +19,24 @@ package org.apache.maven.resolver.internal.ant;
  * under the License.
  */
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.apache.tools.ant.Project;
 import org.eclipse.aether.spi.log.Logger;
 
 /**
  */
-class AntLogger
+@Singleton
+@Named
+public class AntLogger
     implements Logger
 {
+    private final Project project;
 
-    private Project project;
-
-    AntLogger( Project project )
+    @Inject
+    public AntLogger( Project project )
     {
         this.project = project;
     }
@@ -64,5 +70,4 @@ class AntLogger
     {
         project.log( msg, error, Project.MSG_WARN );
     }
-
 }

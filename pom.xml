@@ -62,9 +62,13 @@
 
   <properties>
     <mavenVersion>3.6.3</mavenVersion>
-    <resolverVersion>1.6.1</resolverVersion>
+    <resolverVersion>1.7.0-SNAPSHOT</resolverVersion>
     <antVersion>1.8.4</antVersion>
-    <javaVersion>7</javaVersion>
+    <sisuVersion>0.3.4</sisuVersion>
+    <guiceVersion>4.2.3</guiceVersion>
+    <guavaVersion>30.1-jre</guavaVersion>
+    <guavafailureaccessVersion>1.0.1</guavafailureaccessVersion>
+    <javaVersion>8</javaVersion>
     <maven.site.path>resolver-archives/resolver-ant-tasks-LATEST</maven.site.path>
     <checkstyle.violation.ignore>LineLength,MagicNumber</checkstyle.violation.ignore>
     <project.build.outputTimestamp>2020-11-21T14:21:10Z</project.build.outputTimestamp>
@@ -76,11 +80,6 @@
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-utils</artifactId>
         <version>3.2.0</version>
-      </dependency>
-      <dependency>
-        <groupId>org.sonatype.plexus</groupId>
-        <artifactId>plexus-cipher</artifactId>
-        <version>1.7</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -168,6 +167,22 @@
       </exclusions>
     </dependency>
     <dependency>
+      <groupId>org.sonatype.plexus</groupId>
+      <artifactId>plexus-sec-dispatcher</artifactId>
+      <version>1.4</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.sonatype.plexus</groupId>
+          <artifactId>plexus-cipher</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-cipher</artifactId>
+      <version>1.8</version>
+    </dependency>
+    <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-component-annotations</artifactId>
       <scope>provided</scope>
@@ -177,37 +192,77 @@
       <artifactId>plexus-interpolation</artifactId>
       <version>1.25</version>
     </dependency>
+    <!-- SISU: begin -->
+    <dependency>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+      <version>1</version>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>org.eclipse.sisu</groupId>
-      <artifactId>org.eclipse.sisu.plexus</artifactId>
-      <version>0.3.3</version>
+      <artifactId>org.eclipse.sisu.inject</artifactId>
+      <version>${sisuVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.inject</groupId>
+      <artifactId>guice</artifactId>
+      <version>${guiceVersion}</version>
+      <classifier>no_aop</classifier>
       <exclusions>
+        <exclusion>
+          <groupId>aopalliance</groupId>
+          <artifactId>aopalliance</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.google.code.findbugs</groupId>
+          <artifactId>jsr305</artifactId>
+        </exclusion>
         <exclusion>
           <groupId>com.google.guava</groupId>
           <artifactId>guava</artifactId>
         </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${guavaVersion}</version>
+      <scope>runtime</scope>
+      <exclusions>
         <exclusion>
-          <groupId>javax.enterprise</groupId>
-          <artifactId>cdi-api</artifactId>
+          <groupId>com.google.code.findbugs</groupId>
+          <artifactId>jsr305</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>org.codehaus.plexus</groupId>
-          <artifactId>plexus-classworlds</artifactId>
+          <groupId>com.google.errorprone</groupId>
+          <artifactId>error_prone_annotations</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>org.codehaus.plexus</groupId>
-          <artifactId>plexus-utils</artifactId>
+          <groupId>com.google.guava</groupId>
+          <artifactId>failureaccess</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>org.eclipse.sisu</groupId>
-          <artifactId>org.eclipse.sisu.inject</artifactId>
+          <groupId>com.google.guava</groupId>
+          <artifactId>listenablefuture</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>org.sonatype.sisu</groupId>
-          <artifactId>sisu-guice</artifactId>
+          <groupId>com.google.j2objc</groupId>
+          <artifactId>j2objc-annotations</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.checkerframework</groupId>
+          <artifactId>checker-qual</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>failureaccess</artifactId>
+      <version>${guavafailureaccessVersion}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- SISU: end -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -331,6 +386,20 @@
                 </relocation>
               </relocations>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.eclipse.sisu</groupId>
+        <artifactId>sisu-maven-plugin</artifactId>
+        <version>${sisuVersion}</version>
+        <executions>
+          <execution>
+            <id>index-project</id>
+            <goals>
+              <goal>main-index</goal>
+              <goal>test-index</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>

@@ -36,6 +36,11 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.Module;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.DefaultModelBuilderFactory;
 import org.apache.maven.model.building.DefaultModelBuildingRequest;
@@ -86,10 +91,8 @@ import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.collection.CollectRequest;
 import org.eclipse.aether.collection.CollectResult;
 import org.eclipse.aether.collection.DependencyCollectionException;
-import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory;
 import org.eclipse.aether.deployment.DeployRequest;
 import org.eclipse.aether.deployment.DeploymentException;
-import org.eclipse.aether.impl.DefaultServiceLocator;
 import org.eclipse.aether.impl.RemoteRepositoryManager;
 import org.eclipse.aether.installation.InstallRequest;
 import org.eclipse.aether.installation.InstallationException;
@@ -97,17 +100,13 @@ import org.eclipse.aether.repository.AuthenticationSelector;
 import org.eclipse.aether.repository.LocalRepositoryManager;
 import org.eclipse.aether.repository.MirrorSelector;
 import org.eclipse.aether.repository.ProxySelector;
-import org.eclipse.aether.spi.connector.RepositoryConnectorFactory;
-import org.eclipse.aether.spi.connector.transport.TransporterFactory;
-import org.eclipse.aether.spi.log.Logger;
-import org.eclipse.aether.transport.classpath.ClasspathTransporterFactory;
-import org.eclipse.aether.transport.file.FileTransporterFactory;
-import org.eclipse.aether.transport.http.HttpTransporterFactory;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
 import org.eclipse.aether.util.repository.ConservativeAuthenticationSelector;
 import org.eclipse.aether.util.repository.DefaultAuthenticationSelector;
 import org.eclipse.aether.util.repository.DefaultMirrorSelector;
 import org.eclipse.aether.util.repository.DefaultProxySelector;
+import org.eclipse.sisu.launch.Main;
+import org.eclipse.sisu.space.BeanScanning;
 
 /**
  */
@@ -124,7 +123,7 @@ public class AntRepoSys
 
     private final Project project;
 
-    private final DefaultServiceLocator locator;
+    private final Injector injector;
 
     private RepositorySystem repoSys;
 
@@ -168,14 +167,17 @@ public class AntRepoSys
     {
         this.project = project;
 
-        locator = MavenRepositorySystemUtils.newServiceLocator();
-        locator.setErrorHandler( new AntServiceLocatorErrorHandler( project ) );
-        locator.setServices( Logger.class, new AntLogger( project ) );
-        locator.setServices( ModelBuilder.class, MODEL_BUILDER );
-        locator.addService( RepositoryConnectorFactory.class, BasicRepositoryConnectorFactory.class );
-        locator.addService( TransporterFactory.class, FileTransporterFactory.class );
-        locator.addService( TransporterFactory.class, HttpTransporterFactory.class );
-        locator.addService( TransporterFactory.class, ClasspathTransporterFactory.class );
+        this.injector = Guice.createInjector(
+            Main.wire( BeanScanning.INDEX,
+                new AbstractModule()
+                {
+                    @Override
+                    protected void configure()
+                    {
+                        bind( Key.get( Project.class ) ).toInstance( project );
+                    }
+                }
+            ));
     }
 
     private void initDefaults()
@@ -200,7 +202,7 @@ public class AntRepoSys
     {
         if ( repoSys == null )
         {
-            repoSys = locator.getService( RepositorySystem.class );
+            repoSys = injector.getInstance( RepositorySystem.class );
             if ( repoSys == null )
             {
                 throw new BuildException( "The repository system could not be initialized" );
@@ -213,7 +215,7 @@ public class AntRepoSys
     {
         if ( remoteRepoMan == null )
         {
-            remoteRepoMan = locator.getService( RemoteRepositoryManager.class );
+            remoteRepoMan = injector.getInstance( RemoteRepositoryManager.class );
             if ( remoteRepoMan == null )
             {
                 throw new BuildException( "The repository system could not be initialized" );

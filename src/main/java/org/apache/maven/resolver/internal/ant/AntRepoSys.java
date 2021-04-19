@@ -50,6 +50,7 @@ import org.apache.maven.model.building.ModelBuildingException;
 import org.apache.maven.model.building.ModelBuildingRequest;
 import org.apache.maven.model.resolution.ModelResolver;
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
+import org.apache.maven.repository.internal.MavenResolverModule;
 import org.apache.maven.resolver.internal.ant.types.Artifact;
 import org.apache.maven.resolver.internal.ant.types.Artifacts;
 import org.apache.maven.resolver.internal.ant.types.Authentication;
@@ -176,7 +177,8 @@ public class AntRepoSys
                     {
                         bind( Key.get( Project.class ) ).toInstance( project );
                     }
-                }
+                },
+                new MavenResolverModule()
             ));
     }
 

@@ -24,7 +24,6 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 
-import org.apache.maven.resolver.internal.ant.ProjectWorkspaceReader;
 import org.apache.maven.resolver.internal.ant.types.Pom;
 import org.apache.tools.ant.Project;
 import org.junit.Before;

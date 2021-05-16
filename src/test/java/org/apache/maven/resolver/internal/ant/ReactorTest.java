@@ -8,9 +8,9 @@ package org.apache.maven.resolver.internal.ant;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *  http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -22,9 +22,10 @@ package org.apache.maven.resolver.internal.ant;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.maven.resolver.internal.ant.ProjectWorkspaceReader;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
+
+import static org.junit.Assert.*;
 
 public class ReactorTest
     extends AntBuildsTest
@@ -76,7 +77,7 @@ public class ReactorTest
         throws IOException
     {
         executeTarget( "testResolveArtifact" );
-        String prop = project.getProperty( "resolve.test:test:jar" );
+        String prop = getProject().getProperty( "resolve.test:test:jar" );
         assertEquals( new File( projectDir, "pom1.xml" ).getAbsolutePath(), prop );
     }
 
@@ -84,7 +85,7 @@ public class ReactorTest
         throws IOException
     {
         executeTarget( "testResolveArtifactInMemoryPom" );
-        String prop = project.getProperty( "resolve.test:test:jar" );
+        String prop = getProject().getProperty( "resolve.test:test:jar" );
         assertEquals( new File( projectDir, "pom1.xml" ).getAbsolutePath(), prop );
         assertLogContaining( "The POM for test:test:jar:0.1-SNAPSHOT is missing, no dependency information available" );
     }
@@ -93,7 +94,7 @@ public class ReactorTest
         throws IOException
     {
         executeTarget( "testResolveVersionRange" );
-        String prop = project.getProperty( "resolve.test:test:jar" );
+        String prop = getProject().getProperty( "resolve.test:test:jar" );
         assertEquals( new File( projectDir, "pom1.xml" ).getAbsolutePath(), prop );
     }
 

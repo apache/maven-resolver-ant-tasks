@@ -40,6 +40,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import com.google.inject.name.Named;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.DefaultModelBuilderFactory;
 import org.apache.maven.model.building.DefaultModelBuildingRequest;
@@ -49,7 +50,7 @@ import org.apache.maven.model.building.ModelBuildingException;
 import org.apache.maven.model.building.ModelBuildingRequest;
 import org.apache.maven.model.resolution.ModelResolver;
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
-import org.apache.maven.repository.internal.MavenResolverModule;
+import org.apache.maven.resolver.internal.ant.guice.AntTasksModule;
 import org.apache.maven.resolver.internal.ant.types.Artifact;
 import org.apache.maven.resolver.internal.ant.types.Artifacts;
 import org.apache.maven.resolver.internal.ant.types.Authentication;
@@ -96,6 +97,7 @@ import org.eclipse.aether.deployment.DeploymentException;
 import org.eclipse.aether.impl.RemoteRepositoryManager;
 import org.eclipse.aether.installation.InstallRequest;
 import org.eclipse.aether.installation.InstallationException;
+import org.eclipse.aether.internal.impl.DefaultRepositorySystem;
 import org.eclipse.aether.repository.AuthenticationSelector;
 import org.eclipse.aether.repository.LocalRepositoryManager;
 import org.eclipse.aether.repository.MirrorSelector;
@@ -105,6 +107,7 @@ import org.eclipse.aether.util.repository.ConservativeAuthenticationSelector;
 import org.eclipse.aether.util.repository.DefaultAuthenticationSelector;
 import org.eclipse.aether.util.repository.DefaultMirrorSelector;
 import org.eclipse.aether.util.repository.DefaultProxySelector;
+import org.eclipse.sisu.bean.LifecycleModule;
 import org.eclipse.sisu.launch.Main;
 import org.eclipse.sisu.space.BeanScanning;
 
@@ -167,18 +170,13 @@ public class AntRepoSys
     {
         this.project = project;
 
+        System.setProperty("sisu.debug", "true");
         this.injector = Guice.createInjector(
-            Main.wire( BeanScanning.INDEX,
-                new AbstractModule()
-                {
-                    @Override
-                    protected void configure()
-                    {
-                        bind( Key.get( Project.class ) ).toInstance( project );
-                    }
-                },
-                new MavenResolverModule()
-            ) );
+            Main.wire(
+                BeanScanning.INDEX,
+                new AntTasksModule( System.getProperties(), project )
+            )
+        );
     }
 
     private void initDefaults()

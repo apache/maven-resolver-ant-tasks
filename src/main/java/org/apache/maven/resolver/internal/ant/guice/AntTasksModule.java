@@ -19,36 +19,17 @@ package org.apache.maven.resolver.internal.ant.guice;
  * under the License.
  */
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Provider;
-import javax.inject.Singleton;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Binder;
 import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.Provides;
-import com.google.inject.name.Names;
 import org.apache.maven.model.building.DefaultModelBuilderFactory;
 import org.apache.maven.model.building.ModelBuilder;
-import org.apache.maven.repository.internal.DefaultArtifactDescriptorReader;
-import org.apache.maven.repository.internal.DefaultVersionRangeResolver;
-import org.apache.maven.repository.internal.DefaultVersionResolver;
-import org.apache.maven.repository.internal.SnapshotMetadataGeneratorFactory;
-import org.apache.maven.repository.internal.VersionsMetadataGeneratorFactory;
 import org.apache.tools.ant.Project;
-import org.eclipse.aether.impl.ArtifactDescriptorReader;
-import org.eclipse.aether.impl.MetadataGeneratorFactory;
-import org.eclipse.aether.impl.VersionRangeResolver;
-import org.eclipse.aether.impl.VersionResolver;
-import org.eclipse.aether.impl.guice.AetherModule;
-import org.eclipse.sisu.Parameters;
 import org.eclipse.sisu.bean.LifecycleModule;
 import org.eclipse.sisu.inject.MutableBeanLocator;
 import org.eclipse.sisu.wire.ParameterKeys;
@@ -73,10 +54,17 @@ public final class AntTasksModule
     public void configure( final Binder binder )
     {
         binder.install( new LifecycleModule() );
+        binder.install( new MavenResolverModule() );
         binder.bind( ParameterKeys.PROPERTIES ).toInstance( properties );
         binder.bind( ShutdownThread.class ).asEagerSingleton();
 
         binder.bind( Key.get( Project.class ) ).toInstance( project );
+    }
+
+    @Provides
+    ModelBuilder provideModelBuilder()
+    {
+        return new DefaultModelBuilderFactory().newInstance();
     }
 
     static final class ShutdownThread

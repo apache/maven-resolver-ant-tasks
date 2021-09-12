@@ -64,7 +64,7 @@
     <mavenVersion>3.6.3</mavenVersion>
     <resolverVersion>1.6.3</resolverVersion>
     <antVersion>1.8.4</antVersion>
-    <javaVersion>7</javaVersion>
+    <javaVersion>8</javaVersion>
     <maven.site.path>resolver-archives/resolver-ant-tasks-LATEST</maven.site.path>
     <checkstyle.violation.ignore>LineLength,MagicNumber</checkstyle.violation.ignore>
     <project.build.outputTimestamp>2021-05-13T18:07:07Z</project.build.outputTimestamp>

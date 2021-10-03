@@ -649,11 +649,10 @@ public class AntRepoSys
         {
             props = new Properties();
         }
-        boolean envCaseInsensitive = OS_WINDOWS;
         for ( Map.Entry<String, String> entry : System.getenv().entrySet() )
         {
             String key = entry.getKey();
-            if ( envCaseInsensitive )
+            if ( OS_WINDOWS )
             {
                 key = key.toUpperCase( Locale.ENGLISH );
             }

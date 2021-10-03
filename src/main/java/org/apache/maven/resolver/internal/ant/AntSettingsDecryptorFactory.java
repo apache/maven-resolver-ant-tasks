@@ -30,9 +30,7 @@ class AntSettingsDecryptorFactory
     {
         AntSecDispatcher secDispatcher = new AntSecDispatcher();
 
-        DefaultSettingsDecrypter decrypter = new DefaultSettingsDecrypter( secDispatcher );
-
-        return decrypter;
+        return new DefaultSettingsDecrypter( secDispatcher );
     }
 
 }

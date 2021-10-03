@@ -31,12 +31,12 @@ class AntServiceLocatorErrorHandler
 
     private Project project;
 
-    AntServiceLocatorErrorHandler( Project project )
+    AntServiceLocatorErrorHandler( final Project project )
     {
         this.project = project;
     }
 
-    public void serviceCreationFailed( Class<?> type, Class<?> impl, Throwable exception )
+    public void serviceCreationFailed( final Class<?> type, final Class<?> impl, final Throwable exception )
     {
         String msg = "Could not initialize repository system";
         if ( !RepositorySystem.class.equals( type ) )

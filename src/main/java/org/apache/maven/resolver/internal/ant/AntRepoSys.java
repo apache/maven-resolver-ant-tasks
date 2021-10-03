@@ -227,7 +227,7 @@ public class AntRepoSys
     {
         DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
 
-        Map<Object, Object> configProps = new LinkedHashMap<>();
+        final Map<Object, Object> configProps = new LinkedHashMap<>();
         configProps.put( ConfigurationProperties.USER_AGENT, getUserAgent() );
         configProps.putAll( (Map<?, ?>) project.getProperties() );
         processServerConfiguration( configProps );
@@ -309,7 +309,7 @@ public class AntRepoSys
 
     private Map<String, String> getHttpHeaders( Xpp3Dom dom )
     {
-        Map<String, String> headers = new HashMap<>();
+        final Map<String, String> headers = new HashMap<>();
         for ( int i = 0; i < dom.getChildCount(); i++ )
         {
             Xpp3Dom child = dom.getChild( i );
@@ -435,7 +435,7 @@ public class AntRepoSys
     {
         DefaultAuthenticationSelector selector = new DefaultAuthenticationSelector();
 
-        Collection<String> ids = new HashSet<>();
+        final Collection<String> ids = new HashSet<>();
         for ( Authentication auth : authentications )
         {
             List<String> servers = auth.getServers();
@@ -735,7 +735,7 @@ public class AntRepoSys
             globalExclusions.addAll( dependencies.getExclusions() );
         }
 
-        Collection<String> ids = new HashSet<>();
+        final Collection<String> ids = new HashSet<>();
 
         for ( DependencyContainer container : dependencies.getDependencyContainers() )
         {
@@ -804,7 +804,7 @@ public class AntRepoSys
 
     private List<Dependency> readDependencies( File file )
     {
-        List<Dependency> dependencies = new ArrayList<>();
+        final List<Dependency> dependencies = new ArrayList<>();
         try
         {
             try ( BufferedReader reader = new BufferedReader( new InputStreamReader( new FileInputStream( file ), "UTF-8" ) ) )
@@ -878,7 +878,7 @@ public class AntRepoSys
         Model model = pom.getModel( task );
         File pomFile = pom.getFile();
 
-        List<org.eclipse.aether.artifact.Artifact> results = new ArrayList<>();
+        final List<org.eclipse.aether.artifact.Artifact> results = new ArrayList<>();
 
         org.eclipse.aether.artifact.Artifact pomArtifact =
             new DefaultArtifact( model.getGroupId(), model.getArtifactId(), "pom", model.getVersion() ).setFile( pomFile );

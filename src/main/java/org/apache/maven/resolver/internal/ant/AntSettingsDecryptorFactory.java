@@ -28,7 +28,7 @@ class AntSettingsDecryptorFactory
 
     public DefaultSettingsDecrypter newInstance()
     {
-        AntSecDispatcher secDispatcher = new AntSecDispatcher();
+        final AntSecDispatcher secDispatcher = new AntSecDispatcher();
 
         return new DefaultSettingsDecrypter( secDispatcher );
     }

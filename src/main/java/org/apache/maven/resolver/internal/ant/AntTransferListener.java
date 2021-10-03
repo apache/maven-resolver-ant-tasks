@@ -39,13 +39,13 @@ class AntTransferListener
 
     private Task task;
 
-    AntTransferListener( Task task )
+    AntTransferListener( final Task task )
     {
         this.task = task;
     }
 
     @Override
-    public void transferInitiated( TransferEvent event )
+    public void transferInitiated( final TransferEvent event )
         throws TransferCancelledException
     {
         String msg = event.getRequestType() == TransferEvent.RequestType.PUT ? "Uploading" : "Downloading";
@@ -54,32 +54,32 @@ class AntTransferListener
     }
 
     @Override
-    public void transferCorrupted( TransferEvent event )
+    public void transferCorrupted( final TransferEvent event )
         throws TransferCancelledException
     {
-        TransferResource resource = event.getResource();
+        final TransferResource resource = event.getResource();
 
         task.log( event.getException().getMessage() + " for " + resource.getRepositoryUrl()
                       + resource.getResourceName(), Project.MSG_WARN );
     }
 
     @Override
-    public void transferSucceeded( TransferEvent event )
+    public void transferSucceeded( final TransferEvent event )
     {
         String msg = event.getRequestType() == TransferEvent.RequestType.PUT ? "Uploaded" : "Downloaded";
         msg += " " + event.getResource().getRepositoryUrl() + event.getResource().getResourceName();
 
-        long contentLength = event.getTransferredBytes();
+        final long contentLength = event.getTransferredBytes();
         if ( contentLength >= 0 )
         {
-            String len = contentLength >= 1024 ? ( ( contentLength + 1023 ) / 1024 ) + " KB" : contentLength + " B";
+            final String len = contentLength >= 1024 ? ( ( contentLength + 1023 ) / 1024 ) + " KB" : contentLength + " B";
 
             String throughput = "";
-            long duration = System.currentTimeMillis() - event.getResource().getTransferStartTime();
+            final long duration = System.currentTimeMillis() - event.getResource().getTransferStartTime();
             if ( duration > 0 )
             {
-                DecimalFormat format = new DecimalFormat( "0.0", new DecimalFormatSymbols( Locale.ENGLISH ) );
-                double kbPerSec = ( contentLength / 1024.0 ) / ( duration / 1000.0 );
+                final DecimalFormat format = new DecimalFormat( "0.0", new DecimalFormatSymbols( Locale.ENGLISH ) );
+                final double kbPerSec = ( contentLength / 1024.0 ) / ( duration / 1000.0 );
                 throughput = " at " + format.format( kbPerSec ) + " KB/sec";
             }
 

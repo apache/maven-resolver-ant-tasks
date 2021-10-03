@@ -36,27 +36,27 @@ class AntRepositoryListener
 
     private Task task;
 
-    AntRepositoryListener( Task task )
+    AntRepositoryListener( final Task task )
     {
         this.task = task;
     }
 
     @Override
-    public void artifactInstalling( RepositoryEvent event )
+    public void artifactInstalling( final RepositoryEvent event )
     {
         task.log( "Installing " + event.getArtifact().getFile() + " to " + event.getFile() );
     }
 
     @Override
-    public void metadataInstalling( RepositoryEvent event )
+    public void metadataInstalling( final RepositoryEvent event )
     {
         task.log( "Installing " + event.getMetadata() + " to " + event.getFile() );
     }
 
     @Override
-    public void metadataResolved( RepositoryEvent event )
+    public void metadataResolved( final RepositoryEvent event )
     {
-        Exception e = event.getException();
+        final Exception e = event.getException();
         if ( e != null )
         {
             if ( e instanceof MetadataNotFoundException )
@@ -71,11 +71,11 @@ class AntRepositoryListener
     }
 
     @Override
-    public void metadataInvalid( RepositoryEvent event )
+    public void metadataInvalid( final RepositoryEvent event )
     {
-        Exception exception = event.getException();
+        final Exception exception = event.getException();
 
-        StringBuilder buffer = new StringBuilder( 256 );
+        final StringBuilder buffer = new StringBuilder( 256 );
         buffer.append( "The metadata " );
         if ( event.getMetadata().getFile() != null )
         {
@@ -105,7 +105,7 @@ class AntRepositoryListener
     }
 
     @Override
-    public void artifactDescriptorInvalid( RepositoryEvent event )
+    public void artifactDescriptorInvalid( final RepositoryEvent event )
     {
         task.log( "The POM for " + event.getArtifact() + " is invalid"
                       + ", transitive dependencies (if any) will not be available: "
@@ -114,7 +114,7 @@ class AntRepositoryListener
     };
 
     @Override
-    public void artifactDescriptorMissing( RepositoryEvent event )
+    public void artifactDescriptorMissing( final RepositoryEvent event )
     {
         task.log( "The POM for " + event.getArtifact() + " is missing, no dependency information available",
                   Project.MSG_WARN );

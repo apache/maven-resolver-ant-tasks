@@ -64,8 +64,8 @@ class AntModelResolver
 
     private final Set<String> repositoryIds;
 
-    AntModelResolver( RepositorySystemSession session, String context, RepositorySystem repoSys,
-                             RemoteRepositoryManager remoteRepositoryManager, List<RemoteRepository> repositories )
+    AntModelResolver( final RepositorySystemSession session, final String context, final RepositorySystem repoSys,
+                      final RemoteRepositoryManager remoteRepositoryManager, final List<RemoteRepository> repositories )
     {
         this.session = session;
         this.context = context;
@@ -75,7 +75,7 @@ class AntModelResolver
         this.repositoryIds = new HashSet<String>();
     }
 
-    private AntModelResolver( AntModelResolver original )
+    private AntModelResolver( final AntModelResolver original )
     {
         this.session = original.session;
         this.context = original.context;
@@ -85,7 +85,7 @@ class AntModelResolver
         this.repositoryIds = new HashSet<String>( original.repositoryIds );
     }
 
-    public void addRepository( Repository repository )
+    public void addRepository( final Repository repository )
         throws InvalidRepositoryException
     {
         if ( !repositoryIds.add( repository.getId() ) )
@@ -93,22 +93,22 @@ class AntModelResolver
             return;
         }
 
-        List<RemoteRepository> newRepositories = Collections.singletonList( convert( repository ) );
+        final List<RemoteRepository> newRepositories = Collections.singletonList( convert( repository ) );
 
         this.repositories =
             remoteRepositoryManager.aggregateRepositories( session, repositories, newRepositories, true );
     }
 
-    static RemoteRepository convert( Repository repository )
+    static RemoteRepository convert( final Repository repository )
     {
-        RemoteRepository.Builder builder =
+        final RemoteRepository.Builder builder =
             new RemoteRepository.Builder( repository.getId(), repository.getLayout(), repository.getUrl() );
         builder.setSnapshotPolicy( convert( repository.getSnapshots() ) );
         builder.setReleasePolicy( convert( repository.getReleases() ) );
         return builder.build();
     }
 
-    private static RepositoryPolicy convert( org.apache.maven.model.RepositoryPolicy policy )
+    private static RepositoryPolicy convert( final org.apache.maven.model.RepositoryPolicy policy )
     {
         boolean enabled = true;
         String checksums = RepositoryPolicy.CHECKSUM_POLICY_WARN;
@@ -135,43 +135,43 @@ class AntModelResolver
         return new AntModelResolver( this );
     }
 
-    public ModelSource resolveModel( String groupId, String artifactId, String version )
+    public ModelSource resolveModel( final String groupId, final String artifactId, final String version )
         throws UnresolvableModelException
     {
         Artifact pomArtifact = new DefaultArtifact( groupId, artifactId, "", "pom", version );
 
         try
         {
-            ArtifactRequest request = new ArtifactRequest( pomArtifact, repositories, context );
+            final ArtifactRequest request = new ArtifactRequest( pomArtifact, repositories, context );
             pomArtifact = repoSys.resolveArtifact( session, request ).getArtifact();
         }
-        catch ( ArtifactResolutionException e )
+        catch ( final ArtifactResolutionException e )
         {
             throw new UnresolvableModelException( "Failed to resolve POM for " + groupId + ":" + artifactId + ":"
                 + version + " due to " + e.getMessage(), groupId, artifactId, version, e );
         }
 
-        File pomFile = pomArtifact.getFile();
+        final File pomFile = pomArtifact.getFile();
 
         return new FileModelSource( pomFile );
     }
 
     @Override
-    public ModelSource resolveModel( Parent parent )
+    public ModelSource resolveModel( final Parent parent )
         throws UnresolvableModelException
     {
         return resolveModel( parent.getGroupId(), parent.getArtifactId(), parent.getVersion() );
     }
 
     @Override
-    public ModelSource resolveModel( Dependency dependency )
+    public ModelSource resolveModel( final Dependency dependency )
         throws UnresolvableModelException
     {
         return resolveModel( dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion() );
     }
 
     @Override
-    public void addRepository( Repository repository, boolean replace )
+    public void addRepository( final Repository repository, final boolean replace )
         throws InvalidRepositoryException
     {
         addRepository( repository );

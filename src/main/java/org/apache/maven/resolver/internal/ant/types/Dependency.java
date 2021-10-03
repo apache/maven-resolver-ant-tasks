@@ -59,7 +59,7 @@ public class Dependency
         return (Dependency) getCheckedRef();
     }
 
-    public void validate( Task task )
+    public void validate( final Task task )
     {
         if ( isReference() )
         {
@@ -98,14 +98,14 @@ public class Dependency
                 task.log( "Unknown scope '" + scope + "' for dependency", Project.MSG_WARN );
             }
 
-            for ( Exclusion exclusion : exclusions )
+            for ( final Exclusion exclusion : exclusions )
             {
                 exclusion.validate( task );
             }
         }
     }
 
-    public void setRefid( Reference ref )
+    public void setRefid( final Reference ref )
     {
         if ( groupId != null || artifactId != null || type != null || classifier != null || version != null
             || scope != null || systemPath != null )
@@ -128,7 +128,7 @@ public class Dependency
         return groupId;
     }
 
-    public void setGroupId( String groupId )
+    public void setGroupId( final String groupId )
     {
         checkAttributesAllowed();
         if ( this.groupId != null )
@@ -147,7 +147,7 @@ public class Dependency
         return artifactId;
     }
 
-    public void setArtifactId( String artifactId )
+    public void setArtifactId( final String artifactId )
     {
         checkAttributesAllowed();
         if ( this.artifactId != null )
@@ -166,7 +166,7 @@ public class Dependency
         return version;
     }
 
-    public void setVersion( String version )
+    public void setVersion( final String version )
     {
         checkAttributesAllowed();
         if ( this.version != null )
@@ -185,7 +185,7 @@ public class Dependency
         return classifier;
     }
 
-    public void setClassifier( String classifier )
+    public void setClassifier( final String classifier )
     {
         checkAttributesAllowed();
         if ( this.classifier != null )
@@ -204,7 +204,7 @@ public class Dependency
         return ( type != null ) ? type : "jar";
     }
 
-    public void setType( String type )
+    public void setType( final String type )
     {
         checkAttributesAllowed();
         if ( this.type != null )
@@ -223,7 +223,7 @@ public class Dependency
         return ( scope != null ) ? scope : "compile";
     }
 
-    public void setScope( String scope )
+    public void setScope( final String scope )
     {
         checkAttributesAllowed();
         if ( this.scope != null )
@@ -233,7 +233,7 @@ public class Dependency
         this.scope = scope;
     }
 
-    public void setCoords( String coords )
+    public void setCoords( final String coords )
     {
         checkAttributesAllowed();
         if ( groupId != null || artifactId != null || version != null || type != null || classifier != null
@@ -241,8 +241,8 @@ public class Dependency
         {
             throw ambiguousCoords();
         }
-        Pattern p = Pattern.compile( "([^: ]+):([^: ]+):([^: ]+)((:([^: ]+)(:([^: ]+))?)?:([^: ]+))?" );
-        Matcher m = p.matcher( coords );
+        final Pattern p = Pattern.compile( "([^: ]+):([^: ]+):([^: ]+)((:([^: ]+)(:([^: ]+))?)?:([^: ]+))?" );
+        final Matcher m = p.matcher( coords );
         if ( !m.matches() )
         {
             throw new BuildException( "Bad dependency coordinates '" + coords
@@ -264,7 +264,7 @@ public class Dependency
         scope = m.group( 9 );
     }
 
-    public void setSystemPath( File systemPath )
+    public void setSystemPath( final File systemPath )
     {
         checkAttributesAllowed();
         this.systemPath = systemPath;
@@ -285,7 +285,7 @@ public class Dependency
         {
             return getRef().getVersionlessKey();
         }
-        StringBuilder key = new StringBuilder( 128 );
+        final StringBuilder key = new StringBuilder( 128 );
         if ( groupId != null )
         {
             key.append( groupId );
@@ -305,7 +305,7 @@ public class Dependency
         return key.toString();
     }
 
-    public void addExclusion( Exclusion exclusion )
+    public void addExclusion( final Exclusion exclusion )
     {
         checkChildrenAllowed();
         this.exclusions.add( exclusion );

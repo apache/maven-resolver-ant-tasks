@@ -48,7 +48,7 @@ public class Exclusion
         return (Exclusion) getCheckedRef();
     }
 
-    public void validate( Task task )
+    public void validate( final Task task )
     {
         if ( isReference() )
         {
@@ -64,7 +64,7 @@ public class Exclusion
         }
     }
 
-    public void setRefid( Reference ref )
+    public void setRefid( final Reference ref )
     {
         if ( groupId != null || artifactId != null || extension != null || classifier != null )
         {
@@ -82,7 +82,7 @@ public class Exclusion
         return ( groupId != null ) ? groupId : WILDCARD;
     }
 
-    public void setGroupId( String groupId )
+    public void setGroupId( final String groupId )
     {
         checkAttributesAllowed();
         if ( this.groupId != null )
@@ -101,7 +101,7 @@ public class Exclusion
         return ( artifactId != null ) ? artifactId : WILDCARD;
     }
 
-    public void setArtifactId( String artifactId )
+    public void setArtifactId( final String artifactId )
     {
         checkAttributesAllowed();
         if ( this.artifactId != null )
@@ -120,7 +120,7 @@ public class Exclusion
         return ( classifier != null ) ? classifier : WILDCARD;
     }
 
-    public void setClassifier( String classifier )
+    public void setClassifier( final String classifier )
     {
         checkAttributesAllowed();
         if ( this.classifier != null )
@@ -139,7 +139,7 @@ public class Exclusion
         return ( extension != null ) ? extension : WILDCARD;
     }
 
-    public void setExtension( String extension )
+    public void setExtension( final String extension )
     {
         checkAttributesAllowed();
         if ( this.extension != null )
@@ -149,15 +149,15 @@ public class Exclusion
         this.extension = extension;
     }
 
-    public void setCoords( String coords )
+    public void setCoords( final String coords )
     {
         checkAttributesAllowed();
         if ( groupId != null || artifactId != null || extension != null || classifier != null )
         {
             throw ambiguousCoords();
         }
-        Pattern p = Pattern.compile( "([^: ]+)(:([^: ]+)(:([^: ]+)(:([^: ]*))?)?)?" );
-        Matcher m = p.matcher( coords );
+        final Pattern p = Pattern.compile( "([^: ]+)(:([^: ]+)(:([^: ]+)(:([^: ]*))?)?)?" );
+        final Matcher m = p.matcher( coords );
         if ( !m.matches() )
         {
             throw new BuildException( "Bad exclusion coordinates '" + coords

@@ -40,7 +40,7 @@ public class Artifacts
         return (Artifacts) getCheckedRef();
     }
 
-    public void validate( Task task )
+    public void validate( final Task task )
     {
         if ( isReference() )
         {
@@ -48,14 +48,14 @@ public class Artifacts
         }
         else
         {
-            for ( ArtifactContainer container : containers )
+            for ( final ArtifactContainer container : containers )
             {
                 container.validate( task );
             }
         }
     }
 
-    public void setRefid( Reference ref )
+    public void setRefid( final Reference ref )
     {
         if ( !containers.isEmpty() )
         {
@@ -64,13 +64,13 @@ public class Artifacts
         super.setRefid( ref );
     }
 
-    public void addArtifact( Artifact artifact )
+    public void addArtifact( final Artifact artifact )
     {
         checkChildrenAllowed();
         containers.add( artifact );
     }
 
-    public void addArtifacts( Artifacts artifacts )
+    public void addArtifacts( final Artifacts artifacts )
     {
         checkChildrenAllowed();
         if ( artifacts == this )
@@ -86,8 +86,8 @@ public class Artifacts
         {
             return getRef().getArtifacts();
         }
-        List<Artifact> artifacts = new ArrayList<Artifact>();
-        for ( ArtifactContainer container : containers )
+        final List<Artifact> artifacts = new ArrayList<Artifact>();
+        for ( final ArtifactContainer container : containers )
         {
             artifacts.addAll( container.getArtifacts() );
         }

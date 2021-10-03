@@ -54,7 +54,7 @@ public class Deploy
         }
     }
 
-    public void addRemoteRepo( RemoteRepository repository )
+    public void addRemoteRepo( final RemoteRepository repository )
     {
         if ( this.repository != null )
         {
@@ -63,7 +63,7 @@ public class Deploy
         this.repository = repository;
     }
 
-    public void setRemoteRepoRef( Reference ref )
+    public void setRemoteRepoRef( final Reference ref )
     {
         if ( repository == null )
         {
@@ -73,7 +73,7 @@ public class Deploy
         repository.setRefid( ref );
     }
 
-    public void addSnapshotRepo( RemoteRepository snapshotRepository )
+    public void addSnapshotRepo( final RemoteRepository snapshotRepository )
     {
         if ( this.snapshotRepository != null )
         {
@@ -82,7 +82,7 @@ public class Deploy
         this.snapshotRepository = snapshotRepository;
     }
 
-    public void setSnapshotRepoRef( Reference ref )
+    public void setSnapshotRepoRef( final Reference ref )
     {
         if ( snapshotRepository == null )
         {

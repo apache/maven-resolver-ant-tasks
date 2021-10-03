@@ -52,7 +52,7 @@ public class Dependencies
         return (Dependencies) getCheckedRef();
     }
 
-    public void validate( Task task )
+    public void validate( final Task task )
     {
         if ( isReference() )
         {
@@ -64,15 +64,15 @@ public class Dependencies
             {
                 throw new BuildException( "A <pom> used for dependency resolution has to be backed by a pom.xml file" );
             }
-            Map<String, String> ids = new HashMap<String, String>();
-            for ( DependencyContainer container : containers )
+            final Map<String, String> ids = new HashMap<String, String>();
+            for ( final DependencyContainer container : containers )
             {
                 container.validate( task );
                 if ( container instanceof Dependency )
                 {
-                    Dependency dependency = (Dependency) container;
-                    String id = dependency.getVersionlessKey();
-                    String collision = ids.put( id, dependency.getVersion() );
+                    final Dependency dependency = (Dependency) container;
+                    final String id = dependency.getVersionlessKey();
+                    final String collision = ids.put( id, dependency.getVersion() );
                     if ( collision != null )
                     {
                         throw new BuildException( "You must not declare multiple <dependency> elements"
@@ -84,7 +84,7 @@ public class Dependencies
         }
     }
 
-    public void setRefid( Reference ref )
+    public void setRefid( final Reference ref )
     {
         if ( pom != null || !exclusions.isEmpty() || !containers.isEmpty() )
         {
@@ -93,7 +93,7 @@ public class Dependencies
         super.setRefid( ref );
     }
 
-    public void setFile( File file )
+    public void setFile( final File file )
     {
         checkAttributesAllowed();
         this.file = file;
@@ -109,7 +109,7 @@ public class Dependencies
         return file;
     }
 
-    public void addPom( Pom pom )
+    public void addPom( final Pom pom )
     {
         checkChildrenAllowed();
         if ( this.pom != null )
@@ -129,7 +129,7 @@ public class Dependencies
         return pom;
     }
 
-    public void setPomRef( Reference ref )
+    public void setPomRef( final Reference ref )
     {
         if ( pom == null )
         {
@@ -152,13 +152,13 @@ public class Dependencies
         }
     }
 
-    public void addDependency( Dependency dependency )
+    public void addDependency( final Dependency dependency )
     {
         checkChildrenAllowed();
         containers.add( dependency );
     }
 
-    public void addDependencies( Dependencies dependencies )
+    public void addDependencies( final Dependencies dependencies )
     {
         checkChildrenAllowed();
         if ( dependencies == this )
@@ -179,7 +179,7 @@ public class Dependencies
         return containers;
     }
 
-    public void addExclusion( Exclusion exclusion )
+    public void addExclusion( final Exclusion exclusion )
     {
         checkChildrenAllowed();
         this.exclusions.add( exclusion );

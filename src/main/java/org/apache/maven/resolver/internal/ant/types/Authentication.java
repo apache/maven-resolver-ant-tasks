@@ -44,7 +44,7 @@ public class Authentication
     private List<String> servers = new ArrayList<String>();
 
     @Override
-    public void setProject( Project project )
+    public void setProject( final Project project )
     {
         super.setProject( project );
 
@@ -56,7 +56,7 @@ public class Authentication
         return (Authentication) getCheckedRef();
     }
 
-    public void setRefid( Reference ref )
+    public void setRefid( final Reference ref )
     {
         if ( username != null || password != null || privateKeyFile != null || passphrase != null )
         {
@@ -74,7 +74,7 @@ public class Authentication
         return username;
     }
 
-    public void setUsername( String username )
+    public void setUsername( final String username )
     {
         checkAttributesAllowed();
         this.username = username;
@@ -89,7 +89,7 @@ public class Authentication
         return password;
     }
 
-    public void setPassword( String password )
+    public void setPassword( final String password )
     {
         checkAttributesAllowed();
         this.password = password;
@@ -104,7 +104,7 @@ public class Authentication
         return privateKeyFile;
     }
 
-    public void setPrivateKeyFile( String privateKeyFile )
+    public void setPrivateKeyFile( final String privateKeyFile )
     {
         checkAttributesAllowed();
         this.privateKeyFile = privateKeyFile;
@@ -119,7 +119,7 @@ public class Authentication
         return passphrase;
     }
 
-    public void setPassphrase( String passphrase )
+    public void setPassphrase( final String passphrase )
     {
         checkAttributesAllowed();
         this.passphrase = passphrase;
@@ -134,11 +134,11 @@ public class Authentication
         return servers;
     }
 
-    public void setServers( String servers )
+    public void setServers( final String servers )
     {
         checkAttributesAllowed();
         this.servers.clear();
-        String[] split = servers.split( "[;:]" );
+        final String[] split = servers.split( "[;:]" );
         for ( String server : split )
         {
             server = server.trim();

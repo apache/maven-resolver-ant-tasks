@@ -52,12 +52,12 @@ class Layout
 
     private String[] tokens;
 
-    Layout( String layout )
+    Layout( final String layout )
         throws BuildException
     {
-        Collection<String> valid = new HashSet<String>( Arrays.asList( GID, GID_DIRS, AID, VER, BVER, EXT, CLS ) );
-        List<String> tokens = new ArrayList<String>();
-        Matcher m = Pattern.compile( "(\\{[^}]*\\})|([^{]+)" ).matcher( layout );
+        final Collection<String> valid = new HashSet<String>( Arrays.asList( GID, GID_DIRS, AID, VER, BVER, EXT, CLS ) );
+        final List<String> tokens = new ArrayList<String>();
+        final Matcher m = Pattern.compile( "(\\{[^}]*\\})|([^{]+)" ).matcher( layout );
         while ( m.find() )
         {
             if ( m.group( 1 ) != null && !valid.contains( m.group( 1 ) ) )
@@ -70,13 +70,13 @@ class Layout
         this.tokens = tokens.toArray( new String[tokens.size()] );
     }
 
-    public String getPath( Artifact artifact )
+    public String getPath( final Artifact artifact )
     {
-        StringBuilder buffer = new StringBuilder( 128 );
+        final StringBuilder buffer = new StringBuilder( 128 );
 
         for ( int i = 0; i < tokens.length; i++ )
         {
-            String token = tokens[i];
+            final String token = tokens[i];
             if ( GID.equals( token ) )
             {
                 buffer.append( artifact.getGroupId() );
@@ -103,7 +103,7 @@ class Layout
                 {
                     if ( i > 0 )
                     {
-                        String lt = tokens[i - 1];
+                        final String lt = tokens[i - 1];
                         if ( lt.length() > 0 && "-_".indexOf( lt.charAt( lt.length() - 1 ) ) >= 0 )
                         {
                             buffer.setLength( buffer.length() - 1 );

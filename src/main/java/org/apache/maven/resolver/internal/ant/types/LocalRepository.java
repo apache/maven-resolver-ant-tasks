@@ -42,13 +42,13 @@ public class LocalRepository
         this( null );
     }
 
-    public LocalRepository( Task task )
+    public LocalRepository( final Task task )
     {
         this.task = task;
     }
 
     @Override
-    public void setProject( Project project )
+    public void setProject( final Project project )
     {
         super.setProject( project );
 
@@ -63,7 +63,7 @@ public class LocalRepository
         return (LocalRepository) getCheckedRef();
     }
 
-    public void setRefid( Reference ref )
+    public void setRefid( final Reference ref )
     {
         if ( dir != null )
         {
@@ -81,7 +81,7 @@ public class LocalRepository
         return dir;
     }
 
-    public void setDir( File dir )
+    public void setDir( final File dir )
     {
         checkAttributesAllowed();
         this.dir = dir;

@@ -37,30 +37,30 @@ class DependencyGraphLogger
 
     private String indent = "";
 
-    DependencyGraphLogger( Task task )
+    DependencyGraphLogger( final Task task )
     {
         this.task = task;
     }
 
-    public boolean visitEnter( DependencyNode node )
+    public boolean visitEnter( final DependencyNode node )
     {
-        StringBuilder buffer = new StringBuilder( 128 );
+        final StringBuilder buffer = new StringBuilder( 128 );
         buffer.append( indent );
-        Dependency dep = node.getDependency();
+        final Dependency dep = node.getDependency();
         if ( dep != null )
         {
-            Artifact art = dep.getArtifact();
+            final Artifact art = dep.getArtifact();
 
             buffer.append( art );
             buffer.append( ':' ).append( dep.getScope() );
 
-            String premanagedScope = DependencyManagerUtils.getPremanagedScope( node );
+            final String premanagedScope = DependencyManagerUtils.getPremanagedScope( node );
             if ( premanagedScope != null && !premanagedScope.equals( dep.getScope() ) )
             {
                 buffer.append( " (scope managed from " ).append( premanagedScope ).append( ")" );
             }
 
-            String premanagedVersion = DependencyManagerUtils.getPremanagedVersion( node );
+            final String premanagedVersion = DependencyManagerUtils.getPremanagedVersion( node );
             if ( premanagedVersion != null && !premanagedVersion.equals( art.getVersion() ) )
             {
                 buffer.append( " (version managed from " ).append( premanagedVersion ).append( ")" );
@@ -76,7 +76,7 @@ class DependencyGraphLogger
         return true;
     }
 
-    public boolean visitLeave( DependencyNode node )
+    public boolean visitLeave( final DependencyNode node )
     {
         indent = indent.substring( 0, indent.length() - 3 );
         return true;

@@ -51,7 +51,7 @@ import org.eclipse.aether.util.repository.AuthenticationBuilder;
 class ConverterUtils
 {
 
-    private static org.eclipse.aether.artifact.Artifact toArtifact( Dependency dependency, ArtifactTypeRegistry types )
+    private static org.eclipse.aether.artifact.Artifact toArtifact( final Dependency dependency, final ArtifactTypeRegistry types )
     {
         ArtifactType type = types.get( dependency.getType() );
         if ( type == null )
@@ -65,27 +65,27 @@ class ConverterUtils
             props = Collections.singletonMap( ArtifactProperties.LOCAL_PATH, dependency.getSystemPath().getPath() );
         }
 
-        Artifact artifact =
+        final Artifact artifact =
             new DefaultArtifact( dependency.getGroupId(), dependency.getArtifactId(), dependency.getClassifier(), null,
                                  dependency.getVersion(), props, type );
 
         return artifact;
     }
 
-    public static org.eclipse.aether.repository.Authentication toAuthentication( Authentication auth )
+    public static org.eclipse.aether.repository.Authentication toAuthentication( final Authentication auth )
     {
         if ( auth == null )
         {
             return null;
         }
-        AuthenticationBuilder authBuilder = new AuthenticationBuilder();
+        final AuthenticationBuilder authBuilder = new AuthenticationBuilder();
         authBuilder.addUsername( auth.getUsername() ).addPassword( auth.getPassword() );
         authBuilder.addPrivateKey( auth.getPrivateKeyFile(), auth.getPassphrase() );
         return authBuilder.build();
     }
 
-    public static org.eclipse.aether.graph.Dependency toDependency( Dependency dependency, List<Exclusion> exclusions,
-                                                                     RepositorySystemSession session )
+    public static org.eclipse.aether.graph.Dependency toDependency( final Dependency dependency, final List<Exclusion> exclusions,
+                                                                    final RepositorySystemSession session )
     {
         return new org.eclipse.aether.graph.Dependency( toArtifact( dependency, session.getArtifactTypeRegistry() ),
                                                          dependency.getScope(), false,
@@ -96,38 +96,38 @@ class ConverterUtils
      * Converts the given ant repository type to an Aether repository instance with authentication and proxy filled in
      * via the sessions' selectors.
      */
-    public static org.eclipse.aether.repository.RemoteRepository toDistRepository( RemoteRepository repo,
-                                                                       RepositorySystemSession session )
+    public static org.eclipse.aether.repository.RemoteRepository toDistRepository( final RemoteRepository repo,
+                                                                                   final RepositorySystemSession session )
     {
-        org.eclipse.aether.repository.RemoteRepository result = toRepository( repo );
-        org.eclipse.aether.repository.RemoteRepository.Builder builder =
+        final org.eclipse.aether.repository.RemoteRepository result = toRepository( repo );
+        final org.eclipse.aether.repository.RemoteRepository.Builder builder =
             new org.eclipse.aether.repository.RemoteRepository.Builder( result );
         builder.setAuthentication( session.getAuthenticationSelector().getAuthentication( result ) );
         builder.setProxy( session.getProxySelector().getProxy( result ) );
         return builder.build();
     }
 
-    private static org.eclipse.aether.graph.Exclusion toExclusion( Exclusion exclusion )
+    private static org.eclipse.aether.graph.Exclusion toExclusion( final Exclusion exclusion )
     {
         return new org.eclipse.aether.graph.Exclusion( exclusion.getGroupId(), exclusion.getArtifactId(),
                                                         exclusion.getClassifier(), exclusion.getExtension() );
     }
 
-    private static Collection<org.eclipse.aether.graph.Exclusion> toExclusions( Collection<Exclusion> exclusions1,
-                                                                                 Collection<Exclusion> exclusions2 )
+    private static Collection<org.eclipse.aether.graph.Exclusion> toExclusions( final Collection<Exclusion> exclusions1,
+                                                                                final Collection<Exclusion> exclusions2 )
     {
-        Collection<org.eclipse.aether.graph.Exclusion> results =
+        final Collection<org.eclipse.aether.graph.Exclusion> results =
             new LinkedHashSet<org.eclipse.aether.graph.Exclusion>();
         if ( exclusions1 != null )
         {
-            for ( Exclusion exclusion : exclusions1 )
+            for ( final Exclusion exclusion : exclusions1 )
             {
                 results.add( toExclusion( exclusion ) );
             }
         }
         if ( exclusions2 != null )
         {
-            for ( Exclusion exclusion : exclusions2 )
+            for ( final Exclusion exclusion : exclusions2 )
             {
                 results.add( toExclusion( exclusion ) );
             }
@@ -135,7 +135,7 @@ class ConverterUtils
         return results;
     }
 
-    private static RepositoryPolicy toPolicy( RemoteRepository.Policy policy, boolean enabled, String updates,
+    private static RepositoryPolicy toPolicy( final RemoteRepository.Policy policy, boolean enabled, String updates,
                                               String checksums )
     {
         if ( policy != null )
@@ -156,13 +156,13 @@ class ConverterUtils
     /**
      * Adds every &lt;String, String>-entry in the map as a property to the given Properties.
      */
-    public static Properties addProperties( Properties props, Map<?, ?> map )
+    public static Properties addProperties( Properties props, final Map<?, ?> map )
     {
         if ( props == null )
         {
             props = new Properties();
         }
-        for ( Map.Entry<?, ?> entry : map.entrySet() )
+        for ( final Map.Entry<?, ?> entry : map.entrySet() )
         {
             if ( entry.getKey() instanceof String && entry.getValue() instanceof String )
             {
@@ -172,7 +172,7 @@ class ConverterUtils
         return props;
     }
 
-    public static org.eclipse.aether.repository.Proxy toProxy( Proxy proxy )
+    public static org.eclipse.aether.repository.Proxy toProxy( final Proxy proxy )
     {
         if ( proxy == null )
         {
@@ -182,9 +182,9 @@ class ConverterUtils
                                                          toAuthentication( proxy.getAuthentication() ) );
     }
 
-    private static org.eclipse.aether.repository.RemoteRepository toRepository( RemoteRepository repo )
+    private static org.eclipse.aether.repository.RemoteRepository toRepository( final RemoteRepository repo )
     {
-        org.eclipse.aether.repository.RemoteRepository.Builder builder =
+        final org.eclipse.aether.repository.RemoteRepository.Builder builder =
             new org.eclipse.aether.repository.RemoteRepository.Builder( repo.getId(), repo.getType(), repo.getUrl() );
         builder.setSnapshotPolicy( toPolicy( repo.getSnapshotPolicy(), repo.isSnapshots(), repo.getUpdates(),
                                              repo.getChecksums() ) );
@@ -194,11 +194,11 @@ class ConverterUtils
         return builder.build();
     }
 
-    public static List<org.eclipse.aether.repository.RemoteRepository> toRepositories( Project project,
-                                                                          RepositorySystemSession session,
-                                                                          RemoteRepositories repos, RemoteRepositoryManager remoteRepositoryManager )
+    public static List<org.eclipse.aether.repository.RemoteRepository> toRepositories( final Project project,
+                                                                                       final RepositorySystemSession session,
+                                                                                       final RemoteRepositories repos, final RemoteRepositoryManager remoteRepositoryManager )
     {
-        List<RemoteRepository> repositories;
+        final List<RemoteRepository> repositories;
 
         if ( repos != null )
         {
@@ -211,7 +211,7 @@ class ConverterUtils
 
         List<org.eclipse.aether.repository.RemoteRepository> results =
             new ArrayList<org.eclipse.aether.repository.RemoteRepository>();
-        for ( RemoteRepository repo : repositories )
+        for ( final RemoteRepository repo : repositories )
         {
             results.add( toRepository( repo ) );
         }

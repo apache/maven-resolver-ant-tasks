@@ -35,7 +35,6 @@ import org.apache.maven.resolver.internal.ant.types.RemoteRepositories;
 import org.apache.maven.resolver.internal.ant.types.RemoteRepository;
 import org.apache.tools.ant.Project;
 import org.eclipse.aether.RepositorySystemSession;
-import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.ArtifactProperties;
 import org.eclipse.aether.artifact.ArtifactType;
 import org.eclipse.aether.artifact.ArtifactTypeRegistry;
@@ -65,11 +64,8 @@ class ConverterUtils
             props = Collections.singletonMap( ArtifactProperties.LOCAL_PATH, dependency.getSystemPath().getPath() );
         }
 
-        Artifact artifact =
-            new DefaultArtifact( dependency.getGroupId(), dependency.getArtifactId(), dependency.getClassifier(), null,
-                                 dependency.getVersion(), props, type );
-
-        return artifact;
+        return new DefaultArtifact( dependency.getGroupId(), dependency.getArtifactId(), dependency.getClassifier(), null,
+                             dependency.getVersion(), props, type );
     }
 
     public static org.eclipse.aether.repository.Authentication toAuthentication( Authentication auth )

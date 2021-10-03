@@ -806,8 +806,7 @@ public class AntRepoSys
         List<Dependency> dependencies = new ArrayList<Dependency>();
         try
         {
-            BufferedReader reader = new BufferedReader( new InputStreamReader( new FileInputStream( file ), "UTF-8" ) );
-            try
+            try ( BufferedReader reader = new BufferedReader( new InputStreamReader( new FileInputStream( file ), "UTF-8" ) ) )
             {
                 for ( String line = reader.readLine(); line != null; line = reader.readLine() )
                 {
@@ -825,10 +824,6 @@ public class AntRepoSys
                     dependency.setCoords( line );
                     dependencies.add( dependency );
                 }
-            }
-            finally
-            {
-                reader.close();
             }
         }
         catch ( IOException e )

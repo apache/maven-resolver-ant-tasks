@@ -49,7 +49,7 @@ public class Artifact
         return (Artifact) getCheckedRef();
     }
 
-    public void validate( Task task )
+    public void validate( final Task task )
     {
         if ( isReference() )
         {
@@ -72,7 +72,7 @@ public class Artifact
         }
     }
 
-    public void setRefid( Reference ref )
+    public void setRefid( final Reference ref )
     {
         if ( file != null || type != null || classifier != null )
         {
@@ -90,15 +90,15 @@ public class Artifact
         return file;
     }
 
-    public void setFile( File file )
+    public void setFile( final File file )
     {
         checkAttributesAllowed();
         this.file = file;
 
         if ( file != null && type == null )
         {
-            String name = file.getName();
-            int period = name.lastIndexOf( '.' );
+            final String name = file.getName();
+            final int period = name.lastIndexOf( '.' );
             if ( period >= 0 )
             {
                 type = name.substring( period + 1 );
@@ -115,7 +115,7 @@ public class Artifact
         return ( type != null ) ? type : "jar";
     }
 
-    public void setType( String type )
+    public void setType( final String type )
     {
         checkAttributesAllowed();
         this.type = type;
@@ -130,22 +130,22 @@ public class Artifact
         return ( classifier != null ) ? classifier : "";
     }
 
-    public void setClassifier( String classifier )
+    public void setClassifier( final String classifier )
     {
         checkAttributesAllowed();
         this.classifier = classifier;
     }
 
-    public void setPomRef( Reference ref )
+    public void setPomRef( final Reference ref )
     {
         checkAttributesAllowed();
-        Pom pom = new Pom();
+        final Pom pom = new Pom();
         pom.setProject( getProject() );
         pom.setRefid( ref );
         this.pom = pom;
     }
 
-    public void addPom( Pom pom )
+    public void addPom( final Pom pom )
     {
         checkChildrenAllowed();
         this.pom = pom;
@@ -174,7 +174,7 @@ public class Artifact
 
     public String toString()
     {
-        String pomRepr = getPom() != null ? "(" + getPom().toString() + ":)" : "";
+        final String pomRepr = getPom() != null ? "(" + getPom().toString() + ":)" : "";
         return String.format( pomRepr + "%s:%s", getType(), getClassifier() );
     }
 

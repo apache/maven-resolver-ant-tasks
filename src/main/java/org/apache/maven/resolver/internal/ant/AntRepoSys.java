@@ -146,25 +146,25 @@ public class AntRepoSys
 
     private Pom defaultPom;
 
-    private static <T> boolean eq( T o1, T o2 )
+    private static <T> boolean eq( final T o1, final T o2 )
     {
         return ( o1 == null ) ? o2 == null : o1.equals( o2 );
     }
 
-    public static synchronized AntRepoSys getInstance( Project project )
+    public static synchronized AntRepoSys getInstance( final Project project )
     {
-        Object obj = project.getReference( Names.ID );
+        final Object obj = project.getReference( Names.ID );
         if ( obj instanceof AntRepoSys )
         {
             return (AntRepoSys) obj;
         }
-        AntRepoSys instance = new AntRepoSys( project );
+        final AntRepoSys instance = new AntRepoSys( project );
         project.addReference( Names.ID, instance );
         instance.initDefaults();
         return instance;
     }
 
-    private AntRepoSys( Project project )
+    private AntRepoSys( final Project project )
     {
         this.project = project;
 
@@ -190,7 +190,7 @@ public class AntRepoSys
         repo.setProject( project );
         repo.setRefid( new Reference( project, Names.ID_CENTRAL ) );
 
-        RemoteRepositories repos = new RemoteRepositories();
+        final RemoteRepositories repos = new RemoteRepositories();
         repos.setProject( project );
         repos.addRemoterepo( repo );
         project.addReference( Names.ID_DEFAULT_REPOS, repos );
@@ -222,11 +222,11 @@ public class AntRepoSys
         return remoteRepoMan;
     }
 
-    public RepositorySystemSession getSession( Task task, LocalRepository localRepo )
+    public RepositorySystemSession getSession( final Task task, final LocalRepository localRepo )
     {
-        DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
+        final DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
 
-        Map<Object, Object> configProps = new LinkedHashMap<Object, Object>();
+        final Map<Object, Object> configProps = new LinkedHashMap<Object, Object>();
         configProps.put( ConfigurationProperties.USER_AGENT, getUserAgent() );
         configProps.putAll( (Map<?, ?>) project.getProperties() );
         processServerConfiguration( configProps );
@@ -253,7 +253,7 @@ public class AntRepoSys
 
     private String getUserAgent()
     {
-        StringBuilder buffer = new StringBuilder( 128 );
+        final StringBuilder buffer = new StringBuilder( 128 );
 
         buffer.append( "Apache-Ant/" ).append( project.getProperty( "ant.version" ) );
         buffer.append( " (" );
@@ -268,7 +268,7 @@ public class AntRepoSys
 
     private boolean isOffline()
     {
-        String prop = project.getProperty( Names.PROPERTY_OFFLINE );
+        final String prop = project.getProperty( Names.PROPERTY_OFFLINE );
         if ( prop != null )
         {
             return Boolean.parseBoolean( prop );
@@ -276,17 +276,17 @@ public class AntRepoSys
         return getSettings().isOffline();
     }
 
-    private void processServerConfiguration( Map<Object, Object> configProps )
+    private void processServerConfiguration( final Map<Object, Object> configProps )
     {
-        Settings settings = getSettings();
-        for ( Server server : settings.getServers() )
+        final Settings settings = getSettings();
+        for ( final Server server : settings.getServers() )
         {
             if ( server.getConfiguration() != null )
             {
-                Xpp3Dom dom = (Xpp3Dom) server.getConfiguration();
+                final Xpp3Dom dom = (Xpp3Dom) server.getConfiguration();
                 for ( int i = dom.getChildCount() - 1; i >= 0; i-- )
                 {
-                    Xpp3Dom child = dom.getChild( i );
+                    final Xpp3Dom child = dom.getChild( i );
                     if ( "wagonProvider".equals( child.getName() ) )
                     {
                         dom.removeChild( i );
@@ -306,14 +306,14 @@ public class AntRepoSys
         }
     }
 
-    private Map<String, String> getHttpHeaders( Xpp3Dom dom )
+    private Map<String, String> getHttpHeaders( final Xpp3Dom dom )
     {
-        Map<String, String> headers = new HashMap<String, String>();
+        final Map<String, String> headers = new HashMap<String, String>();
         for ( int i = 0; i < dom.getChildCount(); i++ )
         {
-            Xpp3Dom child = dom.getChild( i );
-            Xpp3Dom name = child.getChild( "name" );
-            Xpp3Dom value = child.getChild( "value" );
+            final Xpp3Dom child = dom.getChild( i );
+            final Xpp3Dom name = child.getChild( "name" );
+            final Xpp3Dom value = child.getChild( "value" );
             if ( name != null && name.getValue() != null )
             {
                 headers.put( name.getValue(), ( value != null ) ? value.getValue() : null );
@@ -324,13 +324,13 @@ public class AntRepoSys
 
     private File getDefaultLocalRepoDir()
     {
-        String dir = project.getProperty( "maven.repo.local" );
+        final String dir = project.getProperty( "maven.repo.local" );
         if ( dir != null )
         {
             return project.resolveFile( dir );
         }
 
-        Settings settings = getSettings();
+        final Settings settings = getSettings();
         if ( settings.getLocalRepository() != null )
         {
             return new File( settings.getLocalRepository() );
@@ -339,14 +339,14 @@ public class AntRepoSys
         return new File( new File( project.getProperty( "user.home" ), ".m2" ), "repository" );
     }
 
-    private LocalRepositoryManager getLocalRepoMan( RepositorySystemSession session, LocalRepository localRepo )
+    private LocalRepositoryManager getLocalRepoMan( final RepositorySystemSession session, LocalRepository localRepo )
     {
         if ( localRepo == null )
         {
             localRepo = localRepository;
         }
 
-        File repoDir;
+        final File repoDir;
         if ( localRepo != null && localRepo.getDir() != null )
         {
             repoDir = localRepo.getDir();
@@ -356,7 +356,7 @@ public class AntRepoSys
             repoDir = getDefaultLocalRepoDir();
         }
 
-        org.eclipse.aether.repository.LocalRepository repo =
+        final org.eclipse.aether.repository.LocalRepository repo =
             new org.eclipse.aether.repository.LocalRepository( repoDir );
 
         return getSystem().newLocalRepositoryManager( session, repo );
@@ -366,7 +366,7 @@ public class AntRepoSys
     {
         if ( settings == null )
         {
-            DefaultSettingsBuildingRequest request = new DefaultSettingsBuildingRequest();
+            final DefaultSettingsBuildingRequest request = new DefaultSettingsBuildingRequest();
             request.setUserSettingsFile( getUserSettings() );
             request.setGlobalSettingsFile( getGlobalSettings() );
             request.setSystemProperties( getSystemProperties() );
@@ -376,12 +376,12 @@ public class AntRepoSys
             {
                 settings = SETTINGS_BUILDER.build( request ).getEffectiveSettings();
             }
-            catch ( SettingsBuildingException e )
+            catch ( final SettingsBuildingException e )
             {
                 project.log( "Could not process settings.xml: " + e.getMessage(), e, Project.MSG_WARN );
             }
 
-            SettingsDecryptionResult result =
+            final SettingsDecryptionResult result =
                 SETTINGS_DECRYPTER.decrypt( new DefaultSettingsDecryptionRequest( settings ) );
             settings.setServers( result.getServers() );
             settings.setProxies( result.getProxies() );
@@ -391,17 +391,17 @@ public class AntRepoSys
 
     private ProxySelector getProxySelector()
     {
-        DefaultProxySelector selector = new DefaultProxySelector();
+        final DefaultProxySelector selector = new DefaultProxySelector();
 
-        for ( Proxy proxy : proxies )
+        for ( final Proxy proxy : proxies )
         {
             selector.add( ConverterUtils.toProxy( proxy ), proxy.getNonProxyHosts() );
         }
 
-        Settings settings = getSettings();
-        for ( org.apache.maven.settings.Proxy proxy : settings.getProxies() )
+        final Settings settings = getSettings();
+        for ( final org.apache.maven.settings.Proxy proxy : settings.getProxies() )
         {
-            AuthenticationBuilder auth = new AuthenticationBuilder();
+            final AuthenticationBuilder auth = new AuthenticationBuilder();
             auth.addUsername( proxy.getUsername() ).addPassword( proxy.getPassword() );
             selector.add( new org.eclipse.aether.repository.Proxy( proxy.getProtocol(), proxy.getHost(),
                                                                    proxy.getPort(), auth.build() ),
@@ -413,15 +413,15 @@ public class AntRepoSys
 
     private MirrorSelector getMirrorSelector()
     {
-        DefaultMirrorSelector selector = new DefaultMirrorSelector();
+        final DefaultMirrorSelector selector = new DefaultMirrorSelector();
 
-        for ( Mirror mirror : mirrors )
+        for ( final Mirror mirror : mirrors )
         {
             selector.add( mirror.getId(), mirror.getUrl(), mirror.getType(), false, mirror.getMirrorOf(), null );
         }
 
-        Settings settings = getSettings();
-        for ( org.apache.maven.settings.Mirror mirror : settings.getMirrors() )
+        final Settings settings = getSettings();
+        for ( final org.apache.maven.settings.Mirror mirror : settings.getMirrors() )
         {
             selector.add( String.valueOf( mirror.getId() ), mirror.getUrl(), mirror.getLayout(), false,
                           mirror.getMirrorOf(), mirror.getMirrorOfLayouts() );
@@ -432,16 +432,16 @@ public class AntRepoSys
 
     private AuthenticationSelector getAuthSelector()
     {
-        DefaultAuthenticationSelector selector = new DefaultAuthenticationSelector();
+        final DefaultAuthenticationSelector selector = new DefaultAuthenticationSelector();
 
-        Collection<String> ids = new HashSet<String>();
-        for ( Authentication auth : authentications )
+        final Collection<String> ids = new HashSet<String>();
+        for ( final Authentication auth : authentications )
         {
-            List<String> servers = auth.getServers();
+            final List<String> servers = auth.getServers();
             if ( !servers.isEmpty() )
             {
-                org.eclipse.aether.repository.Authentication a = ConverterUtils.toAuthentication( auth );
-                for ( String server : servers )
+                final org.eclipse.aether.repository.Authentication a = ConverterUtils.toAuthentication( auth );
+                for ( final String server : servers )
                 {
                     if ( ids.add( server ) )
                     {
@@ -451,10 +451,10 @@ public class AntRepoSys
             }
         }
 
-        Settings settings = getSettings();
-        for ( Server server : settings.getServers() )
+        final Settings settings = getSettings();
+        for ( final Server server : settings.getServers() )
         {
-            AuthenticationBuilder auth = new AuthenticationBuilder();
+            final AuthenticationBuilder auth = new AuthenticationBuilder();
             auth.addUsername( server.getUsername() ).addPassword( server.getPassword() );
             auth.addPrivateKey( server.getPrivateKey(), server.getPassphrase() );
             selector.add( server.getId(), auth.build() );
@@ -465,25 +465,25 @@ public class AntRepoSys
 
     private RemoteRepositories getRemoteRepositories()
     {
-        RemoteRepositories remoteRepositories = new RemoteRepositories();
+        final RemoteRepositories remoteRepositories = new RemoteRepositories();
         remoteRepositories.setProject( project );
 
-        Settings settings = getSettings();
-        List<String> activeProfiles = settings.getActiveProfiles();
-        for ( String profileId : activeProfiles )
+        final Settings settings = getSettings();
+        final List<String> activeProfiles = settings.getActiveProfiles();
+        for ( final String profileId : activeProfiles )
         {
-            Profile profile = settings.getProfilesAsMap().get( profileId );
-            for ( Repository repository : profile.getRepositories() )
+            final Profile profile = settings.getProfilesAsMap().get( profileId );
+            for ( final Repository repository : profile.getRepositories() )
             {
-                String id = repository.getId();
+                final String id = repository.getId();
                 RemoteRepository repo = new RemoteRepository();
                 repo.setProject( project );
                 repo.setId( id );
                 repo.setUrl( repository.getUrl() );
                 if ( repository.getReleases() != null )
                 {
-                    RepositoryPolicy repositoryPolicy = repository.getReleases();
-                    Policy policy = new Policy();
+                    final RepositoryPolicy repositoryPolicy = repository.getReleases();
+                    final Policy policy = new Policy();
                     policy.setEnabled( repositoryPolicy.isEnabled() );
                     if ( repositoryPolicy.getChecksumPolicy() != null )
                     {
@@ -497,8 +497,8 @@ public class AntRepoSys
                 }
                 if ( repository.getSnapshots() != null )
                 {
-                    RepositoryPolicy repositoryPolicy = repository.getSnapshots();
-                    Policy policy = new Policy();
+                    final RepositoryPolicy repositoryPolicy = repository.getSnapshots();
+                    final Policy policy = new Policy();
                     policy.setEnabled( repositoryPolicy.isEnabled() );
                     if ( repositoryPolicy.getChecksumPolicy() != null )
                     {
@@ -524,10 +524,10 @@ public class AntRepoSys
 
     private RemoteRepositories getMergedRepositories()
     {
-        RemoteRepositories defaultRepositories = AetherUtils.getDefaultRepositories( project );
-        RemoteRepositories settingsRepositories = getRemoteRepositories();
+        final RemoteRepositories defaultRepositories = AetherUtils.getDefaultRepositories( project );
+        final RemoteRepositories settingsRepositories = getRemoteRepositories();
 
-        RemoteRepositories mergedRepositories = new RemoteRepositories();
+        final RemoteRepositories mergedRepositories = new RemoteRepositories();
         mergedRepositories.setProject( project );
         mergedRepositories.addRemoterepos( defaultRepositories );
         mergedRepositories.addRemoterepos( settingsRepositories );
@@ -535,7 +535,7 @@ public class AntRepoSys
         return mergedRepositories;
     }
 
-    public synchronized void setUserSettings( File file )
+    public synchronized void setUserSettings( final File file )
     {
         if ( !eq( this.userSettings, file ) )
         {
@@ -553,7 +553,7 @@ public class AntRepoSys
         return userSettings;
     }
 
-    public void setGlobalSettings( File file )
+    public void setGlobalSettings( final File file )
     {
         if ( !eq( this.globalSettings, file ) )
         {
@@ -571,44 +571,44 @@ public class AntRepoSys
         return globalSettings;
     }
 
-    public void addProxy( Proxy proxy )
+    public void addProxy( final Proxy proxy )
     {
         proxies.add( proxy );
     }
 
-    public void addMirror( Mirror mirror )
+    public void addMirror( final Mirror mirror )
     {
         mirrors.add( mirror );
     }
 
-    public void addAuthentication( Authentication authentication )
+    public void addAuthentication( final Authentication authentication )
     {
         authentications.add( authentication );
     }
 
-    public void setLocalRepository( LocalRepository localRepository )
+    public void setLocalRepository( final LocalRepository localRepository )
     {
         this.localRepository = localRepository;
     }
 
-    public Model loadModel( Task task, File pomFile, boolean local, RemoteRepositories remoteRepositories )
+    public Model loadModel( final Task task, final File pomFile, final boolean local, RemoteRepositories remoteRepositories )
     {
-        RepositorySystemSession session = getSession( task, null );
+        final RepositorySystemSession session = getSession( task, null );
 
         remoteRepositories =
             remoteRepositories == null ? getMergedRepositories() : remoteRepositories;
 
-        List<org.eclipse.aether.repository.RemoteRepository> repositories =
+        final List<org.eclipse.aether.repository.RemoteRepository> repositories =
             ConverterUtils.toRepositories( task.getProject(), session, remoteRepositories, getRemoteRepoMan() );
 
-        ModelResolver modelResolver =
+        final ModelResolver modelResolver =
             new AntModelResolver( session, "project", getSystem(), getRemoteRepoMan(), repositories );
 
-        Settings settings = getSettings();
+        final Settings settings = getSettings();
 
         try
         {
-            DefaultModelBuildingRequest request = new DefaultModelBuildingRequest();
+            final DefaultModelBuildingRequest request = new DefaultModelBuildingRequest();
             request.setLocationTracking( true );
             request.setProcessPlugins( false );
             if ( local )
@@ -628,7 +628,7 @@ public class AntRepoSys
             request.setModelResolver( modelResolver );
             return MODEL_BUILDER.build( request ).getEffectiveModel();
         }
-        catch ( ModelBuildingException e )
+        catch ( final ModelBuildingException e )
         {
             throw new BuildException( "Could not load POM " + pomFile + ": " + e.getMessage(), e );
         }
@@ -636,7 +636,7 @@ public class AntRepoSys
 
     private Properties getSystemProperties()
     {
-        Properties props = new Properties();
+        final Properties props = new Properties();
         getEnvProperties( props );
         props.putAll( System.getProperties() );
         ConverterUtils.addProperties( props, project.getProperties() );
@@ -649,8 +649,8 @@ public class AntRepoSys
         {
             props = new Properties();
         }
-        boolean envCaseInsensitive = OS_WINDOWS;
-        for ( Map.Entry<String, String> entry : System.getenv().entrySet() )
+        final boolean envCaseInsensitive = OS_WINDOWS;
+        for ( final Map.Entry<String, String> entry : System.getenv().entrySet() )
         {
             String key = entry.getKey();
             if ( envCaseInsensitive )
@@ -671,7 +671,7 @@ public class AntRepoSys
     /**
      * Sets the default POM.
      */
-    public void setDefaultPom( Pom pom )
+    public void setDefaultPom( final Pom pom )
     {
         this.defaultPom = pom;
     }
@@ -684,21 +684,21 @@ public class AntRepoSys
         return defaultPom;
     }
 
-    public CollectResult collectDependencies( Task task, Dependencies dependencies, LocalRepository localRepository,
+    public CollectResult collectDependencies( final Task task, final Dependencies dependencies, final LocalRepository localRepository,
                                               RemoteRepositories remoteRepositories )
     {
-        RepositorySystemSession session = getSession( task, localRepository );
+        final RepositorySystemSession session = getSession( task, localRepository );
 
         remoteRepositories =
             remoteRepositories == null ? getMergedRepositories() : remoteRepositories;
 
-        List<org.eclipse.aether.repository.RemoteRepository> repos =
+        final List<org.eclipse.aether.repository.RemoteRepository> repos =
             ConverterUtils.toRepositories( project, session, remoteRepositories, getRemoteRepoMan() );
 
-        CollectRequest collectRequest = new CollectRequest();
+        final CollectRequest collectRequest = new CollectRequest();
         collectRequest.setRequestContext( "project" );
 
-        for ( org.eclipse.aether.repository.RemoteRepository repo : repos )
+        for ( final org.eclipse.aether.repository.RemoteRepository repo : repos )
         {
             task.getProject().log( "Using remote repository " + repo, Project.MSG_VERBOSE );
             collectRequest.addRepository( repo );
@@ -711,12 +711,12 @@ public class AntRepoSys
 
         task.getProject().log( "Collecting dependencies", Project.MSG_VERBOSE );
 
-        CollectResult result;
+        final CollectResult result;
         try
         {
             result = getSystem().collectDependencies( session, collectRequest );
         }
-        catch ( DependencyCollectionException e )
+        catch ( final DependencyCollectionException e )
         {
             throw new BuildException( "Could not collect dependencies: " + e.getMessage(), e );
         }
@@ -724,8 +724,8 @@ public class AntRepoSys
         return result;
     }
 
-    private void populateCollectRequest( CollectRequest collectRequest, Task task, RepositorySystemSession session,
-                                         Dependencies dependencies, List<Exclusion> exclusions )
+    private void populateCollectRequest( final CollectRequest collectRequest, final Task task, final RepositorySystemSession session,
+                                         final Dependencies dependencies, final List<Exclusion> exclusions )
     {
         List<Exclusion> globalExclusions = exclusions;
         if ( !dependencies.getExclusions().isEmpty() )
@@ -734,13 +734,13 @@ public class AntRepoSys
             globalExclusions.addAll( dependencies.getExclusions() );
         }
 
-        Collection<String> ids = new HashSet<String>();
+        final Collection<String> ids = new HashSet<String>();
 
-        for ( DependencyContainer container : dependencies.getDependencyContainers() )
+        for ( final DependencyContainer container : dependencies.getDependencyContainers() )
         {
             if ( container instanceof Dependency )
             {
-                Dependency dep = (Dependency) container;
+                final Dependency dep = (Dependency) container;
                 ids.add( dep.getVersionlessKey() );
                 collectRequest.addDependency( ConverterUtils.toDependency( dep, globalExclusions, session ) );
             }
@@ -752,10 +752,10 @@ public class AntRepoSys
 
         if ( dependencies.getPom() != null )
         {
-            Model model = dependencies.getPom().getModel( task );
-            for ( org.apache.maven.model.Dependency dep : model.getDependencies() )
+            final Model model = dependencies.getPom().getModel( task );
+            for ( final org.apache.maven.model.Dependency dep : model.getDependencies() )
             {
-                Dependency dependency = new Dependency();
+                final Dependency dependency = new Dependency();
                 dependency.setArtifactId( dep.getArtifactId() );
                 dependency.setClassifier( dep.getClassifier() );
                 dependency.setGroupId( dep.getGroupId() );
@@ -772,9 +772,9 @@ public class AntRepoSys
                 {
                     dependency.setSystemPath( task.getProject().resolveFile( dep.getSystemPath() ) );
                 }
-                for ( org.apache.maven.model.Exclusion exc : dep.getExclusions() )
+                for ( final org.apache.maven.model.Exclusion exc : dep.getExclusions() )
                 {
-                    Exclusion exclusion = new Exclusion();
+                    final Exclusion exclusion = new Exclusion();
                     exclusion.setGroupId( exc.getGroupId() );
                     exclusion.setArtifactId( exc.getArtifactId() );
                     exclusion.setClassifier( "*" );
@@ -787,8 +787,8 @@ public class AntRepoSys
 
         if ( dependencies.getFile() != null )
         {
-            List<Dependency> deps = readDependencies( dependencies.getFile() );
-            for ( Dependency dependency : deps )
+            final List<Dependency> deps = readDependencies( dependencies.getFile() );
+            for ( final Dependency dependency : deps )
             {
                 if ( ids.contains( dependency.getVersionlessKey() ) )
                 {
@@ -801,17 +801,17 @@ public class AntRepoSys
         }
     }
 
-    private List<Dependency> readDependencies( File file )
+    private List<Dependency> readDependencies( final File file )
     {
-        List<Dependency> dependencies = new ArrayList<Dependency>();
+        final List<Dependency> dependencies = new ArrayList<Dependency>();
         try
         {
-            BufferedReader reader = new BufferedReader( new InputStreamReader( new FileInputStream( file ), "UTF-8" ) );
+            final BufferedReader reader = new BufferedReader( new InputStreamReader( new FileInputStream( file ), "UTF-8" ) );
             try
             {
                 for ( String line = reader.readLine(); line != null; line = reader.readLine() )
                 {
-                    int comment = line.indexOf( '#' );
+                    final int comment = line.indexOf( '#' );
                     if ( comment >= 0 )
                     {
                         line = line.substring( 0, comment );
@@ -821,7 +821,7 @@ public class AntRepoSys
                     {
                         continue;
                     }
-                    Dependency dependency = new Dependency();
+                    final Dependency dependency = new Dependency();
                     dependency.setCoords( line );
                     dependencies.add( dependency );
                 }
@@ -831,66 +831,66 @@ public class AntRepoSys
                 reader.close();
             }
         }
-        catch ( IOException e )
+        catch ( final IOException e )
         {
             throw new BuildException( "Cannot read " + file, e );
         }
         return dependencies;
     }
 
-    public void install( Task task, Pom pom, Artifacts artifacts )
+    public void install( final Task task, final Pom pom, final Artifacts artifacts )
     {
-        RepositorySystemSession session = getSession( task, null );
+        final RepositorySystemSession session = getSession( task, null );
 
-        InstallRequest request = new InstallRequest();
+        final InstallRequest request = new InstallRequest();
         request.setArtifacts( toArtifacts( task, session, pom, artifacts ) );
 
         try
         {
             getSystem().install( session, request );
         }
-        catch ( InstallationException e )
+        catch ( final InstallationException e )
         {
             throw new BuildException( "Could not install artifacts: " + e.getMessage(), e );
         }
     }
 
-    public void deploy( Task task, Pom pom, Artifacts artifacts, RemoteRepository releaseRepository,
-                        RemoteRepository snapshotRepository )
+    public void deploy( final Task task, final Pom pom, final Artifacts artifacts, final RemoteRepository releaseRepository,
+                        final RemoteRepository snapshotRepository )
     {
-        RepositorySystemSession session = getSession( task, null );
+        final RepositorySystemSession session = getSession( task, null );
 
-        DeployRequest request = new DeployRequest();
+        final DeployRequest request = new DeployRequest();
         request.setArtifacts( toArtifacts( task, session, pom, artifacts ) );
-        boolean snapshot = request.getArtifacts().iterator().next().isSnapshot();
-        RemoteRepository distRepo = ( snapshot && snapshotRepository != null ) ? snapshotRepository : releaseRepository;
+        final boolean snapshot = request.getArtifacts().iterator().next().isSnapshot();
+        final RemoteRepository distRepo = ( snapshot && snapshotRepository != null ) ? snapshotRepository : releaseRepository;
         request.setRepository( ConverterUtils.toDistRepository( distRepo, session ) );
 
         try
         {
             getSystem().deploy( session, request );
         }
-        catch ( DeploymentException e )
+        catch ( final DeploymentException e )
         {
             throw new BuildException( "Could not deploy artifacts: " + e.getMessage(), e );
         }
     }
 
-    private List<org.eclipse.aether.artifact.Artifact> toArtifacts( Task task, RepositorySystemSession session,
-                                                                    Pom pom, Artifacts artifacts )
+    private List<org.eclipse.aether.artifact.Artifact> toArtifacts( final Task task, final RepositorySystemSession session,
+                                                                    final Pom pom, final Artifacts artifacts )
     {
-        Model model = pom.getModel( task );
-        File pomFile = pom.getFile();
+        final Model model = pom.getModel( task );
+        final File pomFile = pom.getFile();
 
-        List<org.eclipse.aether.artifact.Artifact> results = new ArrayList<org.eclipse.aether.artifact.Artifact>();
+        final List<org.eclipse.aether.artifact.Artifact> results = new ArrayList<org.eclipse.aether.artifact.Artifact>();
 
-        org.eclipse.aether.artifact.Artifact pomArtifact =
+        final org.eclipse.aether.artifact.Artifact pomArtifact =
             new DefaultArtifact( model.getGroupId(), model.getArtifactId(), "pom", model.getVersion() ).setFile( pomFile );
         results.add( pomArtifact );
 
-        for ( Artifact artifact : artifacts.getArtifacts() )
+        for ( final Artifact artifact : artifacts.getArtifacts() )
         {
-            org.eclipse.aether.artifact.Artifact buildArtifact =
+            final org.eclipse.aether.artifact.Artifact buildArtifact =
                 new DefaultArtifact( model.getGroupId(), model.getArtifactId(), artifact.getClassifier(),
                                      artifact.getType(), model.getVersion() ).setFile( artifact.getFile() );
             results.add( buildArtifact );

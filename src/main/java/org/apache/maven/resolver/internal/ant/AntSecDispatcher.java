@@ -36,7 +36,7 @@ class AntSecDispatcher
         {
             _cipher = new DefaultPlexusCipher();
         }
-        catch ( PlexusCipherException e )
+        catch ( final PlexusCipherException e )
         {
             e.printStackTrace();
         }

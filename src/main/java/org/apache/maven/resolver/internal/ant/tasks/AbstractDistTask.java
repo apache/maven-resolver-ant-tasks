@@ -47,10 +47,10 @@ public abstract class AbstractDistTask
     {
         getArtifacts().validate( this );
 
-        Map<String, File> duplicates = new HashMap<String, File>();
-        for ( Artifact artifact : getArtifacts().getArtifacts() )
+        final Map<String, File> duplicates = new HashMap<String, File>();
+        for ( final Artifact artifact : getArtifacts().getArtifacts() )
         {
-            String key = artifact.getType() + ':' + artifact.getClassifier();
+            final String key = artifact.getType() + ':' + artifact.getClassifier();
             if ( "pom:".equals( key ) )
             {
                 throw new BuildException( "You must not specify an <artifact> with type=pom"
@@ -69,7 +69,7 @@ public abstract class AbstractDistTask
             validateArtifactGav( artifact );
         }
 
-        Pom defaultPom = AntRepoSys.getInstance( getProject() ).getDefaultPom();
+        final Pom defaultPom = AntRepoSys.getInstance( getProject() ).getDefaultPom();
         if ( pom == null && defaultPom != null )
         {
             log( "Using default POM (" + defaultPom.getCoords() + ")", Project.MSG_INFO );
@@ -87,17 +87,17 @@ public abstract class AbstractDistTask
         }
     }
 
-    private void validateArtifactGav( Artifact artifact )
+    private void validateArtifactGav( final Artifact artifact )
     {
-        Pom artifactPom = artifact.getPom();
+        final Pom artifactPom = artifact.getPom();
         if ( artifactPom != null )
         {
-            String gid;
-            String aid;
-            String version;
+            final String gid;
+            final String aid;
+            final String version;
             if ( artifactPom.getFile() != null )
             {
-                Model model = artifactPom.getModel( this );
+                final Model model = artifactPom.getModel( this );
                 gid = model.getGroupId();
                 aid = model.getArtifactId();
                 version = model.getVersion();
@@ -109,7 +109,7 @@ public abstract class AbstractDistTask
                 version = artifactPom.getVersion();
             }
             
-            Model model = getPom().getModel( this );
+            final Model model = getPom().getModel( this );
             
             if ( ! ( model.getGroupId().equals( gid ) && model.getArtifactId().equals( aid ) && model.getVersion().equals( version ) ) )
             {
@@ -129,19 +129,19 @@ public abstract class AbstractDistTask
         return artifacts;
     }
 
-    public void addArtifact( Artifact artifact )
+    public void addArtifact( final Artifact artifact )
     {
         getArtifacts().addArtifact( artifact );
     }
 
-    public void addArtifacts( Artifacts artifacts )
+    public void addArtifacts( final Artifacts artifacts )
     {
         getArtifacts().addArtifacts( artifacts );
     }
 
-    public void setArtifactsRef( Reference ref )
+    public void setArtifactsRef( final Reference ref )
     {
-        Artifacts artifacts = new Artifacts();
+        final Artifacts artifacts = new Artifacts();
         artifacts.setProject( getProject() );
         artifacts.setRefid( ref );
         getArtifacts().addArtifacts( artifacts );
@@ -157,7 +157,7 @@ public abstract class AbstractDistTask
         return pom;
     }
 
-    public void addPom( Pom pom )
+    public void addPom( final Pom pom )
     {
         if ( this.pom != null )
         {
@@ -166,7 +166,7 @@ public abstract class AbstractDistTask
         this.pom = pom;
     }
 
-    public void setPomRef( Reference ref )
+    public void setPomRef( final Reference ref )
     {
         if ( this.pom != null )
         {

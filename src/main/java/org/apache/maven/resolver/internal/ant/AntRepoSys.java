@@ -33,6 +33,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -136,11 +137,11 @@ public class AntRepoSys
 
     private Settings settings;
 
-    private final List<Mirror> mirrors = new CopyOnWriteArrayList<Mirror>();
+    private final List<Mirror> mirrors = new CopyOnWriteArrayList<>();
 
-    private final List<Proxy> proxies = new CopyOnWriteArrayList<Proxy>();
+    private final List<Proxy> proxies = new CopyOnWriteArrayList<>();
 
-    private final List<Authentication> authentications = new CopyOnWriteArrayList<Authentication>();
+    private final List<Authentication> authentications = new CopyOnWriteArrayList<>();
 
     private LocalRepository localRepository;
 
@@ -148,7 +149,7 @@ public class AntRepoSys
 
     private static <T> boolean eq( T o1, T o2 )
     {
-        return ( o1 == null ) ? o2 == null : o1.equals( o2 );
+        return Objects.equals( o1, o2 );
     }
 
     public static synchronized AntRepoSys getInstance( Project project )
@@ -226,7 +227,7 @@ public class AntRepoSys
     {
         DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
 
-        Map<Object, Object> configProps = new LinkedHashMap<Object, Object>();
+        Map<Object, Object> configProps = new LinkedHashMap<>();
         configProps.put( ConfigurationProperties.USER_AGENT, getUserAgent() );
         configProps.putAll( (Map<?, ?>) project.getProperties() );
         processServerConfiguration( configProps );
@@ -308,7 +309,7 @@ public class AntRepoSys
 
     private Map<String, String> getHttpHeaders( Xpp3Dom dom )
     {
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, String> headers = new HashMap<>();
         for ( int i = 0; i < dom.getChildCount(); i++ )
         {
             Xpp3Dom child = dom.getChild( i );
@@ -434,7 +435,7 @@ public class AntRepoSys
     {
         DefaultAuthenticationSelector selector = new DefaultAuthenticationSelector();
 
-        Collection<String> ids = new HashSet<String>();
+        Collection<String> ids = new HashSet<>();
         for ( Authentication auth : authentications )
         {
             List<String> servers = auth.getServers();
@@ -730,11 +731,11 @@ public class AntRepoSys
         List<Exclusion> globalExclusions = exclusions;
         if ( !dependencies.getExclusions().isEmpty() )
         {
-            globalExclusions = new ArrayList<Exclusion>( exclusions );
+            globalExclusions = new ArrayList<>( exclusions );
             globalExclusions.addAll( dependencies.getExclusions() );
         }
 
-        Collection<String> ids = new HashSet<String>();
+        Collection<String> ids = new HashSet<>();
 
         for ( DependencyContainer container : dependencies.getDependencyContainers() )
         {
@@ -803,7 +804,7 @@ public class AntRepoSys
 
     private List<Dependency> readDependencies( File file )
     {
-        List<Dependency> dependencies = new ArrayList<Dependency>();
+        List<Dependency> dependencies = new ArrayList<>();
         try
         {
             try ( BufferedReader reader = new BufferedReader( new InputStreamReader( new FileInputStream( file ), "UTF-8" ) ) )
@@ -877,7 +878,7 @@ public class AntRepoSys
         Model model = pom.getModel( task );
         File pomFile = pom.getFile();
 
-        List<org.eclipse.aether.artifact.Artifact> results = new ArrayList<org.eclipse.aether.artifact.Artifact>();
+        List<org.eclipse.aether.artifact.Artifact> results = new ArrayList<>();
 
         org.eclipse.aether.artifact.Artifact pomArtifact =
             new DefaultArtifact( model.getGroupId(), model.getArtifactId(), "pom", model.getVersion() ).setFile( pomFile );

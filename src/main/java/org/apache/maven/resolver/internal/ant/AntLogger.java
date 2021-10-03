@@ -30,17 +30,17 @@ class AntLogger
 
     private Project project;
 
-    AntLogger( Project project )
+    AntLogger( final Project project )
     {
         this.project = project;
     }
 
-    public void debug( String msg )
+    public void debug( final String msg )
     {
         project.log( msg, Project.MSG_DEBUG );
     }
 
-    public void debug( String msg, Throwable error )
+    public void debug( final String msg, final Throwable error )
     {
         project.log( msg, error, Project.MSG_DEBUG );
     }
@@ -55,12 +55,12 @@ class AntLogger
         return true;
     }
 
-    public void warn( String msg )
+    public void warn( final String msg )
     {
         project.log( msg, Project.MSG_WARN );
     }
 
-    public void warn( String msg, Throwable error )
+    public void warn( final String msg, final Throwable error )
     {
         project.log( msg, error, Project.MSG_WARN );
     }

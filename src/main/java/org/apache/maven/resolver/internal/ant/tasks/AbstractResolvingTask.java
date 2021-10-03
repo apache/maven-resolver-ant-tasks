@@ -41,7 +41,7 @@ public abstract class AbstractResolvingTask
 
     protected LocalRepository localRepository;
 
-    public void addDependencies( Dependencies dependencies )
+    public void addDependencies( final Dependencies dependencies )
     {
         if ( this.dependencies != null )
         {
@@ -50,7 +50,7 @@ public abstract class AbstractResolvingTask
         this.dependencies = dependencies;
     }
 
-    public void setDependenciesRef( Reference ref )
+    public void setDependenciesRef( final Reference ref )
     {
         if ( dependencies == null )
         {
@@ -80,19 +80,19 @@ public abstract class AbstractResolvingTask
         return remoteRepositories;
     }
 
-    public void addRemoteRepo( RemoteRepository repository )
+    public void addRemoteRepo( final RemoteRepository repository )
     {
         getRemoteRepos().addRemoterepo( repository );
     }
 
-    public void addRemoteRepos( RemoteRepositories repositories )
+    public void addRemoteRepos( final RemoteRepositories repositories )
     {
         getRemoteRepos().addRemoterepos( repositories );
     }
 
-    public void setRemoteReposRef( Reference ref )
+    public void setRemoteReposRef( final Reference ref )
     {
-        RemoteRepositories repos = new RemoteRepositories();
+        final RemoteRepositories repos = new RemoteRepositories();
         repos.setProject( getProject() );
         repos.setRefid( ref );
         getRemoteRepos().addRemoterepos( repos );

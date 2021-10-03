@@ -27,16 +27,16 @@ import org.apache.tools.ant.Project;
 class AetherUtils
 {
 
-    public static File findGlobalSettings( Project project )
+    public static File findGlobalSettings( final Project project )
     {
-        File file = new File( new File( project.getProperty( "ant.home" ), "etc" ), Names.SETTINGS_XML );
+        final File file = new File( new File( project.getProperty( "ant.home" ), "etc" ), Names.SETTINGS_XML );
         if ( file.isFile() )
         {
             return file;
         }
         else
         {
-            String mavenHome = getMavenHome( project );
+            final String mavenHome = getMavenHome( project );
             if ( mavenHome != null )
             {
                 return new File( new File( mavenHome, "conf" ), Names.SETTINGS_XML );
@@ -46,9 +46,9 @@ class AetherUtils
         return null;
     }
 
-    public static String getMavenHome( Project project )
+    public static String getMavenHome( final Project project )
     {
-        String mavenHome = project.getProperty( "maven.home" );
+        final String mavenHome = project.getProperty( "maven.home" );
         if ( mavenHome != null )
         {
             return mavenHome;
@@ -56,10 +56,10 @@ class AetherUtils
         return System.getenv( "M2_HOME" );
     }
 
-    public static File findUserSettings( Project project )
+    public static File findUserSettings( final Project project )
     {
-        File userHome = new File( project.getProperty( "user.home" ) );
-        File file = new File( new File( userHome, ".ant" ), Names.SETTINGS_XML );
+        final File userHome = new File( project.getProperty( "user.home" ) );
+        final File file = new File( new File( userHome, ".ant" ), Names.SETTINGS_XML );
         if ( file.isFile() )
         {
             return file;
@@ -70,9 +70,9 @@ class AetherUtils
         }
     }
 
-    public static RemoteRepositories getDefaultRepositories( Project project )
+    public static RemoteRepositories getDefaultRepositories( final Project project )
     {
-        Object obj = project.getReference( Names.ID_DEFAULT_REPOS );
+        final Object obj = project.getReference( Names.ID_DEFAULT_REPOS );
         if ( obj instanceof RemoteRepositories )
         {
             return (RemoteRepositories) obj;

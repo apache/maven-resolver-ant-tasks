@@ -63,8 +63,9 @@
   <properties>
     <mavenVersion>3.6.3</mavenVersion>
     <resolverVersion>1.7.2</resolverVersion>
-    <antVersion>1.8.4</antVersion>
+    <antVersion>1.9.16</antVersion>
     <javaVersion>8</javaVersion>
+    <junitVersion>4.13.2</junitVersion>
     <maven.site.path>resolver-archives/resolver-ant-tasks-LATEST</maven.site.path>
     <checkstyle.violation.ignore>LineLength,MagicNumber</checkstyle.violation.ignore>
     <project.build.outputTimestamp>2021-05-13T18:07:07Z</project.build.outputTimestamp>
@@ -211,7 +212,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <version>${junitVersion}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -363,8 +364,18 @@
             <dependencies>
               <dependency>
                 <groupId>org.apache.ant</groupId>
+                <artifactId>ant</artifactId>
+                <version>${antVersion}</version>
+              </dependency>
+              <dependency>
+                <groupId>org.apache.ant</groupId>
                 <artifactId>ant-junit</artifactId>
                 <version>${antVersion}</version>
+              </dependency>
+              <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junitVersion}</version>
               </dependency>
             </dependencies>
           </plugin>

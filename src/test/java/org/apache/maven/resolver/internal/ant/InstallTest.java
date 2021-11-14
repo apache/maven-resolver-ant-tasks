@@ -8,9 +8,9 @@ package org.apache.maven.resolver.internal.ant;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *  http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,6 +18,9 @@ package org.apache.maven.resolver.internal.ant;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import junit.framework.JUnit4TestAdapter;
+import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
@@ -28,17 +31,23 @@ import java.io.IOException;
 public class InstallTest
     extends AntBuildsTest
 {
+    public static junit.framework.Test suite()
+    {
+        return new JUnit4TestAdapter( InstallTest.class );
+    }
 
+    @Test
     public void testInstallGlobalPom()
     {
         executeTarget( "testInstallGlobalPom" );
         long tstamp = System.currentTimeMillis();
 
         assertLogContaining( "Installing" );
-        
+
         assertUpdatedFile( tstamp, localRepoDir, "test/dummy/0.1-SNAPSHOT/dummy-0.1-SNAPSHOT.pom" );
     }
 
+    @Test
     public void testInstallOverrideGlobalPom()
     {
         executeTarget( "testInstallOverrideGlobalPom" );
@@ -49,6 +58,7 @@ public class InstallTest
         assertUpdatedFile( tstamp, localRepoDir, "test/other/0.1-SNAPSHOT/other-0.1-SNAPSHOT.pom" );
     }
 
+    @Test
     public void testInstallOverrideGlobalPomByRef()
     {
         long tstamp = System.currentTimeMillis();
@@ -60,6 +70,7 @@ public class InstallTest
         assertUpdatedFile( tstamp, localRepoDir, "test/other/0.1-SNAPSHOT/other-0.1-SNAPSHOT.pom" );
     }
 
+    @Test
     public void testDefaultRepo()
     {
         executeTarget( "testDefaultRepo" );
@@ -71,6 +82,7 @@ public class InstallTest
         assertUpdatedFile( tstamp, localRepoDir, "test/dummy/0.1-SNAPSHOT/dummy-0.1-SNAPSHOT-ant.xml" );
     }
 
+    @Test
     public void testCustomRepo()
         throws IOException
     {

@@ -8,9 +8,9 @@ package org.apache.maven.resolver.internal.ant;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *  http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -28,14 +28,21 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 
+import junit.framework.JUnit4TestAdapter;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.FileResource;
+import org.junit.Test;
 
 public class ResolveTest
     extends AntBuildsTest
 {
+    public static junit.framework.Test suite()
+    {
+        return new JUnit4TestAdapter( ResolveTest.class );
+    }
 
+    @Test
     public void testResolveGlobalPom()
     {
         executeTarget( "testResolveGlobalPom" );
@@ -46,6 +53,7 @@ public class ResolveTest
                     allOf( containsString( "aether-api" ), endsWith( ".jar" ) ) );
     }
 
+    @Test
     public void testResolveOverrideGlobalPom()
     {
         executeTarget( "testResolveOverrideGlobalPom" );
@@ -56,6 +64,7 @@ public class ResolveTest
                     allOf( containsString( "aether-api" ), endsWith( ".jar" ) ) );
     }
 
+    @Test
     public void testResolveGlobalPomIntoOtherLocalRepo()
     {
         executeTarget( "testResolveGlobalPomIntoOtherLocalRepo" );
@@ -66,6 +75,7 @@ public class ResolveTest
                     endsWith( "local-repo-custom/org/eclipse/aether/aether-api/0.9.0.M3/aether-api-0.9.0.M3.jar" ) );
     }
 
+    @Test
     public void testResolveCustomFileLayout()
         throws IOException
     {
@@ -76,14 +86,15 @@ public class ResolveTest
                     new File( dir, "org.eclipse.aether/aether-api/org/eclipse/aether/jar" ).exists() );
     }
 
+    @Test
     public void testResolveAttachments()
         throws IOException
     {
         File dir = new File( BUILD_DIR, "resolve-attachments" );
         executeTarget( "testResolveAttachments" );
-        
+
         File jdocDir = new File(dir, "javadoc");
-        
+
         assertThat( "aether-api-javadoc was not saved with custom file layout",
                     new File( jdocDir, "org.eclipse.aether-aether-api-javadoc.jar" ).exists() );
 
@@ -96,6 +107,7 @@ public class ResolveTest
                     everyItem( endsWith( "sources.jar" ) ) );
     }
 
+    @Test
     public void testResolvePath()
     {
         executeTarget( "testResolvePath" );
@@ -108,6 +120,7 @@ public class ResolveTest
                     hasItemInArray( allOf( containsString( "aether-api" ), endsWith( ".jar" ) ) ) );
     }
 
+    @Test
     public void testResolveDepsFromFile()
     {
         executeTarget( "testResolveDepsFromFile" );
@@ -120,6 +133,7 @@ public class ResolveTest
         assertThat( "aether-api was resolved as a property", prop, nullValue() );
     }
 
+    @Test
     public void testResolveNestedDependencyCollections()
     {
         executeTarget( "testResolveNestedDependencyCollections" );
@@ -132,6 +146,7 @@ public class ResolveTest
         assertThat( "aether-api was resolved as a property", prop, nullValue() );
     }
 
+    @Test
     public void testResolveResourceCollectionOnly()
     {
         executeTarget( "testResolveResourceCollectionOnly" );

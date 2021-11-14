@@ -8,9 +8,9 @@ package org.apache.maven.resolver.internal.ant;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *  http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -22,15 +22,15 @@ package org.apache.maven.resolver.internal.ant;
 import java.io.File;
 import java.io.PrintStream;
 
-import org.apache.maven.resolver.internal.ant.ProjectWorkspaceReader;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.BuildFileTest;
-import org.apache.tools.ant.DefaultLogger;
-import org.apache.tools.ant.Project;
+import org.apache.tools.ant.*;
 import org.eclipse.aether.internal.test.util.TestFileUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+
+import static org.junit.Assert.assertTrue;
 
 public abstract class AntBuildsTest
-    extends BuildFileTest
 {
 
     private static final File BASE_DIR;
@@ -39,9 +39,14 @@ public abstract class AntBuildsTest
 
     static
     {
+        System.setProperty("aether.metadataResolver.threads", "1");
+        System.setProperty("aether.connector.basic.threads", "1");
         BASE_DIR = new File( "" ).getAbsoluteFile();
         BUILD_DIR = new File( BASE_DIR, "target/ant" );
     }
+
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
 
     protected File projectDir;
 
@@ -65,12 +70,10 @@ public abstract class AntBuildsTest
         // hook for subclasses to set further system properties for the project to pick up
     }
 
-    @Override
-    protected void setUp()
+    @Before
+    public void setUp()
         throws Exception
     {
-        super.setUp();
-
         TestFileUtils.deleteFile( BUILD_DIR );
 
         projectDir = new File( new File( BASE_DIR, "src/test/resources/ant" ), getProjectDirName() );
@@ -80,36 +83,24 @@ public abstract class AntBuildsTest
         System.setProperty( "project.dir", projectDir.getAbsolutePath() );
         System.setProperty( "build.dir", BUILD_DIR.getAbsolutePath() );
         System.setProperty( "maven.repo.local", localRepoDir.getAbsolutePath() );
-        System.setProperty( "project.distrepo.url", distRepoDir.toURI().toString() );
-        if ( "1.7".equals( System.getProperty( "java.specification.version", "1.7" ) ) )
-        {
-            System.setProperty( "https.protocols", "TLSv1.2" );
-        }
+        System.setProperty( "project.distrepo.url", distRepoDir.toURI().toASCIIString() );
         setUpProperties();
 
         configureProject( new File( projectDir, "ant.xml" ).getAbsolutePath(), Project.MSG_VERBOSE );
     }
 
-    @Override
-    protected void tearDown()
+    @After
+    public void tearDown()
         throws Exception
     {
-        try
-        {
-            ProjectWorkspaceReader.dropInstance();
-            TestFileUtils.deleteFile( BUILD_DIR );
-        }
-        finally
-        {
-            super.tearDown();
-        }
+        ProjectWorkspaceReader.dropInstance();
+        TestFileUtils.deleteFile( BUILD_DIR );
     }
 
-    @Override
     public void configureProject( String filename, int logLevel )
         throws BuildException
     {
-        super.configureProject( filename, logLevel );
+        buildRule.configureProject( filename, logLevel );
         DefaultLogger logger = new DefaultLogger()
         {
             @Override
@@ -122,7 +113,25 @@ public abstract class AntBuildsTest
         logger.setMessageOutputLevel( logLevel );
         logger.setOutputPrintStream( System.out );
         logger.setErrorPrintStream( System.err );
-        getProject().addBuildListener( logger );
+        buildRule.getProject().addBuildListener( logger );
+    }
+    protected void assertLogContaining( String substring )
+    {
+        String realLog = getLog();
+        assertTrue( "expecting log to contain \"" + substring + "\" log was \"" + realLog + "\"", realLog.contains( substring ) );
     }
 
+    protected void executeTarget( String targetName ) {
+        buildRule.executeTarget( targetName );
+    }
+
+    protected String getLog()
+    {
+        return buildRule.getLog();
+    }
+
+    protected Project getProject()
+    {
+        return buildRule.getProject();
+    }
 }

@@ -8,9 +8,9 @@ package org.apache.maven.resolver.internal.ant;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *  http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -25,12 +25,18 @@ import static org.hamcrest.Matchers.*;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.maven.resolver.internal.ant.AntRepoSys;
+import junit.framework.JUnit4TestAdapter;
+import org.junit.Test;
 
 public class SettingsTest
     extends AntBuildsTest
 {
+    public static junit.framework.Test suite()
+    {
+        return new JUnit4TestAdapter( SettingsTest.class );
+    }
 
+    @Test
     public void testUserSettings()
     {
         executeTarget( "testUserSettings" );
@@ -38,6 +44,7 @@ public class SettingsTest
                     equalTo( "userSettings.xml" ) );
     }
 
+    @Test
     public void testGlobalSettings()
     {
         executeTarget( "testGlobalSettings" );
@@ -45,6 +52,7 @@ public class SettingsTest
                     equalTo( "globalSettings.xml" ) );
     }
 
+    @Test
     public void testBothSettings()
     {
         executeTarget( "testBothSettings" );
@@ -54,6 +62,7 @@ public class SettingsTest
                     equalTo( "userSettings.xml" ) );
     }
 
+    @Test
     public void testFallback()
         throws IOException
     {

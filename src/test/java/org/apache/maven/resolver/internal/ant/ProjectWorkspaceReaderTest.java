@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 
-import org.apache.maven.resolver.internal.ant.ProjectWorkspaceReader;
+import junit.framework.JUnit4TestAdapter;
 import org.apache.maven.resolver.internal.ant.types.Pom;
 import org.apache.tools.ant.Project;
 import org.junit.Before;
@@ -34,6 +34,9 @@ import org.eclipse.aether.artifact.DefaultArtifact;
 
 public class ProjectWorkspaceReaderTest
 {
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(ProjectWorkspaceReaderTest.class);
+    }
 
     private ProjectWorkspaceReader reader;
 

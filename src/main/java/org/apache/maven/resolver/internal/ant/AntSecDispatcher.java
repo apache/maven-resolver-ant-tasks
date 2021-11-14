@@ -20,8 +20,9 @@ package org.apache.maven.resolver.internal.ant;
  */
 
 import org.sonatype.plexus.components.cipher.DefaultPlexusCipher;
-import org.sonatype.plexus.components.cipher.PlexusCipherException;
 import org.sonatype.plexus.components.sec.dispatcher.DefaultSecDispatcher;
+
+import java.util.Collections;
 
 /**
  */
@@ -31,15 +32,7 @@ class AntSecDispatcher
 
     AntSecDispatcher()
     {
-        _configurationFile = "~/.m2/settings-security.xml";
-        try
-        {
-            _cipher = new DefaultPlexusCipher();
-        }
-        catch ( PlexusCipherException e )
-        {
-            e.printStackTrace();
-        }
+        super(new DefaultPlexusCipher(), Collections.emptyMap(), "~/.m2/settings-security.xml");
     }
 
 }

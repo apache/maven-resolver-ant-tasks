@@ -19,6 +19,9 @@ package org.apache.maven.resolver.internal.ant;
  * under the License.
  */
 
+import junit.framework.JUnit4TestAdapter;
+import org.junit.Test;
+
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
@@ -32,7 +35,11 @@ import java.util.Arrays;
 public class DeployTest
     extends AntBuildsTest
 {
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(DeployTest.class);
+    }
 
+    @Test
     public void testDeployGlobalPom()
     {
         long min = System.currentTimeMillis();
@@ -44,6 +51,7 @@ public class DeployTest
         assertUpdatedFile( min, max, distRepoDir, "test/dummy/0.1-SNAPSHOT/maven-metadata.xml" );
     }
 
+    @Test
     public void testDeployOverrideGlobalPom()
     {
         long min = System.currentTimeMillis();
@@ -55,6 +63,7 @@ public class DeployTest
         assertUpdatedFile( min, max, distRepoDir, "test/other/0.1-SNAPSHOT/maven-metadata.xml" );
     }
 
+    @Test
     public void testDeployOverrideGlobalPomByRef()
     {
         long min = System.currentTimeMillis();
@@ -67,6 +76,7 @@ public class DeployTest
         assertUpdatedFile( min, max, distRepoDir, "test/other/0.1-SNAPSHOT/maven-metadata.xml" );
     }
 
+    @Test
     public void testDeployAttachedArtifact()
     {
         executeTarget( "testDeployAttachedArtifact" );

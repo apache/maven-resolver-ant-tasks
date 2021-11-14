@@ -28,14 +28,20 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 
+import junit.framework.JUnit4TestAdapter;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.FileResource;
+import org.junit.Test;
 
 public class ResolveTest
     extends AntBuildsTest
 {
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(ResolveTest.class);
+    }
 
+    @Test
     public void testResolveGlobalPom()
     {
         executeTarget( "testResolveGlobalPom" );
@@ -46,6 +52,7 @@ public class ResolveTest
                     allOf( containsString( "aether-api" ), endsWith( ".jar" ) ) );
     }
 
+    @Test
     public void testResolveOverrideGlobalPom()
     {
         executeTarget( "testResolveOverrideGlobalPom" );
@@ -56,6 +63,7 @@ public class ResolveTest
                     allOf( containsString( "aether-api" ), endsWith( ".jar" ) ) );
     }
 
+    @Test
     public void testResolveGlobalPomIntoOtherLocalRepo()
     {
         executeTarget( "testResolveGlobalPomIntoOtherLocalRepo" );
@@ -66,6 +74,7 @@ public class ResolveTest
                     endsWith( "local-repo-custom/org/eclipse/aether/aether-api/0.9.0.M3/aether-api-0.9.0.M3.jar" ) );
     }
 
+    @Test
     public void testResolveCustomFileLayout()
         throws IOException
     {
@@ -76,6 +85,7 @@ public class ResolveTest
                     new File( dir, "org.eclipse.aether/aether-api/org/eclipse/aether/jar" ).exists() );
     }
 
+    @Test
     public void testResolveAttachments()
         throws IOException
     {
@@ -96,6 +106,7 @@ public class ResolveTest
                     everyItem( endsWith( "sources.jar" ) ) );
     }
 
+    @Test
     public void testResolvePath()
     {
         executeTarget( "testResolvePath" );
@@ -108,6 +119,7 @@ public class ResolveTest
                     hasItemInArray( allOf( containsString( "aether-api" ), endsWith( ".jar" ) ) ) );
     }
 
+    @Test
     public void testResolveDepsFromFile()
     {
         executeTarget( "testResolveDepsFromFile" );
@@ -120,6 +132,7 @@ public class ResolveTest
         assertThat( "aether-api was resolved as a property", prop, nullValue() );
     }
 
+    @Test
     public void testResolveNestedDependencyCollections()
     {
         executeTarget( "testResolveNestedDependencyCollections" );
@@ -132,6 +145,7 @@ public class ResolveTest
         assertThat( "aether-api was resolved as a property", prop, nullValue() );
     }
 
+    @Test
     public void testResolveResourceCollectionOnly()
     {
         executeTarget( "testResolveResourceCollectionOnly" );

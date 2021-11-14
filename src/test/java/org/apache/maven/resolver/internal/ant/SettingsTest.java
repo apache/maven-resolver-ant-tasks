@@ -25,12 +25,17 @@ import static org.hamcrest.Matchers.*;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.maven.resolver.internal.ant.AntRepoSys;
+import junit.framework.JUnit4TestAdapter;
+import org.junit.Test;
 
 public class SettingsTest
     extends AntBuildsTest
 {
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(SettingsTest.class);
+    }
 
+    @Test
     public void testUserSettings()
     {
         executeTarget( "testUserSettings" );
@@ -38,6 +43,7 @@ public class SettingsTest
                     equalTo( "userSettings.xml" ) );
     }
 
+    @Test
     public void testGlobalSettings()
     {
         executeTarget( "testGlobalSettings" );
@@ -45,6 +51,7 @@ public class SettingsTest
                     equalTo( "globalSettings.xml" ) );
     }
 
+    @Test
     public void testBothSettings()
     {
         executeTarget( "testBothSettings" );
@@ -54,6 +61,7 @@ public class SettingsTest
                     equalTo( "userSettings.xml" ) );
     }
 
+    @Test
     public void testFallback()
         throws IOException
     {

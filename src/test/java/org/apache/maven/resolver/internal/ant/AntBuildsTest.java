@@ -39,6 +39,8 @@ public abstract class AntBuildsTest
 
     static
     {
+        System.setProperty("aether.metadataResolver.threads", "1");
+        System.setProperty("aether.connector.basic.threads", "1");
         BASE_DIR = new File( "" ).getAbsoluteFile();
         BUILD_DIR = new File( BASE_DIR, "target/ant" );
     }

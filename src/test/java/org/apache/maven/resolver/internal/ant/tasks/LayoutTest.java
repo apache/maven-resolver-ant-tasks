@@ -21,7 +21,7 @@ package org.apache.maven.resolver.internal.ant.tasks;
 
 import static org.junit.Assert.assertEquals;
 
-import org.apache.maven.resolver.internal.ant.tasks.Layout;
+import junit.framework.JUnit4TestAdapter;
 import org.apache.tools.ant.BuildException;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.junit.Test;
@@ -30,6 +30,9 @@ import org.junit.Test;
  */
 public class LayoutTest
 {
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(LayoutTest.class);
+    }
 
     @Test( expected = BuildException.class )
     public void testUnknownVariable()

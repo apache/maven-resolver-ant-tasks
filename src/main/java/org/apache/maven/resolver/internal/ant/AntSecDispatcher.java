@@ -32,7 +32,7 @@ class AntSecDispatcher
 
     AntSecDispatcher()
     {
-        super(new DefaultPlexusCipher(), Collections.emptyMap(), "~/.m2/settings-security.xml");
+        super( new DefaultPlexusCipher(), Collections.emptyMap(), "~/.m2/settings-security.xml" );
     }
 
 }

@@ -21,6 +21,7 @@ package org.apache.maven.resolver.internal.ant.types;
 
 import static org.junit.Assert.*;
 
+import junit.framework.JUnit4TestAdapter;
 import org.apache.maven.resolver.internal.ant.types.Exclusion;
 import org.junit.Test;
 
@@ -28,6 +29,9 @@ import org.junit.Test;
  */
 public class ExclusionTest
 {
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(ExclusionTest.class);
+    }
 
     @Test
     public void testSetCoordsGid()

@@ -21,13 +21,16 @@ package org.apache.maven.resolver.internal.ant.types;
 
 import static org.junit.Assert.*;
 
-import org.apache.maven.resolver.internal.ant.types.Dependency;
+import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
 
 /**
  */
 public class DependencyTest
 {
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(DependencyTest.class);
+    }
 
     @Test
     public void testSetCoordsGidAidVer()

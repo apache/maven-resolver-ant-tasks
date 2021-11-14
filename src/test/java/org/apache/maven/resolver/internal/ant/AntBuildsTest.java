@@ -84,11 +84,7 @@ public abstract class AntBuildsTest
         System.setProperty( "project.dir", projectDir.getAbsolutePath() );
         System.setProperty( "build.dir", BUILD_DIR.getAbsolutePath() );
         System.setProperty( "maven.repo.local", localRepoDir.getAbsolutePath() );
-        System.setProperty( "project.distrepo.url", distRepoDir.toURI().toString() );
-        if ( "1.7".equals( System.getProperty( "java.specification.version", "1.7" ) ) )
-        {
-            System.setProperty( "https.protocols", "TLSv1.2" );
-        }
+        System.setProperty( "project.distrepo.url", distRepoDir.toURI().toASCIIString() );
         setUpProperties();
 
         configureProject( new File( projectDir, "ant.xml" ).getAbsolutePath(), Project.MSG_VERBOSE );

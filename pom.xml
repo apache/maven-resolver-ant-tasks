@@ -79,9 +79,9 @@
         <version>3.2.0</version>
       </dependency>
       <dependency>
-        <groupId>org.sonatype.plexus</groupId>
+        <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-cipher</artifactId>
-        <version>1.7</version>
+        <version>2.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -167,11 +167,6 @@
           <artifactId>plexus-component-annotations</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-component-annotations</artifactId>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>

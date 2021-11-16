@@ -66,6 +66,7 @@
     <antVersion>1.9.16</antVersion>
     <javaVersion>8</javaVersion>
     <junitVersion>4.13.2</junitVersion>
+    <hamcrestVersion>2.2</hamcrestVersion>
     <maven.site.path>resolver-archives/resolver-ant-tasks-LATEST</maven.site.path>
     <checkstyle.violation.ignore>LineLength,MagicNumber</checkstyle.violation.ignore>
     <project.build.outputTimestamp>2021-05-13T18:07:07Z</project.build.outputTimestamp>
@@ -225,13 +226,13 @@
     <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-library</artifactId>
-      <version>1.3</version>
+      <version>${hamcrestVersion}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-core</artifactId>
-      <version>1.3</version>
+      <version>${hamcrestVersion}</version>
       <scope>test</scope>
     </dependency>
     <dependency>

@@ -48,12 +48,7 @@ class AetherUtils
 
     public static String getMavenHome( final Project project )
     {
-        final String mavenHome = project.getProperty( "maven.home" );
-        if ( mavenHome != null )
-        {
-            return mavenHome;
-        }
-        return System.getenv( "M2_HOME" );
+        return project.getProperty( "maven.home" );
     }
 
     public static File findUserSettings( final Project project )

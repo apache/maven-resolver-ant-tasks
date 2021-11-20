@@ -25,7 +25,6 @@ For the global settings, different paths will be tried:
 
 * `${ant.home}/etc/settings.xml`
 * `${maven.home}/conf/settings.xml`
-* `$M2_HOME/conf/settings.xml`
 
 The `<settings/>` definition is used to change that:
 

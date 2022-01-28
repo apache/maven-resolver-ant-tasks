@@ -45,7 +45,12 @@ import org.apache.maven.model.building.ModelBuilder;
 import org.apache.maven.model.building.ModelBuildingException;
 import org.apache.maven.model.building.ModelBuildingRequest;
 import org.apache.maven.model.resolution.ModelResolver;
+import org.apache.maven.repository.internal.DefaultArtifactDescriptorReader;
+import org.apache.maven.repository.internal.DefaultVersionRangeResolver;
+import org.apache.maven.repository.internal.DefaultVersionResolver;
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
+import org.apache.maven.repository.internal.SnapshotMetadataGeneratorFactory;
+import org.apache.maven.repository.internal.VersionsMetadataGeneratorFactory;
 import org.apache.maven.resolver.internal.ant.types.Artifact;
 import org.apache.maven.resolver.internal.ant.types.Artifacts;
 import org.apache.maven.resolver.internal.ant.types.Authentication;
@@ -90,8 +95,12 @@ import org.eclipse.aether.collection.DependencyCollectionException;
 import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory;
 import org.eclipse.aether.deployment.DeployRequest;
 import org.eclipse.aether.deployment.DeploymentException;
+import org.eclipse.aether.impl.ArtifactDescriptorReader;
 import org.eclipse.aether.impl.DefaultServiceLocator;
+import org.eclipse.aether.impl.MetadataGeneratorFactory;
 import org.eclipse.aether.impl.RemoteRepositoryManager;
+import org.eclipse.aether.impl.VersionRangeResolver;
+import org.eclipse.aether.impl.VersionResolver;
 import org.eclipse.aether.installation.InstallRequest;
 import org.eclipse.aether.installation.InstallationException;
 import org.eclipse.aether.repository.AuthenticationSelector;
@@ -169,7 +178,7 @@ public class AntRepoSys
     {
         this.project = project;
 
-        locator = MavenRepositorySystemUtils.newServiceLocator();
+        locator = new DefaultServiceLocator();
         locator.setErrorHandler( new AntServiceLocatorErrorHandler( project ) );
         locator.setServices( Logger.class, new AntLogger( project ) );
         locator.setServices( ModelBuilder.class, MODEL_BUILDER );
@@ -177,6 +186,11 @@ public class AntRepoSys
         locator.addService( TransporterFactory.class, FileTransporterFactory.class );
         locator.addService( TransporterFactory.class, HttpTransporterFactory.class );
         locator.addService( TransporterFactory.class, ClasspathTransporterFactory.class );
+        locator.addService( ArtifactDescriptorReader.class, DefaultArtifactDescriptorReader.class );
+        locator.addService( VersionResolver.class, DefaultVersionResolver.class );
+        locator.addService( VersionRangeResolver.class, DefaultVersionRangeResolver.class );
+        locator.addService( MetadataGeneratorFactory.class, SnapshotMetadataGeneratorFactory.class );
+        locator.addService( MetadataGeneratorFactory.class, VersionsMetadataGeneratorFactory.class );
     }
 
     private void initDefaults()

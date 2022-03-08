@@ -19,6 +19,10 @@ package org.apache.maven.resolver.internal.ant;
  * under the License.
  */
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,6 +41,7 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.DefaultModelBuilderFactory;
 import org.apache.maven.model.building.DefaultModelBuildingRequest;
@@ -45,12 +50,7 @@ import org.apache.maven.model.building.ModelBuilder;
 import org.apache.maven.model.building.ModelBuildingException;
 import org.apache.maven.model.building.ModelBuildingRequest;
 import org.apache.maven.model.resolution.ModelResolver;
-import org.apache.maven.repository.internal.DefaultArtifactDescriptorReader;
-import org.apache.maven.repository.internal.DefaultVersionRangeResolver;
-import org.apache.maven.repository.internal.DefaultVersionResolver;
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
-import org.apache.maven.repository.internal.SnapshotMetadataGeneratorFactory;
-import org.apache.maven.repository.internal.VersionsMetadataGeneratorFactory;
 import org.apache.maven.resolver.internal.ant.types.Artifact;
 import org.apache.maven.resolver.internal.ant.types.Artifacts;
 import org.apache.maven.resolver.internal.ant.types.Authentication;
@@ -65,6 +65,7 @@ import org.apache.maven.resolver.internal.ant.types.Proxy;
 import org.apache.maven.resolver.internal.ant.types.RemoteRepositories;
 import org.apache.maven.resolver.internal.ant.types.RemoteRepository;
 import org.apache.maven.resolver.internal.ant.types.RemoteRepository.Policy;
+import org.apache.maven.session.scope.internal.SessionScope;
 import org.apache.maven.settings.Profile;
 import org.apache.maven.settings.Repository;
 import org.apache.maven.settings.RepositoryPolicy;
@@ -82,6 +83,9 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Reference;
+import org.codehaus.plexus.DefaultContainerConfiguration;
+import org.codehaus.plexus.DefaultPlexusContainer;
+import org.codehaus.plexus.PlexusConstants;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.eclipse.aether.ConfigurationProperties;
 import org.eclipse.aether.DefaultRepositoryCache;
@@ -92,27 +96,15 @@ import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.collection.CollectRequest;
 import org.eclipse.aether.collection.CollectResult;
 import org.eclipse.aether.collection.DependencyCollectionException;
-import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory;
 import org.eclipse.aether.deployment.DeployRequest;
 import org.eclipse.aether.deployment.DeploymentException;
-import org.eclipse.aether.impl.ArtifactDescriptorReader;
-import org.eclipse.aether.impl.DefaultServiceLocator;
-import org.eclipse.aether.impl.MetadataGeneratorFactory;
 import org.eclipse.aether.impl.RemoteRepositoryManager;
-import org.eclipse.aether.impl.VersionRangeResolver;
-import org.eclipse.aether.impl.VersionResolver;
 import org.eclipse.aether.installation.InstallRequest;
 import org.eclipse.aether.installation.InstallationException;
 import org.eclipse.aether.repository.AuthenticationSelector;
 import org.eclipse.aether.repository.LocalRepositoryManager;
 import org.eclipse.aether.repository.MirrorSelector;
 import org.eclipse.aether.repository.ProxySelector;
-import org.eclipse.aether.spi.connector.RepositoryConnectorFactory;
-import org.eclipse.aether.spi.connector.transport.TransporterFactory;
-import org.eclipse.aether.spi.log.Logger;
-import org.eclipse.aether.transport.classpath.ClasspathTransporterFactory;
-import org.eclipse.aether.transport.file.FileTransporterFactory;
-import org.eclipse.aether.transport.http.HttpTransporterFactory;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
 import org.eclipse.aether.util.repository.ConservativeAuthenticationSelector;
 import org.eclipse.aether.util.repository.DefaultAuthenticationSelector;
@@ -134,7 +126,7 @@ public class AntRepoSys
 
     private final Project project;
 
-    private final DefaultServiceLocator locator;
+    private SessionScope sessionScope;
 
     private RepositorySystem repoSys;
 
@@ -174,23 +166,41 @@ public class AntRepoSys
         return instance;
     }
 
+    @Singleton @Named
+    static class Locator
+    {
+
+        @Inject
+        RepositorySystem repositorySystem;
+
+        @Inject
+        RemoteRepositoryManager remoteRepositoryManager;
+
+        @Inject
+        SessionScope sessionScope;
+
+    }
+
     private AntRepoSys( Project project )
     {
         this.project = project;
 
-        locator = new DefaultServiceLocator();
-        locator.setErrorHandler( new AntServiceLocatorErrorHandler( project ) );
-        locator.setServices( Logger.class, new AntLogger( project ) );
-        locator.setServices( ModelBuilder.class, MODEL_BUILDER );
-        locator.addService( RepositoryConnectorFactory.class, BasicRepositoryConnectorFactory.class );
-        locator.addService( TransporterFactory.class, FileTransporterFactory.class );
-        locator.addService( TransporterFactory.class, HttpTransporterFactory.class );
-        locator.addService( TransporterFactory.class, ClasspathTransporterFactory.class );
-        locator.addService( ArtifactDescriptorReader.class, DefaultArtifactDescriptorReader.class );
-        locator.addService( VersionResolver.class, DefaultVersionResolver.class );
-        locator.addService( VersionRangeResolver.class, DefaultVersionRangeResolver.class );
-        locator.addService( MetadataGeneratorFactory.class, SnapshotMetadataGeneratorFactory.class );
-        locator.addService( MetadataGeneratorFactory.class, VersionsMetadataGeneratorFactory.class );
+        try
+        {
+            DefaultPlexusContainer container = new DefaultPlexusContainer(
+                    new DefaultContainerConfiguration()
+                            .setJSR250Lifecycle( true )
+                            .setClassPathScanning( PlexusConstants.SCANNING_INDEX )
+            );
+            Locator locator = container.lookup( Locator.class );
+            sessionScope = locator.sessionScope;
+            repoSys = locator.repositorySystem;
+            remoteRepoMan = locator.remoteRepositoryManager;
+        }
+        catch ( Exception e )
+        {
+            throw new IllegalStateException( e );
+        }
     }
 
     private void initDefaults()
@@ -215,7 +225,7 @@ public class AntRepoSys
     {
         if ( repoSys == null )
         {
-            repoSys = locator.getService( RepositorySystem.class );
+//            repoSys = locator.getService( RepositorySystem.class );
             if ( repoSys == null )
             {
                 throw new BuildException( "The repository system could not be initialized" );
@@ -228,7 +238,7 @@ public class AntRepoSys
     {
         if ( remoteRepoMan == null )
         {
-            remoteRepoMan = locator.getService( RemoteRepositoryManager.class );
+//            remoteRepoMan = locator.getService( RemoteRepositoryManager.class );
             if ( remoteRepoMan == null )
             {
                 throw new BuildException( "The repository system could not be initialized" );
@@ -855,6 +865,8 @@ public class AntRepoSys
         InstallRequest request = new InstallRequest();
         request.setArtifacts( toArtifacts( task, session, pom, artifacts ) );
 
+        sessionScope.enter();
+        sessionScope.seed( MavenSession.class, (MavenSession) null );
         try
         {
             getSystem().install( session, request );
@@ -862,6 +874,10 @@ public class AntRepoSys
         catch ( InstallationException e )
         {
             throw new BuildException( "Could not install artifacts: " + e.getMessage(), e );
+        }
+        finally
+        {
+            sessionScope.exit();
         }
     }
 
@@ -876,6 +892,8 @@ public class AntRepoSys
         RemoteRepository distRepo = ( snapshot && snapshotRepository != null ) ? snapshotRepository : releaseRepository;
         request.setRepository( ConverterUtils.toDistRepository( distRepo, session ) );
 
+        sessionScope.enter();
+        sessionScope.seed( MavenSession.class, (MavenSession) null );
         try
         {
             getSystem().deploy( session, request );
@@ -883,6 +901,10 @@ public class AntRepoSys
         catch ( DeploymentException e )
         {
             throw new BuildException( "Could not deploy artifacts: " + e.getMessage(), e );
+        }
+        finally
+        {
+            sessionScope.exit();
         }
     }
 

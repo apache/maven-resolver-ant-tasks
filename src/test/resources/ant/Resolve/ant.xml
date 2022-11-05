@@ -119,4 +119,11 @@
     </repo:resolve>
   </target>
 
+  <target name="testResolveDependencyManagement">
+    <repo:pom file="${project.dir}/pom.xml"/>
+    <repo:resolve>
+      <path refid="depMgmt.compile" classpath="compile"/>
+      <path refid="depMgmt.test" classpath="test"/>
+    </repo:resolve>
+  </target>
 </project>

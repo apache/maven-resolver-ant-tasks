@@ -37,6 +37,16 @@
     <aetherVersion>0.9.0.M3</aetherVersion>
   </properties>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-pool2</artifactId>
+        <version>2.11.1</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>org.eclipse.aether</groupId>
@@ -50,6 +60,12 @@
       <type>pom</type>
       <scope>system</scope>
       <systemPath>${basedir}/pom.xml</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-dbcp2</artifactId>
+      <version>2.9.0</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

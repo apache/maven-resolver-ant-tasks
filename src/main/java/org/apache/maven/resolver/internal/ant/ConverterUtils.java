@@ -42,6 +42,7 @@ import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.artifact.DefaultArtifactType;
 import org.eclipse.aether.impl.RemoteRepositoryManager;
 import org.eclipse.aether.repository.RepositoryPolicy;
+import org.eclipse.aether.util.artifact.JavaScopes;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
 
 /**
@@ -59,13 +60,34 @@ class ConverterUtils
         }
 
         Map<String, String> props = null;
-        if ( "system".equals( dependency.getScope() ) && dependency.getSystemPath() != null )
+        if ( JavaScopes.SYSTEM.equals( dependency.getScope() ) && dependency.getSystemPath() != null )
         {
             props = Collections.singletonMap( ArtifactProperties.LOCAL_PATH, dependency.getSystemPath().getPath() );
         }
 
         return new DefaultArtifact( dependency.getGroupId(), dependency.getArtifactId(), dependency.getClassifier(), null,
                              dependency.getVersion(), props, type );
+    }
+
+    private static org.eclipse.aether.artifact.Artifact toArtifact( org.apache.maven.model.Dependency dependency,
+            ArtifactTypeRegistry types, Project project )
+    {
+        ArtifactType type = types.get( dependency.getType() );
+        if ( type == null )
+        {
+            type = new DefaultArtifactType( dependency.getType() );
+        }
+
+        Map<String, String> props = null;
+        if ( JavaScopes.SYSTEM.equals( dependency.getScope() ) && dependency.getSystemPath() != null
+                && dependency.getSystemPath().length() > 0 )
+        {
+            props = Collections.singletonMap( ArtifactProperties.LOCAL_PATH,
+                    project.resolveFile( dependency.getSystemPath() ).getPath() );
+        }
+
+        return new DefaultArtifact( dependency.getGroupId(), dependency.getArtifactId(), dependency.getClassifier(),
+                null, dependency.getVersion(), props, type );
     }
 
     public static org.eclipse.aether.repository.Authentication toAuthentication( Authentication auth )
@@ -88,6 +110,26 @@ class ConverterUtils
                                                          toExclusions( dependency.getExclusions(), exclusions ) );
     }
 
+    public static org.eclipse.aether.graph.Dependency toDependency( org.apache.maven.model.Dependency dependency,
+            List<Exclusion> exclusions, RepositorySystemSession session, Project project )
+    {
+        org.eclipse.aether.artifact.Artifact artifact = toArtifact( dependency, session.getArtifactTypeRegistry(), project );
+
+        List<org.eclipse.aether.graph.Exclusion> aetherExclusions = new ArrayList<>(
+                dependency.getExclusions().size() + ( exclusions != null ? exclusions.size() : 0 ) );
+        for ( org.apache.maven.model.Exclusion exclusion : dependency.getExclusions() )
+        {
+            aetherExclusions.add( toExclusion( exclusion ) );
+        }
+        for ( Exclusion exclusion : exclusions )
+        {
+            aetherExclusions.add( toExclusion( exclusion ) );
+        }
+
+        return new org.eclipse.aether.graph.Dependency( artifact, dependency.getScope(),
+                dependency.getOptional() != null ? dependency.isOptional() : null, aetherExclusions );
+    }
+
     /**
      * Converts the given ant repository type to an Aether repository instance with authentication and proxy filled in
      * via the sessions' selectors.
@@ -107,6 +149,11 @@ class ConverterUtils
     {
         return new org.eclipse.aether.graph.Exclusion( exclusion.getGroupId(), exclusion.getArtifactId(),
                                                         exclusion.getClassifier(), exclusion.getExtension() );
+    }
+
+    private static org.eclipse.aether.graph.Exclusion toExclusion( org.apache.maven.model.Exclusion exclusion )
+    {
+        return new org.eclipse.aether.graph.Exclusion( exclusion.getGroupId(), exclusion.getArtifactId(), "*", "*" );
     }
 
     private static Collection<org.eclipse.aether.graph.Exclusion> toExclusions( Collection<Exclusion> exclusions1,

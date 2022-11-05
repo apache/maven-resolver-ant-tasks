@@ -162,4 +162,26 @@ public class ResolveTest
         assertThat( file.getFile().getName(), is( "aether-api-0.9.0.v20140226.jar" ) );
     }
 
+    @Test
+    public void testResolveDependencyManagement()
+    {
+        executeTarget( "testResolveDependencyManagement" );
+        Map<?, ?> refs = getProject().getReferences();
+
+        Object obj = refs.get( "depMgmt.compile" );
+        assertThat( "ref 'depMgmt.compile' is no path", obj, instanceOf( Path.class ) );
+        Path path = (Path) obj;
+        String[] elements = path.list();
+        assertThat( "commons-pool2 on compile classpath", elements,
+                    not( hasItemInArray( containsString("commons-pool2") ) ) );
+
+        obj = refs.get( "depMgmt.test" );
+        assertThat( "ref 'depMgmt.test' is no path", obj, instanceOf( Path.class ) );
+        path = (Path) obj;
+        elements = path.list();
+        assertThat( "no commons-dbcp2 version 2.9.0 on test classpath", elements,
+                    hasItemInArray( endsWith("commons-dbcp2-2.9.0.jar") ) );
+        assertThat( "no commons-pool2 version 2.11.1 on test classpath", elements,
+                hasItemInArray( endsWith("commons-pool2-2.11.1.jar") ) );
+    }
 }

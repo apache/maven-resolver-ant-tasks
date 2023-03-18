@@ -61,8 +61,8 @@
   </distributionManagement>
 
   <properties>
-    <mavenVersion>3.8.3</mavenVersion>
-    <resolverVersion>1.7.2</resolverVersion>
+    <mavenVersion>3.9.1</mavenVersion>
+    <resolverVersion>1.9.7</resolverVersion>
     <antVersion>1.10.13</antVersion>
     <javaVersion>8</javaVersion>
     <junitVersion>4.13.2</junitVersion>
@@ -168,6 +168,18 @@
         </exclusion>
       </exclusions>
     </dependency>
+    <!-- This is needed to make the Maven resolver work with Maven 3.8.1+ -->
+    <!-- [resolver:resolve] [ERROR] Failed to determine Java version for profile XX -->
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-cipher</artifactId>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+      <version>1</version>
+    </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-interpolation</artifactId>
@@ -267,8 +279,9 @@
         </configuration>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.2.4</version>
+        <version>3.4.1</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -291,11 +304,18 @@
                   <artifact>*:*</artifact>
                   <excludes>
                     <exclude>licenses/**</exclude>
+                    <exclude>META-INF/LICENSE</exclude>
+                    <exclude>META-INF/LICENSE.txt</exclude>
+                    <exclude>META-INF/NOTICE</exclude>
+                    <exclude>META-INF/NOTICE.txt</exclude>
+                    <exclude>META-INF/DEPENDENCIES</exclude>
+                    <exclude>META-INF/MANIFEST.MF</exclude>
                   </excludes>
                 </filter>
               </filters>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ComponentsXmlResourceTransformer" />
+                <transformer implementation="org.apache.maven.plugins.shade.resource.SisuIndexResourceTransformer" />
               </transformers>
               <relocations>
                 <relocation>
@@ -341,7 +361,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-antrun-plugin</artifactId>
-            <version>3.0.0</version>
+            <version>3.1.0</version>
             <executions>
               <execution>
                 <id>smoke-test</id>

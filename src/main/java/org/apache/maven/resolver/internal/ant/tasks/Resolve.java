@@ -59,7 +59,7 @@ public class Resolve
     extends AbstractResolvingTask
 {
 
-    private List<ArtifactConsumer> consumers = new ArrayList<ArtifactConsumer>();
+    private List<ArtifactConsumer> consumers = new ArrayList<>();
 
     private boolean failOnMissingAttachments;
 
@@ -132,7 +132,7 @@ public class Resolve
         DependencyNode root = collectDependencies().getRoot();
         root.accept( new DependencyGraphLogger( this ) );
 
-        Map<String, Group> groups = new HashMap<String, Group>();
+        Map<String, Group> groups = new HashMap<>();
         for ( ArtifactConsumer consumer : consumers )
         {
             String classifier = consumer.getClassifier();
@@ -215,8 +215,8 @@ public class Resolve
                 throw new BuildException( "You must not specify both 'scopes' and 'classpath'" );
             }
 
-            Collection<String> included = new HashSet<String>();
-            Collection<String> excluded = new HashSet<String>();
+            Collection<String> included = new HashSet<>();
+            Collection<String> excluded = new HashSet<>();
 
             String[] split = scopes.split( "[, ]" );
             for ( String scope : split )
@@ -504,9 +504,9 @@ public class Resolve
 
         private String classifier;
 
-        private List<ArtifactConsumer> consumers = new ArrayList<ArtifactConsumer>();
+        private List<ArtifactConsumer> consumers = new ArrayList<>();
 
-        private List<ArtifactRequest> requests = new ArrayList<ArtifactRequest>();
+        private List<ArtifactRequest> requests = new ArrayList<>();
 
         Group( String classifier )
         {
@@ -525,7 +525,7 @@ public class Resolve
 
         public void createRequests( DependencyNode node )
         {
-            createRequests( node, new LinkedList<DependencyNode>() );
+            createRequests( node, new LinkedList<>() );
         }
 
         private void createRequests( DependencyNode node, LinkedList<DependencyNode> parents )

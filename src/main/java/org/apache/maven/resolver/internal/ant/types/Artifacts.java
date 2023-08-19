@@ -33,7 +33,7 @@ public class Artifacts
     implements ArtifactContainer
 {
 
-    private List<ArtifactContainer> containers = new ArrayList<ArtifactContainer>();
+    private List<ArtifactContainer> containers = new ArrayList<>();
 
     protected Artifacts getRef()
     {
@@ -86,7 +86,7 @@ public class Artifacts
         {
             return getRef().getArtifacts();
         }
-        List<Artifact> artifacts = new ArrayList<Artifact>();
+        List<Artifact> artifacts = new ArrayList<>();
         for ( ArtifactContainer container : containers )
         {
             artifacts.addAll( container.getArtifacts() );

@@ -47,7 +47,7 @@ public abstract class AbstractDistTask
     {
         getArtifacts().validate( this );
 
-        final Map<String, File> duplicates = new HashMap<String, File>();
+        final Map<String, File> duplicates = new HashMap<>();
         for ( final Artifact artifact : getArtifacts().getArtifacts() )
         {
             final String key = artifact.getType() + ':' + artifact.getClassifier();

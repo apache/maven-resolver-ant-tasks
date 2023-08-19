@@ -55,8 +55,8 @@ class Layout
     Layout( String layout )
         throws BuildException
     {
-        Collection<String> valid = new HashSet<String>( Arrays.asList( GID, GID_DIRS, AID, VER, BVER, EXT, CLS ) );
-        List<String> tokens = new ArrayList<String>();
+        Collection<String> valid = new HashSet<>( Arrays.asList( GID, GID_DIRS, AID, VER, BVER, EXT, CLS ) );
+        List<String> tokens = new ArrayList<>();
         Matcher m = Pattern.compile( "(\\{[^}]*\\})|([^{]+)" ).matcher( layout );
         while ( m.find() )
         {

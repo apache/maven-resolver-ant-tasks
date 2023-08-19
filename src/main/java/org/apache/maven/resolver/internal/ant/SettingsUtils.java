@@ -43,7 +43,7 @@ class SettingsUtils
             return null;
         }
 
-        List<org.apache.maven.model.Profile> results = new ArrayList<org.apache.maven.model.Profile>();
+        List<org.apache.maven.model.Profile> results = new ArrayList<>();
 
         for ( Profile profile : profiles )
         {

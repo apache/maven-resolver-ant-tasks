@@ -33,7 +33,7 @@ public class RemoteRepositories
     implements RemoteRepositoryContainer
 {
 
-    private List<RemoteRepositoryContainer> containers = new ArrayList<RemoteRepositoryContainer>();
+    private List<RemoteRepositoryContainer> containers = new ArrayList<>();
 
     protected RemoteRepositories getRef()
     {
@@ -86,7 +86,7 @@ public class RemoteRepositories
         {
             return getRef().getRepositories();
         }
-        List<RemoteRepository> repos = new ArrayList<RemoteRepository>();
+        List<RemoteRepository> repos = new ArrayList<>();
         for ( RemoteRepositoryContainer container : containers )
         {
             repos.addAll( container.getRepositories() );

@@ -113,7 +113,7 @@ class ConverterUtils
                                                                                  Collection<Exclusion> exclusions2 )
     {
         Collection<org.eclipse.aether.graph.Exclusion> results =
-            new LinkedHashSet<org.eclipse.aether.graph.Exclusion>();
+            new LinkedHashSet<>();
         if ( exclusions1 != null )
         {
             for ( Exclusion exclusion : exclusions1 )
@@ -202,11 +202,11 @@ class ConverterUtils
         }
         else
         {
-            repositories = new ArrayList<RemoteRepository>();
+            repositories = new ArrayList<>();
         }
 
         List<org.eclipse.aether.repository.RemoteRepository> results =
-            new ArrayList<org.eclipse.aether.repository.RemoteRepository>();
+            new ArrayList<>();
         for ( RemoteRepository repo : repositories )
         {
             results.add( toRepository( repo ) );

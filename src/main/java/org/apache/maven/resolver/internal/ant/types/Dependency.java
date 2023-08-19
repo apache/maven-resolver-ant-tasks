@@ -52,7 +52,7 @@ public class Dependency
 
     private File systemPath;
 
-    private List<Exclusion> exclusions = new ArrayList<Exclusion>();
+    private List<Exclusion> exclusions = new ArrayList<>();
 
     protected Dependency getRef()
     {

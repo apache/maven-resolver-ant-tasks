@@ -41,9 +41,9 @@ public class Dependencies
 
     private Pom pom;
 
-    private List<DependencyContainer> containers = new ArrayList<DependencyContainer>();
+    private List<DependencyContainer> containers = new ArrayList<>();
 
-    private List<Exclusion> exclusions = new ArrayList<Exclusion>();
+    private List<Exclusion> exclusions = new ArrayList<>();
 
     private boolean nestedDependencies;
 
@@ -64,7 +64,7 @@ public class Dependencies
             {
                 throw new BuildException( "A <pom> used for dependency resolution has to be backed by a pom.xml file" );
             }
-            Map<String, String> ids = new HashMap<String, String>();
+            Map<String, String> ids = new HashMap<>();
             for ( DependencyContainer container : containers )
             {
                 container.validate( task );

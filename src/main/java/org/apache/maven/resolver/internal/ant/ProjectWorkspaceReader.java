@@ -48,7 +48,7 @@ public class ProjectWorkspaceReader
 
     private static final Object LOCK = new Object();
 
-    private Map<String, Artifact> artifacts = new ConcurrentHashMap<String, Artifact>();
+    private Map<String, Artifact> artifacts = new ConcurrentHashMap<>();
 
     public void addPom( Pom pom )
     {
@@ -107,7 +107,7 @@ public class ProjectWorkspaceReader
 
     public List<String> findVersions( Artifact artifact )
     {
-        List<String> versions = new ArrayList<String>();
+        List<String> versions = new ArrayList<>();
         for ( Artifact art : artifacts.values() )
         {
             if ( ArtifactIdUtils.equalsVersionlessId( artifact, art ) )

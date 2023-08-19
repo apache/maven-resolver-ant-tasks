@@ -72,7 +72,7 @@ class AntModelResolver
         this.repoSys = repoSys;
         this.remoteRepositoryManager = remoteRepositoryManager;
         this.repositories = repositories;
-        this.repositoryIds = new HashSet<String>();
+        this.repositoryIds = new HashSet<>();
     }
 
     private AntModelResolver( final AntModelResolver original )
@@ -82,7 +82,7 @@ class AntModelResolver
         this.repoSys = original.repoSys;
         this.remoteRepositoryManager = original.remoteRepositoryManager;
         this.repositories = original.repositories;
-        this.repositoryIds = new HashSet<String>( original.repositoryIds );
+        this.repositoryIds = new HashSet<>( original.repositoryIds );
     }
 
     public void addRepository( final Repository repository )

@@ -41,7 +41,7 @@ public class Authentication
 
     private String passphrase;
 
-    private List<String> servers = new ArrayList<String>();
+    private List<String> servers = new ArrayList<>();
 
     @Override
     public void setProject( Project project )

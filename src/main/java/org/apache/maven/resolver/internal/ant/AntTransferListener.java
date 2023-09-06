@@ -34,7 +34,7 @@ import org.eclipse.aether.transfer.TransferResource;
  */
 class AntTransferListener extends AbstractTransferListener {
 
-    private Task task;
+    private final Task task;
 
     AntTransferListener(final Task task) {
         this.task = task;

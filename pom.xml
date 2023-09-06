@@ -142,6 +142,11 @@
       <version>${resolverVersion}</version>
     </dependency>
     <dependency>
+      <groupId>org.apache.maven.resolver</groupId>
+      <artifactId>maven-resolver-supplier</artifactId>
+      <version>${resolverVersion}</version>
+    </dependency>
+    <dependency>
       <!-- This shuts off annoying warnings from slf4j-api -->
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-nop</artifactId>

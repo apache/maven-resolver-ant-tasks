@@ -1,5 +1,3 @@
-package org.apache.maven.resolver.internal.ant.types;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -9,7 +7,7 @@ package org.apache.maven.resolver.internal.ant.types;
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -18,75 +16,69 @@ package org.apache.maven.resolver.internal.ant.types;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import static org.junit.Assert.*;
+package org.apache.maven.resolver.internal.ant.types;
 
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
+
 /**
  */
-public class DependencyTest
-{
-    public static junit.framework.Test suite()
-    {
-        return new JUnit4TestAdapter( DependencyTest.class );
+public class DependencyTest {
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(DependencyTest.class);
     }
 
     @Test
-    public void testSetCoordsGidAidVer()
-    {
+    public void testSetCoordsGidAidVer() {
         Dependency dep = new Dependency();
-        dep.setCoords( "gid:aid:ver" );
+        dep.setCoords("gid:aid:ver");
 
-        assertEquals( "gid", dep.getGroupId() );
-        assertEquals( "aid", dep.getArtifactId() );
-        assertEquals( "ver", dep.getVersion() );
-        assertEquals( "jar", dep.getType() );
-        assertEquals( "", dep.getClassifier() );
-        assertEquals( "compile", dep.getScope() );
+        assertEquals("gid", dep.getGroupId());
+        assertEquals("aid", dep.getArtifactId());
+        assertEquals("ver", dep.getVersion());
+        assertEquals("jar", dep.getType());
+        assertEquals("", dep.getClassifier());
+        assertEquals("compile", dep.getScope());
     }
 
     @Test
-    public void testSetCoordsGidAidVerScope()
-    {
+    public void testSetCoordsGidAidVerScope() {
         Dependency dep = new Dependency();
-        dep.setCoords( "gid:aid:ver:scope" );
+        dep.setCoords("gid:aid:ver:scope");
 
-        assertEquals( "gid", dep.getGroupId() );
-        assertEquals( "aid", dep.getArtifactId() );
-        assertEquals( "ver", dep.getVersion() );
-        assertEquals( "jar", dep.getType() );
-        assertEquals( "", dep.getClassifier() );
-        assertEquals( "scope", dep.getScope() );
+        assertEquals("gid", dep.getGroupId());
+        assertEquals("aid", dep.getArtifactId());
+        assertEquals("ver", dep.getVersion());
+        assertEquals("jar", dep.getType());
+        assertEquals("", dep.getClassifier());
+        assertEquals("scope", dep.getScope());
     }
 
     @Test
-    public void testSetCoordsGidAidVerTypeScope()
-    {
+    public void testSetCoordsGidAidVerTypeScope() {
         Dependency dep = new Dependency();
-        dep.setCoords( "gid:aid:ver:type:scope" );
+        dep.setCoords("gid:aid:ver:type:scope");
 
-        assertEquals( "gid", dep.getGroupId() );
-        assertEquals( "aid", dep.getArtifactId() );
-        assertEquals( "ver", dep.getVersion() );
-        assertEquals( "type", dep.getType() );
-        assertEquals( "", dep.getClassifier() );
-        assertEquals( "scope", dep.getScope() );
+        assertEquals("gid", dep.getGroupId());
+        assertEquals("aid", dep.getArtifactId());
+        assertEquals("ver", dep.getVersion());
+        assertEquals("type", dep.getType());
+        assertEquals("", dep.getClassifier());
+        assertEquals("scope", dep.getScope());
     }
 
     @Test
-    public void testSetCoordsGidAidVerTypeClsScope()
-    {
+    public void testSetCoordsGidAidVerTypeClsScope() {
         Dependency dep = new Dependency();
-        dep.setCoords( "gid:aid:ver:type:cls:scope" );
+        dep.setCoords("gid:aid:ver:type:cls:scope");
 
-        assertEquals( "gid", dep.getGroupId() );
-        assertEquals( "aid", dep.getArtifactId() );
-        assertEquals( "ver", dep.getVersion() );
-        assertEquals( "type", dep.getType() );
-        assertEquals( "cls", dep.getClassifier() );
-        assertEquals( "scope", dep.getScope() );
+        assertEquals("gid", dep.getGroupId());
+        assertEquals("aid", dep.getArtifactId());
+        assertEquals("ver", dep.getVersion());
+        assertEquals("type", dep.getType());
+        assertEquals("cls", dep.getClassifier());
+        assertEquals("scope", dep.getScope());
     }
-
 }

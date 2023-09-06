@@ -1,5 +1,3 @@
-package org.apache.maven.resolver.internal.ant.tasks;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -9,7 +7,7 @@ package org.apache.maven.resolver.internal.ant.tasks;
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -18,6 +16,7 @@ package org.apache.maven.resolver.internal.ant.tasks;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.resolver.internal.ant.tasks;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,259 +54,199 @@ import org.eclipse.aether.util.filter.ScopeDependencyFilter;
 
 /**
  */
-public class Resolve
-    extends AbstractResolvingTask
-{
+public class Resolve extends AbstractResolvingTask {
 
     private List<ArtifactConsumer> consumers = new ArrayList<>();
 
     private boolean failOnMissingAttachments;
 
-    public void setFailOnMissingAttachments( boolean failOnMissingAttachments )
-    {
+    public void setFailOnMissingAttachments(boolean failOnMissingAttachments) {
         this.failOnMissingAttachments = failOnMissingAttachments;
     }
 
-    public Path createPath()
-    {
+    public Path createPath() {
         Path path = new Path();
-        consumers.add( path );
+        consumers.add(path);
         return path;
     }
 
-    public Files createFiles()
-    {
+    public Files createFiles() {
         Files files = new Files();
-        consumers.add( files );
+        consumers.add(files);
         return files;
     }
 
-    public Props createProperties()
-    {
+    public Props createProperties() {
         Props props = new Props();
-        consumers.add( props );
+        consumers.add(props);
         return props;
     }
 
-    private void validate()
-    {
-        for ( ArtifactConsumer consumer : consumers )
-        {
+    private void validate() {
+        for (ArtifactConsumer consumer : consumers) {
             consumer.validate();
         }
 
-        Pom pom = AntRepoSys.getInstance( getProject() ).getDefaultPom();
-        if ( dependencies == null && pom != null )
-        {
-            log( "Using default pom for dependency resolution (" + pom.toString() + ")", Project.MSG_INFO );
+        Pom pom = AntRepoSys.getInstance(getProject()).getDefaultPom();
+        if (dependencies == null && pom != null) {
+            log("Using default pom for dependency resolution (" + pom.toString() + ")", Project.MSG_INFO);
             dependencies = new Dependencies();
-            dependencies.setProject( getProject() );
-            getProject().addReference( Names.ID_DEFAULT_POM, pom );
-            dependencies.setPomRef( new Reference( getProject(), Names.ID_DEFAULT_POM ) );
+            dependencies.setProject(getProject());
+            getProject().addReference(Names.ID_DEFAULT_POM, pom);
+            dependencies.setPomRef(new Reference(getProject(), Names.ID_DEFAULT_POM));
         }
 
-        if ( dependencies != null )
-        {
-            dependencies.validate( this );
-        }
-        else
-        {
-            throw new BuildException( "No <dependencies> set for resolution" );
+        if (dependencies != null) {
+            dependencies.validate(this);
+        } else {
+            throw new BuildException("No <dependencies> set for resolution");
         }
     }
 
     @Override
-    public void execute()
-        throws BuildException
-    {
+    public void execute() throws BuildException {
         validate();
 
+        AntRepoSys sys = AntRepoSys.getInstance(getProject());
 
-        AntRepoSys sys = AntRepoSys.getInstance( getProject() );
-
-        RepositorySystemSession session = sys.getSession( this, localRepository );
+        RepositorySystemSession session = sys.getSession(this, localRepository);
         RepositorySystem system = sys.getSystem();
-        log( "Using local repository " + session.getLocalRepository(), Project.MSG_VERBOSE );
+        log("Using local repository " + session.getLocalRepository(), Project.MSG_VERBOSE);
 
         DependencyNode root = collectDependencies().getRoot();
-        root.accept( new DependencyGraphLogger( this ) );
+        root.accept(new DependencyGraphLogger(this));
 
         Map<String, Group> groups = new HashMap<>();
-        for ( ArtifactConsumer consumer : consumers )
-        {
+        for (ArtifactConsumer consumer : consumers) {
             String classifier = consumer.getClassifier();
-            Group group = groups.get( classifier );
-            if ( group == null )
-            {
-                group = new Group( classifier );
-                groups.put( classifier, group );
+            Group group = groups.get(classifier);
+            if (group == null) {
+                group = new Group(classifier);
+                groups.put(classifier, group);
             }
-            group.add( consumer );
+            group.add(consumer);
         }
 
-        for ( Group group : groups.values() )
-        {
-            group.createRequests( root );
+        for (Group group : groups.values()) {
+            group.createRequests(root);
         }
 
-        log( "Resolving artifacts", Project.MSG_INFO );
+        log("Resolving artifacts", Project.MSG_INFO);
 
-        for ( Group group : groups.values() )
-        {
+        for (Group group : groups.values()) {
             List<ArtifactResult> results;
-            try
-            {
-                results = system.resolveArtifacts( session, group.getRequests() );
-            }
-            catch ( ArtifactResolutionException e )
-            {
-                if ( !group.isAttachments() || failOnMissingAttachments )
-                {
-                    throw new BuildException( "Could not resolve artifacts: " + e.getMessage(), e );
+            try {
+                results = system.resolveArtifacts(session, group.getRequests());
+            } catch (ArtifactResolutionException e) {
+                if (!group.isAttachments() || failOnMissingAttachments) {
+                    throw new BuildException("Could not resolve artifacts: " + e.getMessage(), e);
                 }
                 results = e.getResults();
-                for ( ArtifactResult result : results )
-                {
-                    if ( result.isMissing() )
-                    {
-                        log( "Ignoring missing attachment " + result.getRequest().getArtifact(), Project.MSG_VERBOSE );
-                    }
-                    else if ( !result.isResolved() )
-                    {
-                        throw new BuildException( "Could not resolve artifacts: " + e.getMessage(), e );
+                for (ArtifactResult result : results) {
+                    if (result.isMissing()) {
+                        log("Ignoring missing attachment " + result.getRequest().getArtifact(), Project.MSG_VERBOSE);
+                    } else if (!result.isResolved()) {
+                        throw new BuildException("Could not resolve artifacts: " + e.getMessage(), e);
                     }
                 }
             }
 
-            group.processResults( results, session );
+            group.processResults(results, session);
         }
     }
 
     /**
      */
-    public abstract static class ArtifactConsumer
-        extends ProjectComponent
-    {
+    public abstract static class ArtifactConsumer extends ProjectComponent {
 
         private DependencyFilter filter;
 
-        public boolean accept( org.eclipse.aether.graph.DependencyNode node, List<DependencyNode> parents )
-        {
-            return filter == null || filter.accept( node, parents );
+        public boolean accept(org.eclipse.aether.graph.DependencyNode node, List<DependencyNode> parents) {
+            return filter == null || filter.accept(node, parents);
         }
 
-        public String getClassifier()
-        {
+        public String getClassifier() {
             return null;
         }
 
-        public void validate()
-        {
+        public void validate() {}
 
-        }
+        public abstract void process(Artifact artifact, RepositorySystemSession session);
 
-        public abstract void process( Artifact artifact, RepositorySystemSession session );
-
-        public void setScopes( String scopes )
-        {
-            if ( filter != null )
-            {
-                throw new BuildException( "You must not specify both 'scopes' and 'classpath'" );
+        public void setScopes(String scopes) {
+            if (filter != null) {
+                throw new BuildException("You must not specify both 'scopes' and 'classpath'");
             }
 
             Collection<String> included = new HashSet<>();
             Collection<String> excluded = new HashSet<>();
 
-            String[] split = scopes.split( "[, ]" );
-            for ( String scope : split )
-            {
+            String[] split = scopes.split("[, ]");
+            for (String scope : split) {
                 scope = scope.trim();
                 Collection<String> dst;
-                if ( scope.startsWith( "-" ) || scope.startsWith( "!" ) )
-                {
+                if (scope.startsWith("-") || scope.startsWith("!")) {
                     dst = excluded;
-                    scope = scope.substring( 1 );
-                }
-                else
-                {
+                    scope = scope.substring(1);
+                } else {
                     dst = included;
                 }
-                if ( scope.length() > 0 )
-                {
-                    dst.add( scope );
+                if (scope.length() > 0) {
+                    dst.add(scope);
                 }
             }
 
-            filter = new ScopeDependencyFilter( included, excluded );
+            filter = new ScopeDependencyFilter(included, excluded);
         }
 
-        public void setClasspath( String classpath )
-        {
-            if ( "compile".equals( classpath ) )
-            {
-                setScopes( "provided,system,compile" );
-            }
-            else if ( "runtime".equals( classpath ) )
-            {
-                setScopes( "compile,runtime" );
-            }
-            else if ( "test".equals( classpath ) )
-            {
-                setScopes( "provided,system,compile,runtime,test" );
-            }
-            else
-            {
-                throw new BuildException( "The classpath '" + classpath + "' is not defined"
-                    + ", must be one of 'compile', 'runtime' or 'test'" );
+        public void setClasspath(String classpath) {
+            if ("compile".equals(classpath)) {
+                setScopes("provided,system,compile");
+            } else if ("runtime".equals(classpath)) {
+                setScopes("compile,runtime");
+            } else if ("test".equals(classpath)) {
+                setScopes("provided,system,compile,runtime,test");
+            } else {
+                throw new BuildException("The classpath '" + classpath + "' is not defined"
+                        + ", must be one of 'compile', 'runtime' or 'test'");
             }
         }
-
     }
 
     /**
      */
-    public class Path
-        extends ArtifactConsumer
-    {
+    public class Path extends ArtifactConsumer {
 
         private String refid;
 
         private org.apache.tools.ant.types.Path path;
 
-        public void setRefId( String refId )
-        {
+        public void setRefId(String refId) {
             this.refid = refId;
         }
 
-        public void validate()
-        {
-            if ( refid == null )
-            {
-                throw new BuildException( "You must specify the 'refid' for the path" );
+        public void validate() {
+            if (refid == null) {
+                throw new BuildException("You must specify the 'refid' for the path");
             }
         }
 
-        public void process( Artifact artifact, RepositorySystemSession session )
-        {
-            if ( path == null )
-            {
-                path = new org.apache.tools.ant.types.Path( getProject() );
-                getProject().addReference( refid, path );
+        public void process(Artifact artifact, RepositorySystemSession session) {
+            if (path == null) {
+                path = new org.apache.tools.ant.types.Path(getProject());
+                getProject().addReference(refid, path);
             }
             File file = artifact.getFile();
-            path.add( new FileResource( file.getParentFile(), file.getName() ) );
+            path.add(new FileResource(file.getParentFile(), file.getName()));
         }
-
     }
 
     /**
      */
-    public class Files
-        extends ArtifactConsumer
-    {
+    public class Files extends ArtifactConsumer {
 
         private static final String DEFAULT_LAYOUT = Layout.GID_DIRS + "/" + Layout.AID + "/" + Layout.BVER + "/"
-            + Layout.AID + "-" + Layout.VER + "-" + Layout.CLS + "." + Layout.EXT;
+                + Layout.AID + "-" + Layout.VER + "-" + Layout.CLS + "." + Layout.EXT;
 
         private String refid;
 
@@ -321,186 +260,142 @@ public class Resolve
 
         private Resources resources;
 
-        public void setRefId( String refId )
-        {
+        public void setRefId(String refId) {
             this.refid = refId;
         }
 
-        public String getClassifier()
-        {
+        public String getClassifier() {
             return classifier;
         }
 
-        public void setAttachments( String attachments )
-        {
-            if ( "sources".equals( attachments ) )
-            {
+        public void setAttachments(String attachments) {
+            if ("sources".equals(attachments)) {
                 classifier = "*-sources";
-            }
-            else if ( "javadoc".equals( attachments ) )
-            {
+            } else if ("javadoc".equals(attachments)) {
                 classifier = "*-javadoc";
-            }
-            else
-            {
-                throw new BuildException( "The attachment type '" + attachments
-                    + "' is not defined, must be one of 'sources' or 'javadoc'" );
+            } else {
+                throw new BuildException("The attachment type '" + attachments
+                        + "' is not defined, must be one of 'sources' or 'javadoc'");
             }
         }
 
-        public void setDir( File dir )
-        {
+        public void setDir(File dir) {
             this.dir = dir;
-            if ( dir != null && layout == null )
-            {
-                layout = new Layout( DEFAULT_LAYOUT );
+            if (dir != null && layout == null) {
+                layout = new Layout(DEFAULT_LAYOUT);
             }
         }
 
-        public void setLayout( String layout )
-        {
-            this.layout = new Layout( layout );
+        public void setLayout(String layout) {
+            this.layout = new Layout(layout);
         }
 
-        public void validate()
-        {
-            if ( refid == null && dir == null )
-            {
-                throw new BuildException( "You must either specify the 'refid' for the resource collection"
-                    + " or a 'dir' to copy the files to" );
+        public void validate() {
+            if (refid == null && dir == null) {
+                throw new BuildException("You must either specify the 'refid' for the resource collection"
+                        + " or a 'dir' to copy the files to");
             }
-            if ( dir == null && layout != null )
-            {
-                throw new BuildException( "You must not specify a 'layout' unless 'dir' is also specified" );
+            if (dir == null && layout != null) {
+                throw new BuildException("You must not specify a 'layout' unless 'dir' is also specified");
             }
         }
 
-        public void process( Artifact artifact, RepositorySystemSession session )
-        {
-            if ( dir != null )
-            {
-                if ( refid != null && fileset == null )
-                {
+        public void process(Artifact artifact, RepositorySystemSession session) {
+            if (dir != null) {
+                if (refid != null && fileset == null) {
                     fileset = new FileSet();
-                    fileset.setProject( getProject() );
-                    fileset.setDir( dir );
-                    getProject().addReference( refid, fileset );
+                    fileset.setProject(getProject());
+                    fileset.setDir(dir);
+                    getProject().addReference(refid, fileset);
                 }
 
-                String path = layout.getPath( artifact );
+                String path = layout.getPath(artifact);
 
-                if ( fileset != null )
-                {
-                    fileset.createInclude().setName( path );
+                if (fileset != null) {
+                    fileset.createInclude().setName(path);
                 }
 
                 File src = artifact.getFile();
-                File dst = new File( dir, path );
+                File dst = new File(dir, path);
 
-                if ( src.lastModified() != dst.lastModified() || src.length() != dst.length() )
-                {
-                    try
-                    {
-                        Resolve.this.log( "Copy " + src + " to " + dst, Project.MSG_VERBOSE );
-                        FileUtils.getFileUtils().copyFile( src, dst, null, true, true );
+                if (src.lastModified() != dst.lastModified() || src.length() != dst.length()) {
+                    try {
+                        Resolve.this.log("Copy " + src + " to " + dst, Project.MSG_VERBOSE);
+                        FileUtils.getFileUtils().copyFile(src, dst, null, true, true);
+                    } catch (IOException e) {
+                        throw new BuildException(
+                                "Failed to copy artifact file " + src + " to " + dst + ": " + e.getMessage(), e);
                     }
-                    catch ( IOException e )
-                    {
-                        throw new BuildException( "Failed to copy artifact file " + src + " to " + dst + ": "
-                            + e.getMessage(), e );
-                    }
+                } else {
+                    Resolve.this.log("Omit to copy " + src + " to " + dst + ", seems unchanged", Project.MSG_VERBOSE);
                 }
-                else
-                {
-                    Resolve.this.log( "Omit to copy " + src + " to " + dst + ", seems unchanged", Project.MSG_VERBOSE );
-                }
-            }
-            else
-            {
-                if ( resources == null )
-                {
+            } else {
+                if (resources == null) {
                     resources = new Resources();
-                    resources.setProject( getProject() );
-                    getProject().addReference( refid, resources );
+                    resources.setProject(getProject());
+                    getProject().addReference(refid, resources);
                 }
 
-                FileResource resource = new FileResource( artifact.getFile() );
-                resource.setBaseDir( session.getLocalRepository().getBasedir() );
-                resource.setProject( getProject() );
-                resources.add( resource );
+                FileResource resource = new FileResource(artifact.getFile());
+                resource.setBaseDir(session.getLocalRepository().getBasedir());
+                resource.setProject(getProject());
+                resources.add(resource);
             }
         }
-
     }
 
     /**
      */
-    public class Props
-        extends ArtifactConsumer
-    {
+    public class Props extends ArtifactConsumer {
 
         private String prefix;
 
         private String classifier;
 
-        public void setPrefix( String prefix )
-        {
+        public void setPrefix(String prefix) {
             this.prefix = prefix;
         }
 
-        public String getClassifier()
-        {
+        public String getClassifier() {
             return classifier;
         }
 
-        public void setAttachments( String attachments )
-        {
-            if ( "sources".equals( attachments ) )
-            {
+        public void setAttachments(String attachments) {
+            if ("sources".equals(attachments)) {
                 classifier = "*-sources";
-            }
-            else if ( "javadoc".equals( attachments ) )
-            {
+            } else if ("javadoc".equals(attachments)) {
                 classifier = "*-javadoc";
-            }
-            else
-            {
-                throw new BuildException( "The attachment type '" + attachments
-                    + "' is not defined, must be one of 'sources' or 'javadoc'" );
+            } else {
+                throw new BuildException("The attachment type '" + attachments
+                        + "' is not defined, must be one of 'sources' or 'javadoc'");
             }
         }
 
-        public void process( Artifact artifact, RepositorySystemSession session )
-        {
-            StringBuilder buffer = new StringBuilder( 256 );
-            if ( prefix != null && prefix.length() > 0 )
-            {
-                buffer.append( prefix );
-                if ( !prefix.endsWith( "." ) )
-                {
-                    buffer.append( '.' );
+        public void process(Artifact artifact, RepositorySystemSession session) {
+            StringBuilder buffer = new StringBuilder(256);
+            if (prefix != null && prefix.length() > 0) {
+                buffer.append(prefix);
+                if (!prefix.endsWith(".")) {
+                    buffer.append('.');
                 }
             }
-            buffer.append( artifact.getGroupId() );
-            buffer.append( ':' );
-            buffer.append( artifact.getArtifactId() );
-            buffer.append( ':' );
-            buffer.append( artifact.getExtension() );
-            if ( artifact.getClassifier().length() > 0 )
-            {
-                buffer.append( ':' );
-                buffer.append( artifact.getClassifier() );
+            buffer.append(artifact.getGroupId());
+            buffer.append(':');
+            buffer.append(artifact.getArtifactId());
+            buffer.append(':');
+            buffer.append(artifact.getExtension());
+            if (artifact.getClassifier().length() > 0) {
+                buffer.append(':');
+                buffer.append(artifact.getClassifier());
             }
 
             String path = artifact.getFile().getAbsolutePath();
 
-            getProject().setProperty( buffer.toString(), path );
+            getProject().setProperty(buffer.toString(), path);
         }
-
     }
 
-    private static class Group
-    {
+    private static class Group {
 
         private String classifier;
 
@@ -508,79 +403,61 @@ public class Resolve
 
         private List<ArtifactRequest> requests = new ArrayList<>();
 
-        Group( String classifier )
-        {
+        Group(String classifier) {
             this.classifier = classifier;
         }
 
-        public boolean isAttachments()
-        {
+        public boolean isAttachments() {
             return classifier != null;
         }
 
-        public void add( ArtifactConsumer consumer )
-        {
-            consumers.add( consumer );
+        public void add(ArtifactConsumer consumer) {
+            consumers.add(consumer);
         }
 
-        public void createRequests( DependencyNode node )
-        {
-            createRequests( node, new LinkedList<>() );
+        public void createRequests(DependencyNode node) {
+            createRequests(node, new LinkedList<>());
         }
 
-        private void createRequests( DependencyNode node, LinkedList<DependencyNode> parents )
-        {
-            if ( node.getDependency() != null )
-            {
-                for ( ArtifactConsumer consumer : consumers )
-                {
-                    if ( consumer.accept( node, parents ) )
-                    {
-                        ArtifactRequest request = new ArtifactRequest( node );
-                        if ( classifier != null )
-                        {
-                            request.setArtifact( new SubArtifact( request.getArtifact(), classifier, "jar" ) );
+        private void createRequests(DependencyNode node, LinkedList<DependencyNode> parents) {
+            if (node.getDependency() != null) {
+                for (ArtifactConsumer consumer : consumers) {
+                    if (consumer.accept(node, parents)) {
+                        ArtifactRequest request = new ArtifactRequest(node);
+                        if (classifier != null) {
+                            request.setArtifact(new SubArtifact(request.getArtifact(), classifier, "jar"));
                         }
-                        requests.add( request );
+                        requests.add(request);
                         break;
                     }
                 }
             }
 
-            parents.addFirst( node );
+            parents.addFirst(node);
 
-            for ( DependencyNode child : node.getChildren() )
-            {
-                createRequests( child, parents );
+            for (DependencyNode child : node.getChildren()) {
+                createRequests(child, parents);
             }
 
             parents.removeFirst();
         }
 
-        public List<ArtifactRequest> getRequests()
-        {
+        public List<ArtifactRequest> getRequests() {
             return requests;
         }
 
-        public void processResults( List<ArtifactResult> results, RepositorySystemSession session )
-        {
-            for ( ArtifactResult result : results )
-            {
-                if ( !result.isResolved() )
-                {
+        public void processResults(List<ArtifactResult> results, RepositorySystemSession session) {
+            for (ArtifactResult result : results) {
+                if (!result.isResolved()) {
                     continue;
                 }
-                for ( ArtifactConsumer consumer : consumers )
-                {
-                    if ( consumer.accept( result.getRequest().getDependencyNode(),
-                                          Collections.<DependencyNode>emptyList() ) )
-                    {
-                        consumer.process( result.getArtifact(), session );
+                for (ArtifactConsumer consumer : consumers) {
+                    if (consumer.accept(
+                            result.getRequest().getDependencyNode(), Collections.<DependencyNode>emptyList())) {
+                        consumer.process(result.getArtifact(), session);
                     }
                 }
             }
         }
-
     }
-
 }

@@ -1,5 +1,3 @@
-package org.apache.maven.resolver.internal.ant.tasks;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -8,9 +6,9 @@ package org.apache.maven.resolver.internal.ant.tasks;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
- *  http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,6 +16,7 @@ package org.apache.maven.resolver.internal.ant.tasks;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.resolver.internal.ant.tasks;
 
 import org.apache.maven.resolver.internal.ant.AntRepoSys;
 import org.apache.maven.resolver.internal.ant.types.Dependencies;
@@ -31,9 +30,7 @@ import org.eclipse.aether.collection.CollectResult;
 
 /**
  */
-public abstract class AbstractResolvingTask
-    extends Task
-{
+public abstract class AbstractResolvingTask extends Task {
 
     protected Dependencies dependencies;
 
@@ -41,67 +38,54 @@ public abstract class AbstractResolvingTask
 
     protected LocalRepository localRepository;
 
-    public void addDependencies( final Dependencies dependencies )
-    {
-        if ( this.dependencies != null )
-        {
-            throw new BuildException( "You must not specify multiple <dependencies> elements" );
+    public void addDependencies(final Dependencies dependencies) {
+        if (this.dependencies != null) {
+            throw new BuildException("You must not specify multiple <dependencies> elements");
         }
         this.dependencies = dependencies;
     }
 
-    public void setDependenciesRef( final Reference ref )
-    {
-        if ( dependencies == null )
-        {
+    public void setDependenciesRef(final Reference ref) {
+        if (dependencies == null) {
             dependencies = new Dependencies();
-            dependencies.setProject( getProject() );
+            dependencies.setProject(getProject());
         }
-        dependencies.setRefid( ref );
+        dependencies.setRefid(ref);
     }
 
-    public LocalRepository createLocalRepo()
-    {
-        if ( localRepository != null )
-        {
-            throw new BuildException( "You must not specify multiple <localRepo> elements" );
+    public LocalRepository createLocalRepo() {
+        if (localRepository != null) {
+            throw new BuildException("You must not specify multiple <localRepo> elements");
         }
-        localRepository = new LocalRepository( this );
+        localRepository = new LocalRepository(this);
         return localRepository;
     }
 
-    private RemoteRepositories getRemoteRepos()
-    {
-        if ( remoteRepositories == null )
-        {
+    private RemoteRepositories getRemoteRepos() {
+        if (remoteRepositories == null) {
             remoteRepositories = new RemoteRepositories();
-            remoteRepositories.setProject( getProject() );
+            remoteRepositories.setProject(getProject());
         }
         return remoteRepositories;
     }
 
-    public void addRemoteRepo( final RemoteRepository repository )
-    {
-        getRemoteRepos().addRemoterepo( repository );
+    public void addRemoteRepo(final RemoteRepository repository) {
+        getRemoteRepos().addRemoterepo(repository);
     }
 
-    public void addRemoteRepos( final RemoteRepositories repositories )
-    {
-        getRemoteRepos().addRemoterepos( repositories );
+    public void addRemoteRepos(final RemoteRepositories repositories) {
+        getRemoteRepos().addRemoterepos(repositories);
     }
 
-    public void setRemoteReposRef( final Reference ref )
-    {
+    public void setRemoteReposRef(final Reference ref) {
         final RemoteRepositories repos = new RemoteRepositories();
-        repos.setProject( getProject() );
-        repos.setRefid( ref );
-        getRemoteRepos().addRemoterepos( repos );
+        repos.setProject(getProject());
+        repos.setRefid(ref);
+        getRemoteRepos().addRemoterepos(repos);
     }
 
-    protected CollectResult collectDependencies()
-    {
-        return AntRepoSys.getInstance( getProject() ).collectDependencies( this, dependencies, localRepository,
-                                                                           remoteRepositories );
+    protected CollectResult collectDependencies() {
+        return AntRepoSys.getInstance(getProject())
+                .collectDependencies(this, dependencies, localRepository, remoteRepositories);
     }
-
 }

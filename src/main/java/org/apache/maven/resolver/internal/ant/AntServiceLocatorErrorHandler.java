@@ -1,5 +1,3 @@
-package org.apache.maven.resolver.internal.ant;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -9,7 +7,7 @@ package org.apache.maven.resolver.internal.ant;
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -18,6 +16,7 @@ package org.apache.maven.resolver.internal.ant;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.resolver.internal.ant;
 
 import org.apache.tools.ant.Project;
 import org.eclipse.aether.RepositorySystem;
@@ -25,26 +24,20 @@ import org.eclipse.aether.impl.DefaultServiceLocator;
 
 /**
  */
-class AntServiceLocatorErrorHandler
-    extends DefaultServiceLocator.ErrorHandler
-{
+class AntServiceLocatorErrorHandler extends DefaultServiceLocator.ErrorHandler {
 
     private Project project;
 
-    AntServiceLocatorErrorHandler( final Project project )
-    {
+    AntServiceLocatorErrorHandler(final Project project) {
         this.project = project;
     }
 
-    public void serviceCreationFailed( final Class<?> type, final Class<?> impl, final Throwable exception )
-    {
+    public void serviceCreationFailed(final Class<?> type, final Class<?> impl, final Throwable exception) {
         String msg = "Could not initialize repository system";
-        if ( !RepositorySystem.class.equals( type ) )
-        {
+        if (!RepositorySystem.class.equals(type)) {
             msg += ", service " + type.getName() + " (" + impl.getName() + ") failed to initialize";
         }
         msg += ": " + exception.getMessage();
-        project.log( msg, exception, Project.MSG_ERR );
+        project.log(msg, exception, Project.MSG_ERR);
     }
-
 }

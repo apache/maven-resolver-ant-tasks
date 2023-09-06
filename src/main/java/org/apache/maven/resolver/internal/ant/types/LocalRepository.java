@@ -1,5 +1,3 @@
-package org.apache.maven.resolver.internal.ant.types;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -8,9 +6,9 @@ package org.apache.maven.resolver.internal.ant.types;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
- *  http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,6 +16,7 @@ package org.apache.maven.resolver.internal.ant.types;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.resolver.internal.ant.types;
 
 import java.io.File;
 
@@ -29,62 +28,49 @@ import org.apache.tools.ant.types.Reference;
 
 /**
  */
-public class LocalRepository
-    extends DataType
-{
+public class LocalRepository extends DataType {
 
     private final Task task;
 
     private File dir;
 
-    public LocalRepository()
-    {
-        this( null );
+    public LocalRepository() {
+        this(null);
     }
 
-    public LocalRepository( Task task )
-    {
+    public LocalRepository(Task task) {
         this.task = task;
     }
 
     @Override
-    public void setProject( Project project )
-    {
-        super.setProject( project );
+    public void setProject(Project project) {
+        super.setProject(project);
 
-        if ( task == null )
-        {
-            AntRepoSys.getInstance( project ).setLocalRepository( this );
+        if (task == null) {
+            AntRepoSys.getInstance(project).setLocalRepository(this);
         }
     }
 
-    protected LocalRepository getRef()
-    {
+    protected LocalRepository getRef() {
         return (LocalRepository) getCheckedRef();
     }
 
-    public void setRefid( Reference ref )
-    {
-        if ( dir != null )
-        {
+    public void setRefid(Reference ref) {
+        if (dir != null) {
             throw tooManyAttributes();
         }
-        super.setRefid( ref );
+        super.setRefid(ref);
     }
 
-    public File getDir()
-    {
-        if ( isReference() )
-        {
+    public File getDir() {
+        if (isReference()) {
             return getRef().getDir();
         }
         return dir;
     }
 
-    public void setDir( File dir )
-    {
+    public void setDir(File dir) {
         checkAttributesAllowed();
         this.dir = dir;
     }
-
 }

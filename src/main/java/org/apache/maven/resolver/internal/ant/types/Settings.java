@@ -1,5 +1,3 @@
-package org.apache.maven.resolver.internal.ant.types;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -8,9 +6,9 @@ package org.apache.maven.resolver.internal.ant.types;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
- *  http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,6 +16,7 @@ package org.apache.maven.resolver.internal.ant.types;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.resolver.internal.ant.types;
 
 import java.io.File;
 
@@ -27,60 +26,48 @@ import org.apache.tools.ant.types.Reference;
 
 /**
  */
-public class Settings
-    extends DataType
-{
+public class Settings extends DataType {
 
     private File file;
 
     private File globalFile;
 
-    protected Settings getRef()
-    {
+    protected Settings getRef() {
         return (Settings) getCheckedRef();
     }
 
-    public void setRefid( Reference ref )
-    {
-        if ( file != null || globalFile != null )
-        {
+    public void setRefid(Reference ref) {
+        if (file != null || globalFile != null) {
             throw tooManyAttributes();
         }
-        super.setRefid( ref );
+        super.setRefid(ref);
     }
 
-    public File getFile()
-    {
-        if ( isReference() )
-        {
+    public File getFile() {
+        if (isReference()) {
             return getRef().getFile();
         }
         return file;
     }
 
-    public void setFile( File file )
-    {
+    public void setFile(File file) {
         checkAttributesAllowed();
         this.file = file;
 
-        AntRepoSys.getInstance( getProject() ).setUserSettings( file );
+        AntRepoSys.getInstance(getProject()).setUserSettings(file);
     }
 
-    public File getGlobalFile()
-    {
-        if ( isReference() )
-        {
+    public File getGlobalFile() {
+        if (isReference()) {
             return getRef().getFile();
         }
         return globalFile;
     }
 
-    public void setGlobalFile( File globalFile )
-    {
+    public void setGlobalFile(File globalFile) {
         checkAttributesAllowed();
         this.globalFile = globalFile;
 
-        AntRepoSys.getInstance( getProject() ).setGlobalSettings( globalFile );
+        AntRepoSys.getInstance(getProject()).setGlobalSettings(globalFile);
     }
-
 }

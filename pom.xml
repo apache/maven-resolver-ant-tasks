@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
@@ -18,14 +17,13 @@
   specific language governing permissions and limitations
   under the License.
 -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>org.apache.maven</groupId>
     <artifactId>maven-parent</artifactId>
-    <version>34</version>
+    <version>40</version>
   </parent>
 
   <groupId>org.apache.maven.resolver</groupId>
@@ -33,17 +31,15 @@
   <version>1.4.1-SNAPSHOT</version>
 
   <name>Maven Artifact Resolver Ant Tasks</name>
-  <description>
-    Ant tasks handling Maven artifacts using Maven Artifact Resolver and Maven Artifact Resolver Provider.
-  </description>
+  <description>Ant tasks handling Maven artifacts using Maven Artifact Resolver and Maven Artifact Resolver Provider.</description>
   <url>https://maven.apache.org/resolver-ant-tasks/</url>
   <inceptionYear>2010</inceptionYear>
 
- <scm>
+  <scm>
     <connection>scm:git:https://gitbox.apache.org/repos/asf/maven-resolver-ant-tasks.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/maven-resolver-ant-tasks.git</developerConnection>
-    <url>https://github.com/apache/maven-resolver-ant-tasks/</url>
     <tag>maven-resolver-ant-tasks-1.2.1</tag>
+    <url>https://github.com/apache/maven-resolver-ant-tasks/</url>
   </scm>
   <issueManagement>
     <system>jira</system>
@@ -247,13 +243,14 @@
   </dependencies>
 
   <repositories>
-    <repository><!-- useful to resolve maven-shade-plugin 3.2.3-SNAPSHOT -->
-      <id>apache.snapshots</id>
-      <name>Apache Snapshot Repository</name>
-      <url>https://repository.apache.org/snapshots</url>
+    <repository>
       <releases>
         <enabled>false</enabled>
       </releases>
+      <!-- useful to resolve maven-shade-plugin 3.2.3-SNAPSHOT -->
+      <id>apache.snapshots</id>
+      <name>Apache Snapshot Repository</name>
+      <url>https://repository.apache.org/snapshots</url>
     </repository>
   </repositories>
 
@@ -273,14 +270,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <!-- Remove when parent POM updated -->
-        <version>3.5.0</version>
         <executions>
           <execution>
-            <phase>package</phase>
             <goals>
               <goal>shade</goal>
             </goals>
+            <phase>package</phase>
             <configuration>
               <createDependencyReducedPom>false</createDependencyReducedPom>
               <shadedArtifactAttached>true</shadedArtifactAttached>
@@ -354,20 +349,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-antrun-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>smoke-test</id>
-                <phase>integration-test</phase>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-                <configuration>
-                  <target>
-                    <ant antfile="build.xml" />
-                  </target>
-                </configuration>
-              </execution>
-            </executions>
             <dependencies>
               <dependency>
                 <groupId>org.apache.ant</groupId>
@@ -385,6 +366,20 @@
                 <version>${junitVersion}</version>
               </dependency>
             </dependencies>
+            <executions>
+              <execution>
+                <id>smoke-test</id>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <phase>integration-test</phase>
+                <configuration>
+                  <target>
+                    <ant antfile="build.xml" />
+                  </target>
+                </configuration>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>

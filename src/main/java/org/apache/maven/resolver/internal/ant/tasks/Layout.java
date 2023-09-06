@@ -1,5 +1,3 @@
-package org.apache.maven.resolver.internal.ant.tasks;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -9,7 +7,7 @@ package org.apache.maven.resolver.internal.ant.tasks;
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -18,6 +16,7 @@ package org.apache.maven.resolver.internal.ant.tasks;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.resolver.internal.ant.tasks;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,8 +32,7 @@ import org.eclipse.aether.artifact.Artifact;
 
 /**
  */
-class Layout
-{
+class Layout {
 
     public static final String GID = "{groupId}";
 
@@ -52,80 +50,53 @@ class Layout
 
     private String[] tokens;
 
-    Layout( String layout )
-        throws BuildException
-    {
-        Collection<String> valid = new HashSet<>( Arrays.asList( GID, GID_DIRS, AID, VER, BVER, EXT, CLS ) );
+    Layout(String layout) throws BuildException {
+        Collection<String> valid = new HashSet<>(Arrays.asList(GID, GID_DIRS, AID, VER, BVER, EXT, CLS));
         List<String> tokens = new ArrayList<>();
-        Matcher m = Pattern.compile( "(\\{[^}]*\\})|([^{]+)" ).matcher( layout );
-        while ( m.find() )
-        {
-            if ( m.group( 1 ) != null && !valid.contains( m.group( 1 ) ) )
-            {
-                throw new BuildException( "Invalid variable '" + m.group() + "' in layout, supported variables are "
-                    + new TreeSet<String>( valid ) );
+        Matcher m = Pattern.compile("(\\{[^}]*\\})|([^{]+)").matcher(layout);
+        while (m.find()) {
+            if (m.group(1) != null && !valid.contains(m.group(1))) {
+                throw new BuildException("Invalid variable '" + m.group() + "' in layout, supported variables are "
+                        + new TreeSet<String>(valid));
             }
-            tokens.add( m.group() );
+            tokens.add(m.group());
         }
-        this.tokens = tokens.toArray( new String[tokens.size()] );
+        this.tokens = tokens.toArray(new String[tokens.size()]);
     }
 
-    public String getPath( Artifact artifact )
-    {
-        StringBuilder buffer = new StringBuilder( 128 );
+    public String getPath(Artifact artifact) {
+        StringBuilder buffer = new StringBuilder(128);
 
-        for ( int i = 0; i < tokens.length; i++ )
-        {
+        for (int i = 0; i < tokens.length; i++) {
             String token = tokens[i];
-            if ( GID.equals( token ) )
-            {
-                buffer.append( artifact.getGroupId() );
-            }
-            else if ( GID_DIRS.equals( token ) )
-            {
-                buffer.append( artifact.getGroupId().replace( '.', '/' ) );
-            }
-            else if ( AID.equals( token ) )
-            {
-                buffer.append( artifact.getArtifactId() );
-            }
-            else if ( VER.equals( token ) )
-            {
-                buffer.append( artifact.getVersion() );
-            }
-            else if ( BVER.equals( token ) )
-            {
-                buffer.append( artifact.getBaseVersion() );
-            }
-            else if ( CLS.equals( token ) )
-            {
-                if ( artifact.getClassifier().length() <= 0 )
-                {
-                    if ( i > 0 )
-                    {
+            if (GID.equals(token)) {
+                buffer.append(artifact.getGroupId());
+            } else if (GID_DIRS.equals(token)) {
+                buffer.append(artifact.getGroupId().replace('.', '/'));
+            } else if (AID.equals(token)) {
+                buffer.append(artifact.getArtifactId());
+            } else if (VER.equals(token)) {
+                buffer.append(artifact.getVersion());
+            } else if (BVER.equals(token)) {
+                buffer.append(artifact.getBaseVersion());
+            } else if (CLS.equals(token)) {
+                if (artifact.getClassifier().length() <= 0) {
+                    if (i > 0) {
                         String lt = tokens[i - 1];
-                        if ( lt.length() > 0 && "-_".indexOf( lt.charAt( lt.length() - 1 ) ) >= 0 )
-                        {
-                            buffer.setLength( buffer.length() - 1 );
+                        if (lt.length() > 0 && "-_".indexOf(lt.charAt(lt.length() - 1)) >= 0) {
+                            buffer.setLength(buffer.length() - 1);
                         }
                     }
+                } else {
+                    buffer.append(artifact.getClassifier());
                 }
-                else
-                {
-                    buffer.append( artifact.getClassifier() );
-                }
-            }
-            else if ( EXT.equals( token ) )
-            {
-                buffer.append( artifact.getExtension() );
-            }
-            else
-            {
-                buffer.append( token );
+            } else if (EXT.equals(token)) {
+                buffer.append(artifact.getExtension());
+            } else {
+                buffer.append(token);
             }
         }
 
         return buffer.toString();
     }
-
 }

@@ -1,5 +1,3 @@
-package org.apache.maven.resolver.internal.ant.types;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -8,9 +6,9 @@ package org.apache.maven.resolver.internal.ant.types;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
- *  http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,6 +16,7 @@ package org.apache.maven.resolver.internal.ant.types;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.resolver.internal.ant.types;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,10 +31,7 @@ import org.eclipse.aether.repository.RepositoryPolicy;
 
 /**
  */
-public class RemoteRepository
-    extends DataType
-    implements RemoteRepositoryContainer
-{
+public class RemoteRepository extends DataType implements RemoteRepositoryContainer {
 
     private String id;
 
@@ -58,255 +54,203 @@ public class RemoteRepository
     private Authentication authentication;
 
     @Override
-    public void setProject( Project project )
-    {
-        super.setProject( project );
+    public void setProject(Project project) {
+        super.setProject(project);
 
         // NOTE: Just trigger side-effect of default initialization before this type potentially overrides central
-        AntRepoSys.getInstance( project );
+        AntRepoSys.getInstance(project);
     }
 
-    protected RemoteRepository getRef()
-    {
+    protected RemoteRepository getRef() {
         return (RemoteRepository) getCheckedRef();
     }
 
-    public void validate( Task task )
-    {
-        if ( isReference() )
-        {
-            getRef().validate( task );
-        }
-        else
-        {
-            if ( url == null || url.length() <= 0 )
-            {
-                throw new BuildException( "You must specify the 'url' for a remote repository" );
+    public void validate(Task task) {
+        if (isReference()) {
+            getRef().validate(task);
+        } else {
+            if (url == null || url.length() <= 0) {
+                throw new BuildException("You must specify the 'url' for a remote repository");
             }
-            if ( id == null || id.length() <= 0 )
-            {
-                throw new BuildException( "You must specify the 'id' for a remote repository" );
+            if (id == null || id.length() <= 0) {
+                throw new BuildException("You must specify the 'id' for a remote repository");
             }
         }
     }
 
-    public void setRefid( Reference ref )
-    {
-        if ( id != null || url != null || type != null || checksums != null || updates != null )
-        {
+    public void setRefid(Reference ref) {
+        if (id != null || url != null || type != null || checksums != null || updates != null) {
             throw tooManyAttributes();
         }
-        if ( releasePolicy != null || snapshotPolicy != null || authentication != null )
-        {
+        if (releasePolicy != null || snapshotPolicy != null || authentication != null) {
             throw noChildrenAllowed();
         }
-        super.setRefid( ref );
+        super.setRefid(ref);
     }
 
-    public String getId()
-    {
-        if ( isReference() )
-        {
+    public String getId() {
+        if (isReference()) {
             return getRef().getId();
         }
         return id;
     }
 
-    public void setId( String id )
-    {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getUrl()
-    {
-        if ( isReference() )
-        {
+    public String getUrl() {
+        if (isReference()) {
             return getRef().getUrl();
         }
         return url;
     }
 
-    public void setUrl( String url )
-    {
+    public void setUrl(String url) {
         checkAttributesAllowed();
         this.url = url;
     }
 
-    public String getType()
-    {
-        if ( isReference() )
-        {
+    public String getType() {
+        if (isReference()) {
             return getRef().getType();
         }
-        return ( type != null ) ? type : "default";
+        return (type != null) ? type : "default";
     }
 
-    public void setType( String type )
-    {
+    public void setType(String type) {
         checkAttributesAllowed();
         this.type = type;
     }
 
-    public Policy getReleasePolicy()
-    {
-        if ( isReference() )
-        {
+    public Policy getReleasePolicy() {
+        if (isReference()) {
             return getRef().getReleasePolicy();
         }
         return releasePolicy;
     }
 
-    public void addReleases( Policy policy )
-    {
+    public void addReleases(Policy policy) {
         checkChildrenAllowed();
-        if ( this.releasePolicy != null )
-        {
-            throw new BuildException( "You must not specify multiple <releases> elements" );
+        if (this.releasePolicy != null) {
+            throw new BuildException("You must not specify multiple <releases> elements");
         }
         this.releasePolicy = policy;
     }
 
-    public Policy getSnapshotPolicy()
-    {
-        if ( isReference() )
-        {
+    public Policy getSnapshotPolicy() {
+        if (isReference()) {
             return getRef().getSnapshotPolicy();
         }
         return snapshotPolicy;
     }
 
-    public void addSnapshots( Policy policy )
-    {
+    public void addSnapshots(Policy policy) {
         checkChildrenAllowed();
-        if ( this.snapshotPolicy != null )
-        {
-            throw new BuildException( "You must not specify multiple <snapshots> elements" );
+        if (this.snapshotPolicy != null) {
+            throw new BuildException("You must not specify multiple <snapshots> elements");
         }
         this.snapshotPolicy = policy;
     }
 
-    public boolean isReleases()
-    {
-        if ( isReference() )
-        {
+    public boolean isReleases() {
+        if (isReference()) {
             return getRef().isReleases();
         }
         return releases;
     }
 
-    public void setReleases( boolean releases )
-    {
+    public void setReleases(boolean releases) {
         checkAttributesAllowed();
         this.releases = releases;
     }
 
-    public boolean isSnapshots()
-    {
-        if ( isReference() )
-        {
+    public boolean isSnapshots() {
+        if (isReference()) {
             return getRef().isSnapshots();
         }
         return snapshots;
     }
 
-    public void setSnapshots( boolean snapshots )
-    {
+    public void setSnapshots(boolean snapshots) {
         checkAttributesAllowed();
         this.snapshots = snapshots;
     }
 
-    public String getUpdates()
-    {
-        if ( isReference() )
-        {
+    public String getUpdates() {
+        if (isReference()) {
             return getRef().getUpdates();
         }
-        return ( updates != null ) ? updates : RepositoryPolicy.UPDATE_POLICY_DAILY;
+        return (updates != null) ? updates : RepositoryPolicy.UPDATE_POLICY_DAILY;
     }
 
-    public void setUpdates( String updates )
-    {
+    public void setUpdates(String updates) {
         checkAttributesAllowed();
-        checkUpdates( updates );
+        checkUpdates(updates);
         this.updates = updates;
     }
 
-    protected static void checkUpdates( String updates )
-    {
-        if ( !RepositoryPolicy.UPDATE_POLICY_ALWAYS.equals( updates )
-            && !RepositoryPolicy.UPDATE_POLICY_DAILY.equals( updates )
-            && !RepositoryPolicy.UPDATE_POLICY_NEVER.equals( updates )
-            && !updates.startsWith( RepositoryPolicy.UPDATE_POLICY_INTERVAL ) )
-        {
-            throw new BuildException( "'" + updates + "' is not a permitted update policy" );
+    protected static void checkUpdates(String updates) {
+        if (!RepositoryPolicy.UPDATE_POLICY_ALWAYS.equals(updates)
+                && !RepositoryPolicy.UPDATE_POLICY_DAILY.equals(updates)
+                && !RepositoryPolicy.UPDATE_POLICY_NEVER.equals(updates)
+                && !updates.startsWith(RepositoryPolicy.UPDATE_POLICY_INTERVAL)) {
+            throw new BuildException("'" + updates + "' is not a permitted update policy");
         }
     }
 
-    public String getChecksums()
-    {
-        if ( isReference() )
-        {
+    public String getChecksums() {
+        if (isReference()) {
             return getRef().getChecksums();
         }
-        return ( checksums != null ) ? checksums : RepositoryPolicy.CHECKSUM_POLICY_WARN;
+        return (checksums != null) ? checksums : RepositoryPolicy.CHECKSUM_POLICY_WARN;
     }
 
-    public void setChecksums( String checksums )
-    {
+    public void setChecksums(String checksums) {
         checkAttributesAllowed();
-        checkChecksums( checksums );
+        checkChecksums(checksums);
         this.checksums = checksums;
     }
 
-    protected static void checkChecksums( String checksums )
-    {
-        if ( !RepositoryPolicy.CHECKSUM_POLICY_FAIL.equals( checksums )
-            && !RepositoryPolicy.CHECKSUM_POLICY_WARN.equals( checksums )
-            && !RepositoryPolicy.CHECKSUM_POLICY_IGNORE.equals( checksums ) )
-        {
-            throw new BuildException( "'" + checksums + "' is not a permitted checksum policy" );
+    protected static void checkChecksums(String checksums) {
+        if (!RepositoryPolicy.CHECKSUM_POLICY_FAIL.equals(checksums)
+                && !RepositoryPolicy.CHECKSUM_POLICY_WARN.equals(checksums)
+                && !RepositoryPolicy.CHECKSUM_POLICY_IGNORE.equals(checksums)) {
+            throw new BuildException("'" + checksums + "' is not a permitted checksum policy");
         }
     }
 
-    public Authentication getAuthentication()
-    {
-        if ( isReference() )
-        {
+    public Authentication getAuthentication() {
+        if (isReference()) {
             return getRef().getAuthentication();
         }
         return authentication;
     }
 
-    public void addAuthentication( Authentication authentication )
-    {
+    public void addAuthentication(Authentication authentication) {
         checkChildrenAllowed();
-        if ( this.authentication != null )
-        {
-            throw new BuildException( "You must not specify multiple <authentication> elements" );
+        if (this.authentication != null) {
+            throw new BuildException("You must not specify multiple <authentication> elements");
         }
         this.authentication = authentication;
     }
 
-    public void setAuthRef( Reference ref )
-    {
+    public void setAuthRef(Reference ref) {
         checkAttributesAllowed();
-        if ( authentication == null )
-        {
+        if (authentication == null) {
             authentication = new Authentication();
-            authentication.setProject( getProject() );
+            authentication.setProject(getProject());
         }
-        authentication.setRefid( ref );
+        authentication.setRefid(ref);
     }
 
-    public List<RemoteRepository> getRepositories()
-    {
-        return Collections.singletonList( this );
+    public List<RemoteRepository> getRepositories() {
+        return Collections.singletonList(this);
     }
 
     /**
      */
-    public static class Policy
-    {
+    public static class Policy {
 
         private boolean enabled = true;
 
@@ -314,38 +258,30 @@ public class RemoteRepository
 
         private String updatePolicy;
 
-        public boolean isEnabled()
-        {
+        public boolean isEnabled() {
             return enabled;
         }
 
-        public void setEnabled( boolean enabled )
-        {
+        public void setEnabled(boolean enabled) {
             this.enabled = enabled;
         }
 
-        public String getChecksums()
-        {
+        public String getChecksums() {
             return checksumPolicy;
         }
 
-        public void setChecksums( String checksumPolicy )
-        {
-            checkChecksums( checksumPolicy );
+        public void setChecksums(String checksumPolicy) {
+            checkChecksums(checksumPolicy);
             this.checksumPolicy = checksumPolicy;
         }
 
-        public String getUpdates()
-        {
+        public String getUpdates() {
             return updatePolicy;
         }
 
-        public void setUpdates( String updatePolicy )
-        {
-            checkUpdates( updatePolicy );
+        public void setUpdates(String updatePolicy) {
+            checkUpdates(updatePolicy);
             this.updatePolicy = updatePolicy;
         }
-
     }
-
 }

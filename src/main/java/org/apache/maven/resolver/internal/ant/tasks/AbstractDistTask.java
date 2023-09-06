@@ -1,5 +1,3 @@
-package org.apache.maven.resolver.internal.ant.tasks;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -8,9 +6,9 @@ package org.apache.maven.resolver.internal.ant.tasks;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
- *  http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,6 +16,7 @@ package org.apache.maven.resolver.internal.ant.tasks;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.resolver.internal.ant.tasks;
 
 import java.io.File;
 import java.util.HashMap;
@@ -35,146 +34,118 @@ import org.apache.tools.ant.types.Reference;
 
 /**
  */
-public abstract class AbstractDistTask
-    extends Task
-{
+public abstract class AbstractDistTask extends Task {
 
     private Pom pom;
 
     private Artifacts artifacts;
 
-    protected void validate()
-    {
-        getArtifacts().validate( this );
+    protected void validate() {
+        getArtifacts().validate(this);
 
         final Map<String, File> duplicates = new HashMap<>();
-        for ( final Artifact artifact : getArtifacts().getArtifacts() )
-        {
+        for (final Artifact artifact : getArtifacts().getArtifacts()) {
             final String key = artifact.getType() + ':' + artifact.getClassifier();
-            if ( "pom:".equals( key ) )
-            {
-                throw new BuildException( "You must not specify an <artifact> with type=pom"
-                    + ", please use the <pom> element instead." );
-            }
-            else if ( duplicates.containsKey( key ) )
-            {
-                throw new BuildException( "You must not specify two or more artifacts with the same type ("
-                    + artifact.getType() + ") and classifier (" + artifact.getClassifier() + ")" );
-            }
-            else
-            {
-                duplicates.put( key, artifact.getFile() );
+            if ("pom:".equals(key)) {
+                throw new BuildException(
+                        "You must not specify an <artifact> with type=pom" + ", please use the <pom> element instead.");
+            } else if (duplicates.containsKey(key)) {
+                throw new BuildException("You must not specify two or more artifacts with the same type ("
+                        + artifact.getType() + ") and classifier (" + artifact.getClassifier() + ")");
+            } else {
+                duplicates.put(key, artifact.getFile());
             }
 
-            validateArtifactGav( artifact );
+            validateArtifactGav(artifact);
         }
 
-        final Pom defaultPom = AntRepoSys.getInstance( getProject() ).getDefaultPom();
-        if ( pom == null && defaultPom != null )
-        {
-            log( "Using default POM (" + defaultPom.getCoords() + ")", Project.MSG_INFO );
+        final Pom defaultPom = AntRepoSys.getInstance(getProject()).getDefaultPom();
+        if (pom == null && defaultPom != null) {
+            log("Using default POM (" + defaultPom.getCoords() + ")", Project.MSG_INFO);
             pom = defaultPom;
         }
 
-        if ( pom == null )
-        {
-            throw new BuildException( "You must specify the <pom file=\"...\"> element"
-                + " to denote the descriptor for the artifacts" );
+        if (pom == null) {
+            throw new BuildException(
+                    "You must specify the <pom file=\"...\"> element" + " to denote the descriptor for the artifacts");
         }
-        if ( pom.getFile() == null )
-        {
-            throw new BuildException( "You must specify a <pom> element that has the 'file' attribute set" );
+        if (pom.getFile() == null) {
+            throw new BuildException("You must specify a <pom> element that has the 'file' attribute set");
         }
     }
 
-    private void validateArtifactGav( final Artifact artifact )
-    {
+    private void validateArtifactGav(final Artifact artifact) {
         final Pom artifactPom = artifact.getPom();
-        if ( artifactPom != null )
-        {
+        if (artifactPom != null) {
             final String gid;
             final String aid;
             final String version;
-            if ( artifactPom.getFile() != null )
-            {
-                final Model model = artifactPom.getModel( this );
+            if (artifactPom.getFile() != null) {
+                final Model model = artifactPom.getModel(this);
                 gid = model.getGroupId();
                 aid = model.getArtifactId();
                 version = model.getVersion();
-            }
-            else
-            {
+            } else {
                 gid = artifactPom.getGroupId();
                 aid = artifactPom.getArtifactId();
                 version = artifactPom.getVersion();
             }
-            
-            final Model model = getPom().getModel( this );
-            
-            if ( ! ( model.getGroupId().equals( gid ) && model.getArtifactId().equals( aid ) && model.getVersion().equals( version ) ) )
-            {
-                throw new BuildException( "Artifact references different pom than it would be installed with: "
-                    + artifact.toString() );
+
+            final Model model = getPom().getModel(this);
+
+            if (!(model.getGroupId().equals(gid)
+                    && model.getArtifactId().equals(aid)
+                    && model.getVersion().equals(version))) {
+                throw new BuildException(
+                        "Artifact references different pom than it would be installed with: " + artifact.toString());
             }
         }
     }
 
-    protected Artifacts getArtifacts()
-    {
-        if ( artifacts == null )
-        {
+    protected Artifacts getArtifacts() {
+        if (artifacts == null) {
             artifacts = new Artifacts();
-            artifacts.setProject( getProject() );
+            artifacts.setProject(getProject());
         }
         return artifacts;
     }
 
-    public void addArtifact( final Artifact artifact )
-    {
-        getArtifacts().addArtifact( artifact );
+    public void addArtifact(final Artifact artifact) {
+        getArtifacts().addArtifact(artifact);
     }
 
-    public void addArtifacts( final Artifacts artifacts )
-    {
-        getArtifacts().addArtifacts( artifacts );
+    public void addArtifacts(final Artifacts artifacts) {
+        getArtifacts().addArtifacts(artifacts);
     }
 
-    public void setArtifactsRef( final Reference ref )
-    {
+    public void setArtifactsRef(final Reference ref) {
         final Artifacts artifacts = new Artifacts();
-        artifacts.setProject( getProject() );
-        artifacts.setRefid( ref );
-        getArtifacts().addArtifacts( artifacts );
+        artifacts.setProject(getProject());
+        artifacts.setRefid(ref);
+        getArtifacts().addArtifacts(artifacts);
     }
 
-    protected Pom getPom()
-    {
-        if ( pom == null )
-        {
-            return AntRepoSys.getInstance( getProject() ).getDefaultPom();
+    protected Pom getPom() {
+        if (pom == null) {
+            return AntRepoSys.getInstance(getProject()).getDefaultPom();
         }
 
         return pom;
     }
 
-    public void addPom( final Pom pom )
-    {
-        if ( this.pom != null )
-        {
-            throw new BuildException( "You must not specify multiple <pom> elements" );
+    public void addPom(final Pom pom) {
+        if (this.pom != null) {
+            throw new BuildException("You must not specify multiple <pom> elements");
         }
         this.pom = pom;
     }
 
-    public void setPomRef( final Reference ref )
-    {
-        if ( this.pom != null )
-        {
-            throw new BuildException( "You must not specify multiple <pom> elements" );
+    public void setPomRef(final Reference ref) {
+        if (this.pom != null) {
+            throw new BuildException("You must not specify multiple <pom> elements");
         }
         pom = new Pom();
-        pom.setProject( getProject() );
-        pom.setRefid( ref );
+        pom.setProject(getProject());
+        pom.setRefid(ref);
     }
-
 }

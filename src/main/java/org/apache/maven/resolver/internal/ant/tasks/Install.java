@@ -1,5 +1,3 @@
-package org.apache.maven.resolver.internal.ant.tasks;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -8,9 +6,9 @@ package org.apache.maven.resolver.internal.ant.tasks;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
- *  http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,24 +16,19 @@ package org.apache.maven.resolver.internal.ant.tasks;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.resolver.internal.ant.tasks;
 
 import org.apache.maven.resolver.internal.ant.AntRepoSys;
-
 import org.apache.tools.ant.BuildException;
 
 /**
  */
-public class Install
-    extends AbstractDistTask
-{
+public class Install extends AbstractDistTask {
 
     @Override
-    public void execute()
-        throws BuildException
-    {
+    public void execute() throws BuildException {
         validate();
 
-        AntRepoSys.getInstance( getProject() ).install( this, getPom(), getArtifacts() );
+        AntRepoSys.getInstance(getProject()).install(this, getPom(), getArtifacts());
     }
-
 }

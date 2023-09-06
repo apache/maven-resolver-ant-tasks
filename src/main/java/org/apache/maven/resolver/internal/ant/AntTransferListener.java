@@ -1,5 +1,3 @@
-package org.apache.maven.resolver.internal.ant;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -9,7 +7,7 @@ package org.apache.maven.resolver.internal.ant;
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -18,6 +16,7 @@ package org.apache.maven.resolver.internal.ant;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.resolver.internal.ant;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -33,59 +32,52 @@ import org.eclipse.aether.transfer.TransferResource;
 /**
  * Logs up- and downloads.
  */
-class AntTransferListener
-    extends AbstractTransferListener
-{
+class AntTransferListener extends AbstractTransferListener {
 
     private Task task;
 
-    AntTransferListener( final Task task )
-    {
+    AntTransferListener(final Task task) {
         this.task = task;
     }
 
     @Override
-    public void transferInitiated( final TransferEvent event )
-        throws TransferCancelledException
-    {
+    public void transferInitiated(final TransferEvent event) throws TransferCancelledException {
         String msg = event.getRequestType() == TransferEvent.RequestType.PUT ? "Uploading" : "Downloading";
-        msg += " " + event.getResource().getRepositoryUrl() + event.getResource().getResourceName();
-        task.log( msg );
+        msg += " " + event.getResource().getRepositoryUrl()
+                + event.getResource().getResourceName();
+        task.log(msg);
     }
 
     @Override
-    public void transferCorrupted( final TransferEvent event )
-        throws TransferCancelledException
-    {
+    public void transferCorrupted(final TransferEvent event) throws TransferCancelledException {
         final TransferResource resource = event.getResource();
 
-        task.log( event.getException().getMessage() + " for " + resource.getRepositoryUrl()
-                      + resource.getResourceName(), Project.MSG_WARN );
+        task.log(
+                event.getException().getMessage() + " for " + resource.getRepositoryUrl() + resource.getResourceName(),
+                Project.MSG_WARN);
     }
 
     @Override
-    public void transferSucceeded( final TransferEvent event )
-    {
+    public void transferSucceeded(final TransferEvent event) {
         String msg = event.getRequestType() == TransferEvent.RequestType.PUT ? "Uploaded" : "Downloaded";
-        msg += " " + event.getResource().getRepositoryUrl() + event.getResource().getResourceName();
+        msg += " " + event.getResource().getRepositoryUrl()
+                + event.getResource().getResourceName();
 
         final long contentLength = event.getTransferredBytes();
-        if ( contentLength >= 0 )
-        {
-            final String len = contentLength >= 1024 ? ( ( contentLength + 1023 ) / 1024 ) + " KB" : contentLength + " B";
+        if (contentLength >= 0) {
+            final String len = contentLength >= 1024 ? ((contentLength + 1023) / 1024) + " KB" : contentLength + " B";
 
             String throughput = "";
-            final long duration = System.currentTimeMillis() - event.getResource().getTransferStartTime();
-            if ( duration > 0 )
-            {
-                final DecimalFormat format = new DecimalFormat( "0.0", new DecimalFormatSymbols( Locale.ENGLISH ) );
-                final double kbPerSec = ( contentLength / 1024.0 ) / ( duration / 1000.0 );
-                throughput = " at " + format.format( kbPerSec ) + " KB/sec";
+            final long duration =
+                    System.currentTimeMillis() - event.getResource().getTransferStartTime();
+            if (duration > 0) {
+                final DecimalFormat format = new DecimalFormat("0.0", new DecimalFormatSymbols(Locale.ENGLISH));
+                final double kbPerSec = (contentLength / 1024.0) / (duration / 1000.0);
+                throughput = " at " + format.format(kbPerSec) + " KB/sec";
             }
 
             msg += " (" + len + throughput + ")";
         }
-        task.log( msg );
+        task.log(msg);
     }
-
 }

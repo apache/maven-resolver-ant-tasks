@@ -1,5 +1,3 @@
-package org.apache.maven.resolver.internal.ant;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -9,7 +7,7 @@ package org.apache.maven.resolver.internal.ant;
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -18,25 +16,24 @@ package org.apache.maven.resolver.internal.ant;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+package org.apache.maven.resolver.internal.ant;
 
 import java.io.File;
 
 import junit.framework.JUnit4TestAdapter;
 import org.apache.maven.resolver.internal.ant.types.Pom;
 import org.apache.tools.ant.Project;
-import org.junit.Before;
-import org.junit.Test;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ProjectWorkspaceReaderTest
-{
-    public static junit.framework.Test suite()
-    {
-        return new JUnit4TestAdapter( ProjectWorkspaceReaderTest.class );
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+
+public class ProjectWorkspaceReaderTest {
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(ProjectWorkspaceReaderTest.class);
     }
 
     private ProjectWorkspaceReader reader;
@@ -44,85 +41,80 @@ public class ProjectWorkspaceReaderTest
     private Project project;
 
     @Before
-    public void setUp()
-        throws Exception
-    {
+    public void setUp() throws Exception {
         this.reader = new ProjectWorkspaceReader();
 
         this.project = new Project();
-        project.setProperty( "user.home", System.getProperty( "user.home" ) );
+        project.setProperty("user.home", System.getProperty("user.home"));
     }
 
-    private Artifact artifact( String coords )
-    {
-        return new DefaultArtifact( coords );
+    private Artifact artifact(String coords) {
+        return new DefaultArtifact(coords);
     }
 
-    private File getFile( String name )
-    {
-        return new File( "src/test/resources/ProjectWorkspaceReader", name );
+    private File getFile(String name) {
+        return new File("src/test/resources/ProjectWorkspaceReader", name);
     }
 
     @Test
-    public void testFindPom()
-    {
+    public void testFindPom() {
         Pom pom = new Pom();
-        pom.setProject( project );
-        pom.setFile( getFile( "dummy-pom.xml" ) );
+        pom.setProject(project);
+        pom.setFile(getFile("dummy-pom.xml"));
 
-        reader.addPom( pom );
+        reader.addPom(pom);
 
-        assertEquals( pom.getFile(), reader.findArtifact( artifact( "test:dummy:pom:0.1-SNAPSHOT" ) ) );
-        assertNull( reader.findArtifact( artifact( "unavailable:test:pom:0.1-SNAPSHOT" ) ) );
+        assertEquals(pom.getFile(), reader.findArtifact(artifact("test:dummy:pom:0.1-SNAPSHOT")));
+        assertNull(reader.findArtifact(artifact("unavailable:test:pom:0.1-SNAPSHOT")));
     }
 
     @Test
-    public void testFindArtifact()
-    {
+    public void testFindArtifact() {
         Pom pom = new Pom();
-        pom.setProject( project );
-        pom.setFile( getFile( "dummy-pom.xml" ) );
+        pom.setProject(project);
+        pom.setFile(getFile("dummy-pom.xml"));
 
-        reader.addPom( pom );
+        reader.addPom(pom);
 
-        org.apache.maven.resolver.internal.ant.types.Artifact artifact = new org.apache.maven.resolver.internal.ant.types.Artifact();
-        artifact.setProject( project );
-        artifact.addPom( pom );
-        artifact.setFile( getFile( "dummy-file.txt" ) );
+        org.apache.maven.resolver.internal.ant.types.Artifact artifact =
+                new org.apache.maven.resolver.internal.ant.types.Artifact();
+        artifact.setProject(project);
+        artifact.addPom(pom);
+        artifact.setFile(getFile("dummy-file.txt"));
 
-        reader.addArtifact( artifact );
+        reader.addArtifact(artifact);
 
-        assertEquals( artifact.getFile(), reader.findArtifact( artifact( "test:dummy:txt:0.1-SNAPSHOT" ) ) );
-        assertNull( reader.findArtifact( artifact( "unavailable:test:jar:0.1-SNAPSHOT" ) ) );
+        assertEquals(artifact.getFile(), reader.findArtifact(artifact("test:dummy:txt:0.1-SNAPSHOT")));
+        assertNull(reader.findArtifact(artifact("unavailable:test:jar:0.1-SNAPSHOT")));
     }
 
     @Test
-    public void testFindVersions()
-    {
+    public void testFindVersions() {
         Pom pom1 = new Pom();
-        pom1.setProject( project );
-        pom1.setCoords( "test:dummy:1-SNAPSHOT" );
+        pom1.setProject(project);
+        pom1.setCoords("test:dummy:1-SNAPSHOT");
 
-        org.apache.maven.resolver.internal.ant.types.Artifact artifact1 = new org.apache.maven.resolver.internal.ant.types.Artifact();
-        artifact1.setProject( project );
-        artifact1.addPom( pom1 );
-        artifact1.setFile( getFile( "dummy-file.txt" ) );
+        org.apache.maven.resolver.internal.ant.types.Artifact artifact1 =
+                new org.apache.maven.resolver.internal.ant.types.Artifact();
+        artifact1.setProject(project);
+        artifact1.addPom(pom1);
+        artifact1.setFile(getFile("dummy-file.txt"));
 
-        reader.addArtifact( artifact1 );
+        reader.addArtifact(artifact1);
 
         Pom pom2 = new Pom();
-        pom2.setProject( project );
-        pom2.setCoords( "test:dummy:2-SNAPSHOT" );
+        pom2.setProject(project);
+        pom2.setCoords("test:dummy:2-SNAPSHOT");
 
-        org.apache.maven.resolver.internal.ant.types.Artifact artifact2 = new org.apache.maven.resolver.internal.ant.types.Artifact();
-        artifact2.setProject( project );
-        artifact2.addPom( pom2 );
-        artifact2.setFile( getFile( "dummy-file.txt" ) );
+        org.apache.maven.resolver.internal.ant.types.Artifact artifact2 =
+                new org.apache.maven.resolver.internal.ant.types.Artifact();
+        artifact2.setProject(project);
+        artifact2.addPom(pom2);
+        artifact2.setFile(getFile("dummy-file.txt"));
 
-        reader.addArtifact( artifact2 );
+        reader.addArtifact(artifact2);
 
-        assertThat( reader.findVersions( artifact( "test:dummy:txt:[0,)" ) ),
-                    containsInAnyOrder( "1-SNAPSHOT", "2-SNAPSHOT" ) );
+        assertThat(
+                reader.findVersions(artifact("test:dummy:txt:[0,)")), containsInAnyOrder("1-SNAPSHOT", "2-SNAPSHOT"));
     }
-
 }

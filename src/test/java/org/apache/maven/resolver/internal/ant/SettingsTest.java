@@ -1,5 +1,3 @@
-package org.apache.maven.resolver.internal.ant;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -9,7 +7,7 @@ package org.apache.maven.resolver.internal.ant;
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -18,9 +16,7 @@ package org.apache.maven.resolver.internal.ant;
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
+package org.apache.maven.resolver.internal.ant;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,47 +24,51 @@ import java.io.IOException;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
 
-public class SettingsTest
-    extends AntBuildsTest
-{
-    public static junit.framework.Test suite()
-    {
-        return new JUnit4TestAdapter( SettingsTest.class );
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.*;
+
+public class SettingsTest extends AntBuildsTest {
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(SettingsTest.class);
     }
 
     @Test
-    public void testUserSettings()
-    {
-        executeTarget( "testUserSettings" );
-        assertThat( "user settings not set", AntRepoSys.getInstance( getProject() ).getUserSettings().getName(),
-                    equalTo( "userSettings.xml" ) );
+    public void testUserSettings() {
+        executeTarget("testUserSettings");
+        assertThat(
+                "user settings not set",
+                AntRepoSys.getInstance(getProject()).getUserSettings().getName(),
+                equalTo("userSettings.xml"));
     }
 
     @Test
-    public void testGlobalSettings()
-    {
-        executeTarget( "testGlobalSettings" );
-        assertThat( "global settings not set", AntRepoSys.getInstance( getProject() ).getGlobalSettings().getName(),
-                    equalTo( "globalSettings.xml" ) );
+    public void testGlobalSettings() {
+        executeTarget("testGlobalSettings");
+        assertThat(
+                "global settings not set",
+                AntRepoSys.getInstance(getProject()).getGlobalSettings().getName(),
+                equalTo("globalSettings.xml"));
     }
 
     @Test
-    public void testBothSettings()
-    {
-        executeTarget( "testBothSettings" );
-        assertThat( "global settings not set", AntRepoSys.getInstance( getProject() ).getGlobalSettings().getName(),
-                    equalTo( "globalSettings.xml" ) );
-        assertThat( "user settings not set", AntRepoSys.getInstance( getProject() ).getUserSettings().getName(),
-                    equalTo( "userSettings.xml" ) );
+    public void testBothSettings() {
+        executeTarget("testBothSettings");
+        assertThat(
+                "global settings not set",
+                AntRepoSys.getInstance(getProject()).getGlobalSettings().getName(),
+                equalTo("globalSettings.xml"));
+        assertThat(
+                "user settings not set",
+                AntRepoSys.getInstance(getProject()).getUserSettings().getName(),
+                equalTo("userSettings.xml"));
     }
 
     @Test
-    public void testFallback()
-        throws IOException
-    {
+    public void testFallback() throws IOException {
         executeTarget("setUp");
-        assertThat( "no fallback to local settings",
-                    AntRepoSys.getInstance( getProject() ).getUserSettings().getAbsolutePath(), endsWith( ".m2"
-                        + File.separator + "settings.xml" ) );
+        assertThat(
+                "no fallback to local settings",
+                AntRepoSys.getInstance(getProject()).getUserSettings().getAbsolutePath(),
+                endsWith(".m2" + File.separator + "settings.xml"));
     }
 }

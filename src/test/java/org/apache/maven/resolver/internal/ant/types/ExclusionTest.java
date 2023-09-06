@@ -1,5 +1,3 @@
-package org.apache.maven.resolver.internal.ant.types;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -9,7 +7,7 @@ package org.apache.maven.resolver.internal.ant.types;
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -18,76 +16,69 @@ package org.apache.maven.resolver.internal.ant.types;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.resolver.internal.ant.types;
+
+import junit.framework.JUnit4TestAdapter;
+import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import junit.framework.JUnit4TestAdapter;
-import org.apache.maven.resolver.internal.ant.types.Exclusion;
-import org.junit.Test;
-
 /**
  */
-public class ExclusionTest
-{
-    public static junit.framework.Test suite()
-    {
-        return new JUnit4TestAdapter( ExclusionTest.class );
+public class ExclusionTest {
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(ExclusionTest.class);
     }
 
     @Test
-    public void testSetCoordsGid()
-    {
+    public void testSetCoordsGid() {
         Exclusion ex = new Exclusion();
-        ex.setCoords( "gid" );
+        ex.setCoords("gid");
 
-        assertEquals( "gid", ex.getGroupId() );
-        assertEquals( "*", ex.getArtifactId() );
-        assertEquals( "*", ex.getExtension() );
-        assertEquals( "*", ex.getClassifier() );
+        assertEquals("gid", ex.getGroupId());
+        assertEquals("*", ex.getArtifactId());
+        assertEquals("*", ex.getExtension());
+        assertEquals("*", ex.getClassifier());
     }
 
     @Test
-    public void testSetCoordsGidAid()
-    {
+    public void testSetCoordsGidAid() {
         Exclusion ex = new Exclusion();
-        ex.setCoords( "gid:aid" );
+        ex.setCoords("gid:aid");
 
-        assertEquals( "gid", ex.getGroupId() );
-        assertEquals( "aid", ex.getArtifactId() );
-        assertEquals( "*", ex.getExtension() );
-        assertEquals( "*", ex.getClassifier() );
+        assertEquals("gid", ex.getGroupId());
+        assertEquals("aid", ex.getArtifactId());
+        assertEquals("*", ex.getExtension());
+        assertEquals("*", ex.getClassifier());
     }
 
     @Test
-    public void testSetCoordsGidAidExt()
-    {
+    public void testSetCoordsGidAidExt() {
         Exclusion ex = new Exclusion();
-        ex.setCoords( "gid:aid:ext" );
+        ex.setCoords("gid:aid:ext");
 
-        assertEquals( "gid", ex.getGroupId() );
-        assertEquals( "aid", ex.getArtifactId() );
-        assertEquals( "ext", ex.getExtension() );
-        assertEquals( "*", ex.getClassifier() );
+        assertEquals("gid", ex.getGroupId());
+        assertEquals("aid", ex.getArtifactId());
+        assertEquals("ext", ex.getExtension());
+        assertEquals("*", ex.getClassifier());
     }
 
     @Test
-    public void testSetCoordsGidAidExtCls()
-    {
+    public void testSetCoordsGidAidExtCls() {
         Exclusion ex = new Exclusion();
-        ex.setCoords( "gid:aid:ext:cls" );
+        ex.setCoords("gid:aid:ext:cls");
 
-        assertEquals( "gid", ex.getGroupId() );
-        assertEquals( "aid", ex.getArtifactId() );
-        assertEquals( "ext", ex.getExtension() );
-        assertEquals( "cls", ex.getClassifier() );
+        assertEquals("gid", ex.getGroupId());
+        assertEquals("aid", ex.getArtifactId());
+        assertEquals("ext", ex.getExtension());
+        assertEquals("cls", ex.getClassifier());
 
         ex = new Exclusion();
-        ex.setCoords( "gid:aid:ext:" );
+        ex.setCoords("gid:aid:ext:");
 
-        assertEquals( "gid", ex.getGroupId() );
-        assertEquals( "aid", ex.getArtifactId() );
-        assertEquals( "ext", ex.getExtension() );
-        assertEquals( "", ex.getClassifier() );
+        assertEquals("gid", ex.getGroupId());
+        assertEquals("aid", ex.getArtifactId());
+        assertEquals("ext", ex.getExtension());
+        assertEquals("", ex.getClassifier());
     }
-
 }

@@ -1,5 +1,3 @@
-package org.apache.maven.resolver.internal.ant.types;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -8,9 +6,9 @@ package org.apache.maven.resolver.internal.ant.types;
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
- *  http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,6 +16,7 @@ package org.apache.maven.resolver.internal.ant.types;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.apache.maven.resolver.internal.ant.types;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,10 +31,7 @@ import org.apache.tools.ant.types.Reference;
 
 /**
  */
-public class Dependencies
-    extends DataType
-    implements DependencyContainer
-{
+public class Dependencies extends DataType implements DependencyContainer {
 
     private File file;
 
@@ -47,151 +43,119 @@ public class Dependencies
 
     private boolean nestedDependencies;
 
-    protected Dependencies getRef()
-    {
+    protected Dependencies getRef() {
         return (Dependencies) getCheckedRef();
     }
 
-    public void validate( Task task )
-    {
-        if ( isReference() )
-        {
-            getRef().validate( task );
-        }
-        else
-        {
-            if ( getPom() != null && getPom().getFile() == null )
-            {
-                throw new BuildException( "A <pom> used for dependency resolution has to be backed by a pom.xml file" );
+    public void validate(Task task) {
+        if (isReference()) {
+            getRef().validate(task);
+        } else {
+            if (getPom() != null && getPom().getFile() == null) {
+                throw new BuildException("A <pom> used for dependency resolution has to be backed by a pom.xml file");
             }
             Map<String, String> ids = new HashMap<>();
-            for ( DependencyContainer container : containers )
-            {
-                container.validate( task );
-                if ( container instanceof Dependency )
-                {
+            for (DependencyContainer container : containers) {
+                container.validate(task);
+                if (container instanceof Dependency) {
                     Dependency dependency = (Dependency) container;
                     String id = dependency.getVersionlessKey();
-                    String collision = ids.put( id, dependency.getVersion() );
-                    if ( collision != null )
-                    {
-                        throw new BuildException( "You must not declare multiple <dependency> elements"
-                            + " with the same coordinates but got " + id + " -> " + collision + " vs "
-                            + dependency.getVersion() );
+                    String collision = ids.put(id, dependency.getVersion());
+                    if (collision != null) {
+                        throw new BuildException("You must not declare multiple <dependency> elements"
+                                + " with the same coordinates but got " + id + " -> " + collision + " vs "
+                                + dependency.getVersion());
                     }
                 }
             }
         }
     }
 
-    public void setRefid( Reference ref )
-    {
-        if ( pom != null || !exclusions.isEmpty() || !containers.isEmpty() )
-        {
+    public void setRefid(Reference ref) {
+        if (pom != null || !exclusions.isEmpty() || !containers.isEmpty()) {
             throw noChildrenAllowed();
         }
-        super.setRefid( ref );
+        super.setRefid(ref);
     }
 
-    public void setFile( File file )
-    {
+    public void setFile(File file) {
         checkAttributesAllowed();
         this.file = file;
         checkExternalSources();
     }
 
-    public File getFile()
-    {
-        if ( isReference() )
-        {
+    public File getFile() {
+        if (isReference()) {
             return getRef().getFile();
         }
         return file;
     }
 
-    public void addPom( Pom pom )
-    {
+    public void addPom(Pom pom) {
         checkChildrenAllowed();
-        if ( this.pom != null )
-        {
-            throw new BuildException( "You must not specify multiple <pom> elements" );
+        if (this.pom != null) {
+            throw new BuildException("You must not specify multiple <pom> elements");
         }
         this.pom = pom;
         checkExternalSources();
     }
 
-    public Pom getPom()
-    {
-        if ( isReference() )
-        {
+    public Pom getPom() {
+        if (isReference()) {
             return getRef().getPom();
         }
         return pom;
     }
 
-    public void setPomRef( Reference ref )
-    {
-        if ( pom == null )
-        {
+    public void setPomRef(Reference ref) {
+        if (pom == null) {
             pom = new Pom();
-            pom.setProject( getProject() );
+            pom.setProject(getProject());
         }
-        pom.setRefid( ref );
+        pom.setRefid(ref);
         checkExternalSources();
     }
 
-    private void checkExternalSources()
-    {
-        if ( file != null && pom != null )
-        {
-            throw new BuildException( "You must not specify both a text file and a POM to list dependencies" );
+    private void checkExternalSources() {
+        if (file != null && pom != null) {
+            throw new BuildException("You must not specify both a text file and a POM to list dependencies");
         }
-        if ( ( file != null || pom != null ) && nestedDependencies )
-        {
-            throw new BuildException( "You must not specify both a file/POM and nested dependency collections" );
+        if ((file != null || pom != null) && nestedDependencies) {
+            throw new BuildException("You must not specify both a file/POM and nested dependency collections");
         }
     }
 
-    public void addDependency( Dependency dependency )
-    {
+    public void addDependency(Dependency dependency) {
         checkChildrenAllowed();
-        containers.add( dependency );
+        containers.add(dependency);
     }
 
-    public void addDependencies( Dependencies dependencies )
-    {
+    public void addDependencies(Dependencies dependencies) {
         checkChildrenAllowed();
-        if ( dependencies == this )
-        {
+        if (dependencies == this) {
             throw circularReference();
         }
-        containers.add( dependencies );
+        containers.add(dependencies);
         nestedDependencies = true;
         checkExternalSources();
     }
 
-    public List<DependencyContainer> getDependencyContainers()
-    {
-        if ( isReference() )
-        {
+    public List<DependencyContainer> getDependencyContainers() {
+        if (isReference()) {
             return getRef().getDependencyContainers();
         }
         return containers;
     }
 
-    public void addExclusion( Exclusion exclusion )
-    {
+    public void addExclusion(Exclusion exclusion) {
         checkChildrenAllowed();
-        this.exclusions.add( exclusion );
+        this.exclusions.add(exclusion);
     }
 
-    public List<Exclusion> getExclusions()
-    {
-        if ( isReference() )
-        {
+    public List<Exclusion> getExclusions() {
+        if (isReference()) {
             return getRef().getExclusions();
         }
         return exclusions;
     }
-
 }

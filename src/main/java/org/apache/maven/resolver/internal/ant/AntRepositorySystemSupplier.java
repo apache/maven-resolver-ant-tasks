@@ -18,7 +18,6 @@
  */
 package org.apache.maven.resolver.internal.ant;
 
-import org.apache.maven.model.building.DefaultModelBuilderFactory;
 import org.apache.maven.model.building.ModelBuilder;
 import org.eclipse.aether.impl.RemoteRepositoryManager;
 import org.eclipse.aether.impl.UpdatePolicyAnalyzer;
@@ -26,13 +25,13 @@ import org.eclipse.aether.spi.connector.checksum.ChecksumPolicyProvider;
 import org.eclipse.aether.supplier.RepositorySystemSupplier;
 
 /**
- * The Ant modified supplier.
+ * The Ant modified supplier, that on repository system creation "remembers" (and exposes) other required components as well.
  *
  * @since 1.5.0
  */
 public class AntRepositorySystemSupplier extends RepositorySystemSupplier {
 
-    ModelBuilder modelBuilder = new DefaultModelBuilderFactory().newInstance();
+    ModelBuilder modelBuilder;
 
     RemoteRepositoryManager remoteRepositoryManager;
 

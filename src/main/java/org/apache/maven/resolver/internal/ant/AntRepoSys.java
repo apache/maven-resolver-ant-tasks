@@ -233,8 +233,9 @@ public class AntRepoSys
         processServerConfiguration( configProps );
         session.setConfigProperties( configProps );
 
-        session.setOffline( isOffline() );
+        session.setSystemProperties( System.getProperties() );
         session.setUserProperties( project.getUserProperties() );
+        session.setOffline( isOffline() );
 
         session.setProxySelector( getProxySelector() );
         session.setMirrorSelector( getMirrorSelector() );

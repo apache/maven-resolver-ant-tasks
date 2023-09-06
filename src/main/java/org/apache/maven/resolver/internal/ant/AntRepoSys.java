@@ -20,9 +20,10 @@ package org.apache.maven.resolver.internal.ant;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -37,10 +38,8 @@ import java.util.Properties;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.maven.model.Model;
-import org.apache.maven.model.building.DefaultModelBuilderFactory;
 import org.apache.maven.model.building.DefaultModelBuildingRequest;
 import org.apache.maven.model.building.FileModelSource;
-import org.apache.maven.model.building.ModelBuilder;
 import org.apache.maven.model.building.ModelBuildingException;
 import org.apache.maven.model.building.ModelBuildingRequest;
 import org.apache.maven.model.resolution.ModelResolver;
@@ -86,10 +85,8 @@ import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.collection.CollectRequest;
 import org.eclipse.aether.collection.CollectResult;
 import org.eclipse.aether.collection.DependencyCollectionException;
-import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory;
 import org.eclipse.aether.deployment.DeployRequest;
 import org.eclipse.aether.deployment.DeploymentException;
-import org.eclipse.aether.impl.DefaultServiceLocator;
 import org.eclipse.aether.impl.RemoteRepositoryManager;
 import org.eclipse.aether.installation.InstallRequest;
 import org.eclipse.aether.installation.InstallationException;
@@ -97,12 +94,6 @@ import org.eclipse.aether.repository.AuthenticationSelector;
 import org.eclipse.aether.repository.LocalRepositoryManager;
 import org.eclipse.aether.repository.MirrorSelector;
 import org.eclipse.aether.repository.ProxySelector;
-import org.eclipse.aether.spi.connector.RepositoryConnectorFactory;
-import org.eclipse.aether.spi.connector.transport.TransporterFactory;
-import org.eclipse.aether.spi.log.Logger;
-import org.eclipse.aether.transport.classpath.ClasspathTransporterFactory;
-import org.eclipse.aether.transport.file.FileTransporterFactory;
-import org.eclipse.aether.transport.http.HttpTransporterFactory;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
 import org.eclipse.aether.util.repository.ConservativeAuthenticationSelector;
 import org.eclipse.aether.util.repository.DefaultAuthenticationSelector;
@@ -115,19 +106,15 @@ public class AntRepoSys {
 
     private static final boolean OS_WINDOWS = Os.isFamily("windows");
 
-    private static final ModelBuilder MODEL_BUILDER = new DefaultModelBuilderFactory().newInstance();
-
     private static final SettingsBuilder SETTINGS_BUILDER = new DefaultSettingsBuilderFactory().newInstance();
 
     private static final SettingsDecrypter SETTINGS_DECRYPTER = new AntSettingsDecryptorFactory().newInstance();
 
     private final Project project;
 
-    private final DefaultServiceLocator locator;
+    private final AntRepositorySystemSupplier antRepositorySystemSupplier;
 
-    private RepositorySystem repoSys;
-
-    private RemoteRepositoryManager remoteRepoMan;
+    private final RepositorySystem repoSys;
 
     private File userSettings;
 
@@ -162,15 +149,8 @@ public class AntRepoSys {
 
     private AntRepoSys(Project project) {
         this.project = project;
-
-        locator = MavenRepositorySystemUtils.newServiceLocator();
-        locator.setErrorHandler(new AntServiceLocatorErrorHandler(project));
-        locator.setServices(Logger.class, new AntLogger(project));
-        locator.setServices(ModelBuilder.class, MODEL_BUILDER);
-        locator.addService(RepositoryConnectorFactory.class, BasicRepositoryConnectorFactory.class);
-        locator.addService(TransporterFactory.class, FileTransporterFactory.class);
-        locator.addService(TransporterFactory.class, HttpTransporterFactory.class);
-        locator.addService(TransporterFactory.class, ClasspathTransporterFactory.class);
+        this.antRepositorySystemSupplier = new AntRepositorySystemSupplier();
+        this.repoSys = antRepositorySystemSupplier.get();
     }
 
     private void initDefaults() {
@@ -191,23 +171,11 @@ public class AntRepoSys {
     }
 
     public synchronized RepositorySystem getSystem() {
-        if (repoSys == null) {
-            repoSys = locator.getService(RepositorySystem.class);
-            if (repoSys == null) {
-                throw new BuildException("The repository system could not be initialized");
-            }
-        }
         return repoSys;
     }
 
     private synchronized RemoteRepositoryManager getRemoteRepoMan() {
-        if (remoteRepoMan == null) {
-            remoteRepoMan = locator.getService(RemoteRepositoryManager.class);
-            if (remoteRepoMan == null) {
-                throw new BuildException("The repository system could not be initialized");
-            }
-        }
-        return remoteRepoMan;
+        return antRepositorySystemSupplier.remoteRepositoryManager;
     }
 
     public RepositorySystemSession getSession(Task task, LocalRepository localRepo) {
@@ -215,7 +183,7 @@ public class AntRepoSys {
 
         final Map<Object, Object> configProps = new LinkedHashMap<>();
         configProps.put(ConfigurationProperties.USER_AGENT, getUserAgent());
-        configProps.putAll((Map<?, ?>) project.getProperties());
+        configProps.putAll(project.getProperties());
         processServerConfiguration(configProps);
         session.setConfigProperties(configProps);
 
@@ -240,17 +208,13 @@ public class AntRepoSys {
     }
 
     private String getUserAgent() {
-        StringBuilder buffer = new StringBuilder(128);
-
-        buffer.append("Apache-Ant/").append(project.getProperty("ant.version"));
-        buffer.append(" (");
-        buffer.append("Java ").append(System.getProperty("java.version"));
-        buffer.append("; ");
-        buffer.append(System.getProperty("os.name")).append(" ").append(System.getProperty("os.version"));
-        buffer.append(")");
-        buffer.append(" Aether");
-
-        return buffer.toString();
+        return "Apache-Ant/" + project.getProperty("ant.version")
+                + " ("
+                + "Java " + System.getProperty("java.version")
+                + "; "
+                + System.getProperty("os.name") + " " + System.getProperty("os.version")
+                + ")"
+                + " Aether";
     }
 
     private boolean isOffline() {
@@ -375,7 +339,7 @@ public class AntRepoSys {
         DefaultMirrorSelector selector = new DefaultMirrorSelector();
 
         for (Mirror mirror : mirrors) {
-            selector.add(mirror.getId(), mirror.getUrl(), mirror.getType(), false, mirror.getMirrorOf(), null);
+            selector.add(mirror.getId(), mirror.getUrl(), mirror.getType(), false, false, mirror.getMirrorOf(), null);
         }
 
         Settings settings = getSettings();
@@ -384,6 +348,7 @@ public class AntRepoSys {
                     String.valueOf(mirror.getId()),
                     mirror.getUrl(),
                     mirror.getLayout(),
+                    false,
                     false,
                     mirror.getMirrorOf(),
                     mirror.getMirrorOfLayouts());
@@ -531,7 +496,7 @@ public class AntRepoSys {
         remoteRepositories = remoteRepositories == null ? getMergedRepositories() : remoteRepositories;
 
         List<org.eclipse.aether.repository.RemoteRepository> repositories =
-                ConverterUtils.toRepositories(task.getProject(), session, remoteRepositories, getRemoteRepoMan());
+                ConverterUtils.toRepositories(task.getProject(), getSystem(), session, remoteRepositories);
 
         ModelResolver modelResolver =
                 new AntModelResolver(session, "project", getSystem(), getRemoteRepoMan(), repositories);
@@ -554,7 +519,7 @@ public class AntRepoSys {
             request.setProfiles(SettingsUtils.convert(settings.getProfiles()));
             request.setActiveProfileIds(settings.getActiveProfiles());
             request.setModelResolver(modelResolver);
-            return MODEL_BUILDER.build(request).getEffectiveModel();
+            return antRepositorySystemSupplier.modelBuilder.build(request).getEffectiveModel();
         } catch (ModelBuildingException e) {
             throw new BuildException("Could not load POM " + pomFile + ": " + e.getMessage(), e);
         }
@@ -568,20 +533,18 @@ public class AntRepoSys {
         return props;
     }
 
-    private Properties getEnvProperties(Properties props) {
+    private void getEnvProperties(Properties props) {
         if (props == null) {
             props = new Properties();
         }
-        boolean envCaseInsensitive = OS_WINDOWS;
         for (Map.Entry<String, String> entry : System.getenv().entrySet()) {
             String key = entry.getKey();
-            if (envCaseInsensitive) {
+            if (OS_WINDOWS) {
                 key = key.toUpperCase(Locale.ENGLISH);
             }
             key = "env." + key;
             props.put(key, entry.getValue());
         }
-        return props;
     }
 
     private Properties getUserProperties() {
@@ -612,7 +575,7 @@ public class AntRepoSys {
         remoteRepositories = remoteRepositories == null ? getMergedRepositories() : remoteRepositories;
 
         List<org.eclipse.aether.repository.RemoteRepository> repos =
-                ConverterUtils.toRepositories(project, session, remoteRepositories, getRemoteRepoMan());
+                ConverterUtils.toRepositories(project, getSystem(), session, remoteRepositories);
 
         CollectRequest collectRequest = new CollectRequest();
         collectRequest.setRequestContext("project");
@@ -623,7 +586,7 @@ public class AntRepoSys {
         }
 
         if (dependencies != null) {
-            populateCollectRequest(collectRequest, task, session, dependencies, Collections.<Exclusion>emptyList());
+            populateCollectRequest(collectRequest, task, session, dependencies, Collections.emptyList());
         }
 
         task.getProject().log("Collecting dependencies", Project.MSG_VERBOSE);
@@ -679,7 +642,7 @@ public class AntRepoSys {
                             Project.MSG_VERBOSE);
                     continue;
                 }
-                if (dep.getSystemPath() != null && dep.getSystemPath().length() > 0) {
+                if (dep.getSystemPath() != null && !dep.getSystemPath().isEmpty()) {
                     dependency.setSystemPath(task.getProject().resolveFile(dep.getSystemPath()));
                 }
                 for (org.apache.maven.model.Exclusion exc : dep.getExclusions()) {
@@ -712,8 +675,8 @@ public class AntRepoSys {
     private List<Dependency> readDependencies(File file) {
         final List<Dependency> dependencies = new ArrayList<>();
         try {
-            try (BufferedReader reader =
-                    new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"))) {
+            try (BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(Files.newInputStream(file.toPath()), StandardCharsets.UTF_8))) {
                 for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                     int comment = line.indexOf('#');
                     if (comment >= 0) {

@@ -33,13 +33,13 @@ import org.apache.maven.resolver.internal.ant.types.Proxy;
 import org.apache.maven.resolver.internal.ant.types.RemoteRepositories;
 import org.apache.maven.resolver.internal.ant.types.RemoteRepository;
 import org.apache.tools.ant.Project;
+import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.artifact.ArtifactProperties;
 import org.eclipse.aether.artifact.ArtifactType;
 import org.eclipse.aether.artifact.ArtifactTypeRegistry;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.artifact.DefaultArtifactType;
-import org.eclipse.aether.impl.RemoteRepositoryManager;
 import org.eclipse.aether.repository.RepositoryPolicy;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
 
@@ -174,9 +174,9 @@ class ConverterUtils {
 
     public static List<org.eclipse.aether.repository.RemoteRepository> toRepositories(
             Project project,
+            RepositorySystem repositorySystem,
             RepositorySystemSession session,
-            RemoteRepositories repos,
-            RemoteRepositoryManager remoteRepositoryManager) {
+            RemoteRepositories repos) {
         List<RemoteRepository> repositories;
 
         if (repos != null) {
@@ -190,8 +190,7 @@ class ConverterUtils {
             results.add(toRepository(repo));
         }
 
-        results = remoteRepositoryManager.aggregateRepositories(
-                session, Collections.<org.eclipse.aether.repository.RemoteRepository>emptyList(), results, true);
+        results = repositorySystem.newResolutionRepositories(session, results);
 
         return results;
     }

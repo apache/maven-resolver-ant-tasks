@@ -28,7 +28,7 @@
 
   <groupId>org.apache.maven.resolver</groupId>
   <artifactId>maven-resolver-ant-tasks</artifactId>
-  <version>1.4.1-SNAPSHOT</version>
+  <version>1.5.0-SNAPSHOT</version>
 
   <name>Maven Artifact Resolver Ant Tasks</name>
   <description>Ant tasks handling Maven artifacts using Maven Artifact Resolver and Maven Artifact Resolver Provider.</description>

@@ -186,13 +186,13 @@ public class AntRepoSys {
         final Map<Object, Object> configProps = new LinkedHashMap<>();
         configProps.put(ConfigurationProperties.USER_AGENT, getUserAgent());
         configProps.put("maven.startTime", STARTED);
-        configProps.putAll(System.getProperties());
-        configProps.putAll(project.getProperties());
+        configProps.putAll(getSystemProperties());
+        configProps.putAll(getUserProperties());
         processServerConfiguration(configProps);
 
         session.setConfigProperties(configProps);
-        session.setSystemProperties(System.getProperties());
-        session.setUserProperties(project.getUserProperties());
+        session.setSystemProperties(getSystemProperties());
+        session.setUserProperties(getUserProperties());
         session.setOffline(isOffline());
 
         session.setProxySelector(getProxySelector());

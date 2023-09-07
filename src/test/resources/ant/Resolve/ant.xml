@@ -119,4 +119,11 @@
     </repo:resolve>
   </target>
 
+  <target name="testResolveTransitiveDependencyManagement">
+    <repo:pom file="${project.dir}/transitive-depmgt-pom.xml"/>
+    <repo:resolve>
+      <properties prefix="test.resolve.path" classpath="compile"/>
+    </repo:resolve>
+  </target>
+
 </project>

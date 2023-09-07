@@ -631,6 +631,33 @@ public class AntRepoSys {
 
         if (dependencies.getPom() != null) {
             Model model = dependencies.getPom().getModel(task);
+            if (model.getDependencyManagement() != null) {
+                for (org.apache.maven.model.Dependency manDep :
+                        model.getDependencyManagement().getDependencies()) {
+                    Dependency dependency = new Dependency();
+                    dependency.setArtifactId(manDep.getArtifactId());
+                    dependency.setClassifier(manDep.getClassifier());
+                    dependency.setGroupId(manDep.getGroupId());
+                    dependency.setScope(manDep.getScope());
+                    dependency.setType(manDep.getType());
+                    dependency.setVersion(manDep.getVersion());
+                    if (manDep.getSystemPath() != null
+                            && !manDep.getSystemPath().isEmpty()) {
+                        dependency.setSystemPath(task.getProject().resolveFile(manDep.getSystemPath()));
+                    }
+                    for (org.apache.maven.model.Exclusion exc : manDep.getExclusions()) {
+                        Exclusion exclusion = new Exclusion();
+                        exclusion.setGroupId(exc.getGroupId());
+                        exclusion.setArtifactId(exc.getArtifactId());
+                        exclusion.setClassifier("*");
+                        exclusion.setExtension("*");
+                        dependency.addExclusion(exclusion);
+                    }
+                    collectRequest.addManagedDependency(
+                            ConverterUtils.toDependency(dependency, globalExclusions, session));
+                }
+            }
+
             for (org.apache.maven.model.Dependency dep : model.getDependencies()) {
                 Dependency dependency = new Dependency();
                 dependency.setArtifactId(dep.getArtifactId());

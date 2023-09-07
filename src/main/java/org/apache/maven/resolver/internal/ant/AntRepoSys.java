@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -103,6 +104,7 @@ import org.eclipse.aether.util.repository.DefaultProxySelector;
 /**
  */
 public class AntRepoSys {
+    private static final Date STARTED = new Date();
 
     private static final boolean OS_WINDOWS = Os.isFamily("windows");
 
@@ -183,10 +185,12 @@ public class AntRepoSys {
 
         final Map<Object, Object> configProps = new LinkedHashMap<>();
         configProps.put(ConfigurationProperties.USER_AGENT, getUserAgent());
+        configProps.put("maven.startTime", STARTED);
+        configProps.putAll(System.getProperties());
         configProps.putAll(project.getProperties());
         processServerConfiguration(configProps);
-        session.setConfigProperties(configProps);
 
+        session.setConfigProperties(configProps);
         session.setSystemProperties(System.getProperties());
         session.setUserProperties(project.getUserProperties());
         session.setOffline(isOffline());

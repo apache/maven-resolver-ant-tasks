@@ -28,7 +28,7 @@
 
   <groupId>org.apache.maven.resolver</groupId>
   <artifactId>maven-resolver-ant-tasks</artifactId>
-  <version>1.5.0</version>
+  <version>1.5.1-SNAPSHOT</version>
 
   <name>Maven Artifact Resolver Ant Tasks</name>
   <description>Ant tasks handling Maven artifacts using Maven Artifact Resolver and Maven Artifact Resolver Provider.</description>
@@ -38,7 +38,7 @@
   <scm>
     <connection>scm:git:https://gitbox.apache.org/repos/asf/maven-resolver-ant-tasks.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/maven-resolver-ant-tasks.git</developerConnection>
-    <tag>maven-resolver-ant-tasks-1.5.0</tag>
+    <tag>maven-resolver-ant-tasks-1.2.1</tag>
     <url>https://github.com/apache/maven-resolver-ant-tasks/</url>
   </scm>
   <issueManagement>
@@ -65,7 +65,7 @@
     <hamcrestVersion>2.2</hamcrestVersion>
     <maven.site.path>resolver-archives/resolver-ant-tasks-LATEST</maven.site.path>
     <checkstyle.violation.ignore>LineLength,MagicNumber</checkstyle.violation.ignore>
-    <project.build.outputTimestamp>2023-09-08T10:41:55Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2023-09-08T10:42:31Z</project.build.outputTimestamp>
   </properties>
 
   <dependencyManagement>

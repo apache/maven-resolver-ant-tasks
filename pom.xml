@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.apache.maven</groupId>
     <artifactId>maven-parent</artifactId>
-    <version>40</version>
+    <version>41</version>
   </parent>
 
   <groupId>org.apache.maven.resolver</groupId>
@@ -38,7 +38,7 @@
   <scm>
     <connection>scm:git:https://gitbox.apache.org/repos/asf/maven-resolver-ant-tasks.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/maven-resolver-ant-tasks.git</developerConnection>
-    <tag>maven-resolver-ant-tasks-1.2.1</tag>
+    <tag>HEAD</tag>
     <url>https://github.com/apache/maven-resolver-ant-tasks/</url>
   </scm>
   <issueManagement>
@@ -57,8 +57,8 @@
   </distributionManagement>
 
   <properties>
-    <mavenVersion>3.9.4</mavenVersion>
-    <resolverVersion>1.9.15</resolverVersion>
+    <mavenVersion>3.9.6</mavenVersion>
+    <resolverVersion>1.9.18</resolverVersion>
     <antVersion>1.10.14</antVersion>
     <javaVersion>8</javaVersion>
     <junitVersion>4.13.2</junitVersion>
@@ -176,12 +176,12 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-interpolation</artifactId>
-      <version>1.26</version>
+      <version>1.27</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.sisu</groupId>
       <artifactId>org.eclipse.sisu.plexus</artifactId>
-      <version>0.3.5</version>
+      <version>0.9.0.M2</version>
       <exclusions>
         <exclusion>
           <groupId>com.google.guava</groupId>

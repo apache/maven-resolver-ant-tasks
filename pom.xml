@@ -58,7 +58,7 @@
 
   <properties>
     <mavenVersion>3.9.6</mavenVersion>
-    <resolverVersion>1.9.18</resolverVersion>
+    <resolverVersion>1.9.19</resolverVersion>
     <antVersion>1.10.14</antVersion>
     <javaVersion>8</javaVersion>
     <junitVersion>4.13.2</junitVersion>

@@ -33,7 +33,7 @@ public class Settings extends DataType {
     private File globalFile;
 
     protected Settings getRef() {
-        return (Settings) getCheckedRef();
+        return getCheckedRef(Settings.class);
     }
 
     public void setRefid(Reference ref) {

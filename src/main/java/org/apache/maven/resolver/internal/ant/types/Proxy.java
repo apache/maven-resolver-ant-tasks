@@ -46,9 +46,10 @@ public class Proxy extends DataType {
     }
 
     protected Proxy getRef() {
-        return (Proxy) getCheckedRef();
+        return getCheckedRef(Proxy.class);
     }
 
+    @Override
     public void setRefid(Reference ref) {
         if (host != null || port != 0 || type != null || nonProxyHosts != null) {
             throw tooManyAttributes();

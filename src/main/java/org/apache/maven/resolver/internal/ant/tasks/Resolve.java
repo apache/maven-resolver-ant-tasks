@@ -56,7 +56,7 @@ import org.eclipse.aether.util.filter.ScopeDependencyFilter;
  */
 public class Resolve extends AbstractResolvingTask {
 
-    private List<ArtifactConsumer> consumers = new ArrayList<>();
+    private final List<ArtifactConsumer> consumers = new ArrayList<>();
 
     private boolean failOnMissingAttachments;
 
@@ -191,7 +191,7 @@ public class Resolve extends AbstractResolvingTask {
                 } else {
                     dst = included;
                 }
-                if (scope.length() > 0) {
+                if (!scope.isEmpty()) {
                     dst.add(scope);
                 }
             }
@@ -215,7 +215,7 @@ public class Resolve extends AbstractResolvingTask {
 
     /**
      */
-    public class Path extends ArtifactConsumer {
+    public static class Path extends ArtifactConsumer {
 
         private String refid;
 
@@ -225,12 +225,14 @@ public class Resolve extends AbstractResolvingTask {
             this.refid = refId;
         }
 
+        @Override
         public void validate() {
             if (refid == null) {
                 throw new BuildException("You must specify the 'refid' for the path");
             }
         }
 
+        @Override
         public void process(Artifact artifact, RepositorySystemSession session) {
             if (path == null) {
                 path = new org.apache.tools.ant.types.Path(getProject());
@@ -264,6 +266,7 @@ public class Resolve extends AbstractResolvingTask {
             this.refid = refId;
         }
 
+        @Override
         public String getClassifier() {
             return classifier;
         }
@@ -290,6 +293,7 @@ public class Resolve extends AbstractResolvingTask {
             this.layout = new Layout(layout);
         }
 
+        @Override
         public void validate() {
             if (refid == null && dir == null) {
                 throw new BuildException("You must either specify the 'refid' for the resource collection"
@@ -300,6 +304,7 @@ public class Resolve extends AbstractResolvingTask {
             }
         }
 
+        @Override
         public void process(Artifact artifact, RepositorySystemSession session) {
             if (dir != null) {
                 if (refid != null && fileset == null) {
@@ -346,7 +351,7 @@ public class Resolve extends AbstractResolvingTask {
 
     /**
      */
-    public class Props extends ArtifactConsumer {
+    public static class Props extends ArtifactConsumer {
 
         private String prefix;
 
@@ -356,6 +361,7 @@ public class Resolve extends AbstractResolvingTask {
             this.prefix = prefix;
         }
 
+        @Override
         public String getClassifier() {
             return classifier;
         }
@@ -371,9 +377,10 @@ public class Resolve extends AbstractResolvingTask {
             }
         }
 
+        @Override
         public void process(Artifact artifact, RepositorySystemSession session) {
             StringBuilder buffer = new StringBuilder(256);
-            if (prefix != null && prefix.length() > 0) {
+            if (prefix != null && !prefix.isEmpty()) {
                 buffer.append(prefix);
                 if (!prefix.endsWith(".")) {
                     buffer.append('.');
@@ -384,7 +391,7 @@ public class Resolve extends AbstractResolvingTask {
             buffer.append(artifact.getArtifactId());
             buffer.append(':');
             buffer.append(artifact.getExtension());
-            if (artifact.getClassifier().length() > 0) {
+            if (!artifact.getClassifier().isEmpty()) {
                 buffer.append(':');
                 buffer.append(artifact.getClassifier());
             }
@@ -397,11 +404,11 @@ public class Resolve extends AbstractResolvingTask {
 
     private static class Group {
 
-        private String classifier;
+        private final String classifier;
 
-        private List<ArtifactConsumer> consumers = new ArrayList<>();
+        private final List<ArtifactConsumer> consumers = new ArrayList<>();
 
-        private List<ArtifactRequest> requests = new ArrayList<>();
+        private final List<ArtifactRequest> requests = new ArrayList<>();
 
         Group(String classifier) {
             this.classifier = classifier;

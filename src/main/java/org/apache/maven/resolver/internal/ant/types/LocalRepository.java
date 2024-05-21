@@ -52,9 +52,10 @@ public class LocalRepository extends DataType {
     }
 
     protected LocalRepository getRef() {
-        return (LocalRepository) getCheckedRef();
+        return getCheckedRef(LocalRepository.class);
     }
 
+    @Override
     public void setRefid(Reference ref) {
         if (dir != null) {
             throw tooManyAttributes();

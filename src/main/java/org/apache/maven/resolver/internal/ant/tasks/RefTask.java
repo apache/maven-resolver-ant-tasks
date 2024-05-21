@@ -73,7 +73,7 @@ public abstract class RefTask extends Task {
         Object o = ref.getReferencedObject(project);
         if (!(requiredClass.isAssignableFrom(o.getClass()))) {
             log("Class " + o.getClass() + " is not a subclass of " + requiredClass, Project.MSG_VERBOSE);
-            String msg = ref.getRefId() + " doesn\'t denote a " + dataTypeName;
+            String msg = ref.getRefId() + " doesn't denote a " + dataTypeName;
             throw new BuildException(msg);
         }
         return o;

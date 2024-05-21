@@ -41,7 +41,7 @@ public class Exclusion extends DataType {
     private String extension;
 
     protected Exclusion getRef() {
-        return (Exclusion) getCheckedRef();
+        return getCheckedRef(Exclusion.class);
     }
 
     public void validate(Task task) {
@@ -55,6 +55,7 @@ public class Exclusion extends DataType {
         }
     }
 
+    @Override
     public void setRefid(Reference ref) {
         if (groupId != null || artifactId != null || extension != null || classifier != null) {
             throw tooManyAttributes();

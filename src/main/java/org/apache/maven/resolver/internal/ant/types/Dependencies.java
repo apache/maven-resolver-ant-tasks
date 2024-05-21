@@ -37,16 +37,17 @@ public class Dependencies extends DataType implements DependencyContainer {
 
     private Pom pom;
 
-    private List<DependencyContainer> containers = new ArrayList<>();
+    private final List<DependencyContainer> containers = new ArrayList<>();
 
-    private List<Exclusion> exclusions = new ArrayList<>();
+    private final List<Exclusion> exclusions = new ArrayList<>();
 
     private boolean nestedDependencies;
 
     protected Dependencies getRef() {
-        return (Dependencies) getCheckedRef();
+        return getCheckedRef(Dependencies.class);
     }
 
+    @Override
     public void validate(Task task) {
         if (isReference()) {
             getRef().validate(task);
@@ -71,6 +72,7 @@ public class Dependencies extends DataType implements DependencyContainer {
         }
     }
 
+    @Override
     public void setRefid(Reference ref) {
         if (pom != null || !exclusions.isEmpty() || !containers.isEmpty()) {
             throw noChildrenAllowed();

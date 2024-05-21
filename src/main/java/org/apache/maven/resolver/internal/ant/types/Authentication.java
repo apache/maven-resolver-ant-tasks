@@ -38,7 +38,7 @@ public class Authentication extends DataType {
 
     private String passphrase;
 
-    private List<String> servers = new ArrayList<>();
+    private final List<String> servers = new ArrayList<>();
 
     @Override
     public void setProject(Project project) {
@@ -48,9 +48,10 @@ public class Authentication extends DataType {
     }
 
     protected Authentication getRef() {
-        return (Authentication) getCheckedRef();
+        return getCheckedRef(Authentication.class);
     }
 
+    @Override
     public void setRefid(Reference ref) {
         if (username != null || password != null || privateKeyFile != null || passphrase != null) {
             throw tooManyAttributes();
@@ -119,7 +120,7 @@ public class Authentication extends DataType {
         String[] split = servers.split("[;:]");
         for (String server : split) {
             server = server.trim();
-            if (server.length() > 0) {
+            if (!server.isEmpty()) {
                 this.servers.add(server);
             }
         }

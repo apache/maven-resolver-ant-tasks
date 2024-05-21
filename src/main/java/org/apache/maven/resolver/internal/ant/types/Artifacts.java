@@ -29,12 +29,13 @@ import org.apache.tools.ant.types.Reference;
  */
 public class Artifacts extends DataType implements ArtifactContainer {
 
-    private List<ArtifactContainer> containers = new ArrayList<>();
+    private final List<ArtifactContainer> containers = new ArrayList<>();
 
     protected Artifacts getRef() {
-        return (Artifacts) getCheckedRef();
+        return getCheckedRef(Artifacts.class);
     }
 
+    @Override
     public void validate(Task task) {
         if (isReference()) {
             getRef().validate(task);
@@ -45,6 +46,7 @@ public class Artifacts extends DataType implements ArtifactContainer {
         }
     }
 
+    @Override
     public void setRefid(Reference ref) {
         if (!containers.isEmpty()) {
             throw noChildrenAllowed();
@@ -65,6 +67,7 @@ public class Artifacts extends DataType implements ArtifactContainer {
         containers.add(artifacts);
     }
 
+    @Override
     public List<Artifact> getArtifacts() {
         if (isReference()) {
             return getRef().getArtifacts();

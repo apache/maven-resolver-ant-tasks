@@ -45,7 +45,7 @@ public class ProjectWorkspaceReader implements WorkspaceReader {
 
     private static final Object LOCK = new Object();
 
-    private Map<String, Artifact> artifacts = new ConcurrentHashMap<>();
+    private final Map<String, Artifact> artifacts = new ConcurrentHashMap<>();
 
     public void addPom(Pom pom) {
         if (pom.getFile() != null) {
@@ -89,15 +89,18 @@ public class ProjectWorkspaceReader implements WorkspaceReader {
         return ArtifactIdUtils.toId(artifact);
     }
 
+    @Override
     public WorkspaceRepository getRepository() {
         return new WorkspaceRepository("ant");
     }
 
+    @Override
     public File findArtifact(Artifact artifact) {
         artifact = artifacts.get(coords(artifact));
         return (artifact != null) ? artifact.getFile() : null;
     }
 
+    @Override
     public List<String> findVersions(Artifact artifact) {
         List<String> versions = new ArrayList<>();
         for (Artifact art : artifacts.values()) {

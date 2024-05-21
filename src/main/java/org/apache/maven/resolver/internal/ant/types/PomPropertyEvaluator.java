@@ -39,6 +39,7 @@ class PomPropertyEvaluator implements PropertyEvaluator {
         this.extractor = extractor;
     }
 
+    @Override
     public Object evaluate(String property, PropertyHelper propertyHelper) {
         Object value = extractor.getValue(property);
         if (value != null) {

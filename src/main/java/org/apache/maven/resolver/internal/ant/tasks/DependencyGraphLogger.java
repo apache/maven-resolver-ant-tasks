@@ -30,7 +30,7 @@ import org.eclipse.aether.util.graph.manager.DependencyManagerUtils;
  */
 class DependencyGraphLogger implements DependencyVisitor {
 
-    private Task task;
+    private final Task task;
 
     private String indent = "";
 
@@ -38,6 +38,7 @@ class DependencyGraphLogger implements DependencyVisitor {
         this.task = task;
     }
 
+    @Override
     public boolean visitEnter(DependencyNode node) {
         StringBuilder buffer = new StringBuilder(128);
         buffer.append(indent);
@@ -68,6 +69,7 @@ class DependencyGraphLogger implements DependencyVisitor {
         return true;
     }
 
+    @Override
     public boolean visitLeave(DependencyNode node) {
         indent = indent.substring(0, indent.length() - 3);
         return true;

@@ -29,12 +29,13 @@ import org.apache.tools.ant.types.Reference;
  */
 public class RemoteRepositories extends DataType implements RemoteRepositoryContainer {
 
-    private List<RemoteRepositoryContainer> containers = new ArrayList<>();
+    private final List<RemoteRepositoryContainer> containers = new ArrayList<>();
 
     protected RemoteRepositories getRef() {
-        return (RemoteRepositories) getCheckedRef();
+        return getCheckedRef(RemoteRepositories.class);
     }
 
+    @Override
     public void validate(Task task) {
         if (isReference()) {
             getRef().validate(task);
@@ -45,6 +46,7 @@ public class RemoteRepositories extends DataType implements RemoteRepositoryCont
         }
     }
 
+    @Override
     public void setRefid(Reference ref) {
         if (!containers.isEmpty()) {
             throw noChildrenAllowed();
@@ -65,6 +67,7 @@ public class RemoteRepositories extends DataType implements RemoteRepositoryCont
         containers.add(repositories);
     }
 
+    @Override
     public List<RemoteRepository> getRepositories() {
         if (isReference()) {
             return getRef().getRepositories();

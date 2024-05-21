@@ -44,6 +44,7 @@ public class Artifact extends RefTask implements ArtifactContainer {
         return (Artifact) getCheckedRef();
     }
 
+    @Override
     public void validate(final Task task) {
         if (isReference()) {
             getRef().validate(task);
@@ -59,6 +60,7 @@ public class Artifact extends RefTask implements ArtifactContainer {
         }
     }
 
+    @Override
     public void setRefid(final Reference ref) {
         if (file != null || type != null || classifier != null) {
             throw tooManyAttributes();
@@ -130,6 +132,7 @@ public class Artifact extends RefTask implements ArtifactContainer {
         return pom;
     }
 
+    @Override
     public List<Artifact> getArtifacts() {
         return Collections.singletonList(this);
     }
@@ -139,6 +142,7 @@ public class Artifact extends RefTask implements ArtifactContainer {
         ProjectWorkspaceReader.getInstance().addArtifact(this);
     }
 
+    @Override
     public String toString() {
         final String pomRepr = getPom() != null ? "(" + getPom().toString() + ":)" : "";
         return String.format(pomRepr + "%s:%s", getType(), getClassifier());

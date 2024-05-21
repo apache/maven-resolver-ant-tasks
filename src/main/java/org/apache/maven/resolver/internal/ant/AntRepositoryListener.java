@@ -31,7 +31,7 @@ import org.eclipse.aether.transfer.MetadataNotFoundException;
  */
 class AntRepositoryListener extends AbstractRepositoryListener {
 
-    private Task task;
+    private final Task task;
 
     AntRepositoryListener(final Task task) {
         this.task = task;

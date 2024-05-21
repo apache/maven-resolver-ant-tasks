@@ -46,9 +46,10 @@ public class Mirror extends DataType {
     }
 
     protected Mirror getRef() {
-        return (Mirror) getCheckedRef();
+        return getCheckedRef(Mirror.class);
     }
 
+    @Override
     public void setRefid(Reference ref) {
         if (id != null || url != null || mirrorOf != null || type != null) {
             throw tooManyAttributes();

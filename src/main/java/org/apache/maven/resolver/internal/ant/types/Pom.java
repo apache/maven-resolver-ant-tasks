@@ -75,6 +75,7 @@ public class Pom extends RefTask {
         }
     }
 
+    @Override
     public void setRefid(Reference ref) {
         if (id != null || file != null || groupId != null || artifactId != null || version != null) {
             throw tooManyAttributes();
@@ -278,6 +279,7 @@ public class Pom extends RefTask {
         }
     }
 
+    @Override
     public String toString() {
         return coords + " (" + super.toString() + ")";
     }

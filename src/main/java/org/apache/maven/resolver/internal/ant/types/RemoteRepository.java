@@ -62,9 +62,10 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
     }
 
     protected RemoteRepository getRef() {
-        return (RemoteRepository) getCheckedRef();
+        return getCheckedRef(RemoteRepository.class);
     }
 
+    @Override
     public void validate(Task task) {
         if (isReference()) {
             getRef().validate(task);
@@ -78,6 +79,7 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         }
     }
 
+    @Override
     public void setRefid(Reference ref) {
         if (id != null || url != null || type != null || checksums != null || updates != null) {
             throw tooManyAttributes();
@@ -244,6 +246,7 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         authentication.setRefid(ref);
     }
 
+    @Override
     public List<RemoteRepository> getRepositories() {
         return Collections.singletonList(this);
     }

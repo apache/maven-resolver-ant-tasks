@@ -48,12 +48,13 @@ public class Dependency extends DataType implements DependencyContainer {
 
     private File systemPath;
 
-    private List<Exclusion> exclusions = new ArrayList<>();
+    private final List<Exclusion> exclusions = new ArrayList<>();
 
     protected Dependency getRef() {
-        return (Dependency) getCheckedRef();
+        return getCheckedRef(Dependency.class);
     }
 
+    @Override
     public void validate(Task task) {
         if (isReference()) {
             getRef().validate(task);
@@ -91,6 +92,7 @@ public class Dependency extends DataType implements DependencyContainer {
         }
     }
 
+    @Override
     public void setRefid(Reference ref) {
         if (groupId != null
                 || artifactId != null
@@ -253,7 +255,7 @@ public class Dependency extends DataType implements DependencyContainer {
         }
         key.append(':');
         key.append((type != null) ? type : "jar");
-        if (classifier != null && classifier.length() > 0) {
+        if (classifier != null && !classifier.isEmpty()) {
             key.append(':');
             key.append(classifier);
         }

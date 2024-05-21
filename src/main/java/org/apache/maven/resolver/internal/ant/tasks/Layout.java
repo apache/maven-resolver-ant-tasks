@@ -48,7 +48,7 @@ class Layout {
 
     public static final String CLS = "{classifier}";
 
-    private String[] tokens;
+    private final String[] tokens;
 
     Layout(String layout) throws BuildException {
         Collection<String> valid = new HashSet<>(Arrays.asList(GID, GID_DIRS, AID, VER, BVER, EXT, CLS));
@@ -61,7 +61,7 @@ class Layout {
             }
             tokens.add(m.group());
         }
-        this.tokens = tokens.toArray(new String[tokens.size()]);
+        this.tokens = tokens.toArray(new String[0]);
     }
 
     public String getPath(Artifact artifact) {
@@ -83,7 +83,7 @@ class Layout {
                 if (artifact.getClassifier().length() <= 0) {
                     if (i > 0) {
                         String lt = tokens[i - 1];
-                        if (lt.length() > 0 && "-_".indexOf(lt.charAt(lt.length() - 1)) >= 0) {
+                        if (!lt.isEmpty() && "-_".indexOf(lt.charAt(lt.length() - 1)) >= 0) {
                             buffer.setLength(buffer.length() - 1);
                         }
                     }

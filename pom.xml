@@ -62,7 +62,7 @@
     <antVersion>1.10.14</antVersion>
     <javaVersion>8</javaVersion>
     <junitVersion>4.13.2</junitVersion>
-    <hamcrestVersion>2.2</hamcrestVersion>
+    <hamcrestVersion>3.0</hamcrestVersion>
     <maven.site.path>resolver-archives/resolver-ant-tasks-LATEST</maven.site.path>
     <checkstyle.violation.ignore>LineLength,MagicNumber</checkstyle.violation.ignore>
     <project.build.outputTimestamp>2024-05-21T11:08:52Z</project.build.outputTimestamp>

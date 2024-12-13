@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.maven.resolver.internal.ant.types.Authentication;
 import org.apache.maven.resolver.internal.ant.types.Dependency;
 import org.apache.maven.resolver.internal.ant.types.Exclusion;
@@ -82,6 +83,16 @@ class ConverterUtils {
 
     public static org.eclipse.aether.graph.Dependency toDependency(
             Dependency dependency, List<Exclusion> exclusions, RepositorySystemSession session) {
+        String scope = dependency.getScope();
+        return new org.eclipse.aether.graph.Dependency(
+                toArtifact(dependency, session.getArtifactTypeRegistry()),
+                ObjectUtils.isEmpty(scope) ? "compile" : scope,
+                false,
+                toExclusions(dependency.getExclusions(), exclusions));
+    }
+
+    public static org.eclipse.aether.graph.Dependency toManagedDependency(
+        Dependency dependency, List<Exclusion> exclusions, RepositorySystemSession session) {
         return new org.eclipse.aether.graph.Dependency(
                 toArtifact(dependency, session.getArtifactTypeRegistry()),
                 dependency.getScope(),

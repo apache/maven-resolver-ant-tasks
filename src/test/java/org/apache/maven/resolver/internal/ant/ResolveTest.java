@@ -177,4 +177,23 @@ public class ResolveTest extends AntBuildsTest {
                 prop,
                 allOf(containsString("apiguardian-api"), endsWith("apiguardian-api-1.1.1.jar")));
     }
+
+    @Test
+    public void testResolveTransitiveDependencyManagementTestScope() {
+        executeTarget("testResolveTransitiveDependencyManagementTestScope");
+
+        String prop = getProject().getProperty("test.compile.resolve.path.org.slf4j:slf4j-api:jar");
+        assertThat("slf4j-api was not resolved as a property", prop, notNullValue());
+        assertThat(
+                "slf4j-api was not resolved to default local repository",
+                prop,
+                allOf(containsString("slf4j-api"), endsWith("slf4j-api-2.0.6.jar")));
+
+        prop = getProject().getProperty("test.resolve.path.org.apiguardian:apiguardian-api:jar");
+        assertThat("apiguardian-api was not resolved as a property", prop, notNullValue());
+        assertThat(
+                "apiguardian-api was not resolved to default local repository",
+                prop,
+                allOf(containsString("apiguardian-api"), endsWith("apiguardian-api-1.1.1.jar")));
+    }
 }

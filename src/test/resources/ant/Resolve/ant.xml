@@ -122,8 +122,18 @@
   <target name="testResolveTransitiveDependencyManagement">
     <repo:pom file="${project.dir}/transitive-depmgt-pom.xml"/>
     <repo:resolve>
-      <properties prefix="test.resolve.path" classpath="compile"/>
+      <properties prefix="test.resolve.path" classpath="test"/>
     </repo:resolve>
   </target>
+
+  <target name="testResolveTransitiveDependencyManagementTestScope">
+    <repo:pom file="${project.dir}/transitive-depmgt-pom.xml"/>
+    <repo:resolve>
+      <properties prefix="test.compile.resolve.path" scopes="compile"/>
+      <properties prefix="test.compile.resolve.classpath" classpath="compile"/>
+      <properties prefix="test.resolve.path" scopes="test"/>
+      <properties prefix="test.resolve.classpath" classpath="test"/>
+    </repo:resolve>
+  </target>	
 
 </project>

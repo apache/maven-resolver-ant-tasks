@@ -40,7 +40,7 @@ public class DependencyTest {
         assertEquals("ver", dep.getVersion());
         assertEquals("jar", dep.getType());
         assertEquals("", dep.getClassifier());
-        assertEquals("compile", dep.getScope());
+        assertEquals("", dep.getScope());
     }
 
     @Test

@@ -654,7 +654,7 @@ public class AntRepoSys {
                         dependency.addExclusion(exclusion);
                     }
                     collectRequest.addManagedDependency(
-                            ConverterUtils.toDependency(dependency, globalExclusions, session));
+                            ConverterUtils.toManagedDependency(dependency, globalExclusions, session));
                 }
             }
 

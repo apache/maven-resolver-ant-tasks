@@ -188,7 +188,7 @@ public class Dependency extends DataType implements DependencyContainer {
         if (isReference()) {
             return getRef().getScope();
         }
-        return (scope != null) ? scope : "compile";
+        return (scope != null) ? scope : "";
     }
 
     public void setScope(String scope) {

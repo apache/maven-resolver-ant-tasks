@@ -42,8 +42,8 @@
     <url>https://github.com/apache/maven-resolver-ant-tasks/</url>
   </scm>
   <issueManagement>
-    <system>jira</system>
-    <url>https://issues.apache.org/jira/browse/MRESOLVER</url>
+    <system>GitHub Issues</system>
+    <url>https://github.com/apache/maven-resolver-ant-tasks/issues</url>
   </issueManagement>
   <ciManagement>
     <system>Jenkins</system>

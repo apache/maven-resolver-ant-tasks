@@ -8,3 +8,6 @@ github:
     - apache-maven
     - maven
     - apache-ant
+  del_branch_on_merge: true
+  features:
+    issues: true

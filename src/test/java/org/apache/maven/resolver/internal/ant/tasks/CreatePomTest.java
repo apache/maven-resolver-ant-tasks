@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
 
+import junit.framework.JUnit4TestAdapter;
 import org.apache.maven.model.*;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.resolver.internal.ant.AntBuildsTest;
@@ -33,6 +34,10 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class CreatePomTest extends AntBuildsTest {
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(CreatePomTest.class);
+    }
+
     public CreatePomTest() {
         super(new File("target/test-classes/ant/DependencyManagement/build.xml"));
     }

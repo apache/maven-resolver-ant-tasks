@@ -20,6 +20,7 @@ package org.apache.maven.resolver.internal.ant.types;
 
 import java.io.File;
 
+import junit.framework.JUnit4TestAdapter;
 import org.apache.maven.resolver.internal.ant.AntBuildsTest;
 import org.junit.Test;
 
@@ -27,6 +28,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class DependencyManagementTest extends AntBuildsTest {
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(DependencyManagementTest.class);
+    }
 
     public DependencyManagementTest() {
         super(new File("src/test/resources/ant/DependencyManagement/build.xml"));

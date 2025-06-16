@@ -32,7 +32,7 @@ public class DependencyManagement extends DataType {
      * @param dependencyManagementRef the reference to the DependencyManagement section
      * @return the DependencyManagement instance
      */
-    static DependencyManagement get(Project project, String dependencyManagementRef) {
+    public static DependencyManagement get(Project project, String dependencyManagementRef) {
         if (dependencyManagementRef == null) {
             throw new IllegalArgumentException("dependencyManagementRef must not be null");
         }
@@ -46,7 +46,7 @@ public class DependencyManagement extends DataType {
         return dependencyManagement.getRef();
     }
 
-    Dependencies getDependencies() {
+    public Dependencies getDependencies() {
         return dependencies;
     }
 
@@ -57,14 +57,14 @@ public class DependencyManagement extends DataType {
      * @param dependencies the dependencies to set
      * @throws IllegalStateException if dependencies are already set
      */
-    void addDependencies(Dependencies dependencies) {
+    public void addDependencies(Dependencies dependencies) {
         if (this.dependencies != null) {
             throw new IllegalStateException("You must not specify multiple <dependencies> elements");
         }
         this.dependencies = dependencies;
     }
 
-    DependencyManagement getRef() {
+    public DependencyManagement getRef() {
         return getCheckedRef(DependencyManagement.class);
     }
 }

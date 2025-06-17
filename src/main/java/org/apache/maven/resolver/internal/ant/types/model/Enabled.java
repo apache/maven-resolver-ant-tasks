@@ -28,10 +28,21 @@ import org.apache.tools.ant.types.DataType;
 public class Enabled extends DataType {
     private boolean enabled;
 
+    /**
+     * Set the value for the enabled state.
+     *
+     * @param enabled the enabled state to set, true for enabled, false for disabled
+     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
+    /**
+     * Adds text to the enabled element. The text should be "true" or "false".
+     *
+     * @param text the text to add, which should be either "true" or "false"
+     * @throws BuildException if the text is not valid
+     */
     public void addText(String text) {
         String trimmed = getProject().replaceProperties(text).trim();
         if ("true".equalsIgnoreCase(trimmed)) {
@@ -43,6 +54,11 @@ public class Enabled extends DataType {
         }
     }
 
+    /**
+     * Gets the enabled state.
+     *
+     * @return true if enabled, false otherwise
+     */
     public boolean isEnabled() {
         return enabled;
     }

@@ -31,10 +31,21 @@ public class Repositories extends DataType {
 
     private final List<Repository> repositories = new ArrayList<>();
 
+    /**
+     * Get the list of repositories.
+     *
+     * @return a list of Repository objects, never null
+     */
     public List<Repository> getRepositories() {
         return repositories;
     }
 
+    /**
+     * Adds a repository to the list of repositories.
+     *
+     * @param repository the Repository object to add, must not be null
+     * @throws IllegalArgumentException if the repository is null
+     */
     public void addRepository(Repository repository) {
         if (repository == null) {
             throw new IllegalArgumentException("Repository cannot be null");

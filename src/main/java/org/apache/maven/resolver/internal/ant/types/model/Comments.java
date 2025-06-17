@@ -26,12 +26,26 @@ import org.apache.tools.ant.types.DataType;
 public class Comments extends DataType {
     String comments;
 
+    /**
+     * Default constructor for Comments.
+     * Initializes an empty Comments object.
+     */
     public Comments() {}
 
+    /**
+     * Adds text to the comments element.
+     *
+     * @param comments the comments text to add
+     */
     public void addText(String comments) {
         this.comments = getProject().replaceProperties(comments);
     }
 
+    /**
+     * Gets the comments text (the value).
+     *
+     * @return the comments text
+     */
     public String getText() {
         return comments;
     }

@@ -28,10 +28,21 @@ public class Url extends DataType {
 
     public Url() {}
 
+    /**
+     * Adds a url string to the url element.
+     *
+     * @param url the URL to add, must not be null
+     * @throws IllegalArgumentException if the URL is null
+     */
     public void addText(String url) {
         this.url = getProject().replaceProperties(url);
     }
 
+    /**
+     * Gets the URL string from the url element.
+     *
+     * @return the URL as a String, never null
+     */
     public String getText() {
         return url;
     }

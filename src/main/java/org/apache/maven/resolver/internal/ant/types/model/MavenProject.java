@@ -42,6 +42,12 @@ public class MavenProject extends DataType {
         model.setPackaging("jar");
     }
 
+    /**
+     * Adds a license to the Maven project model.
+     *
+     * @param license the License object to add, must not be null
+     * @throws IllegalArgumentException if the license is null
+     */
     public void addLicense(License license) {
         org.apache.maven.model.License lic = new org.apache.maven.model.License();
         lic.setName(license.getName());
@@ -51,26 +57,55 @@ public class MavenProject extends DataType {
         model.getLicenses().add(lic);
     }
 
+    /**
+     * Set the groupId for the Maven project model.
+     *
+     * @param groupId the groupId to set, must not be null or empty
+     */
     public void setGroupId(String groupId) {
         model.setGroupId(groupId);
     }
 
+    /**
+     * Set the artifactId for the Maven project model.
+     *
+     * @param artifactId the artifactId to set, must not be null or empty
+     */
     public void setArtifactId(String artifactId) {
         model.setArtifactId(artifactId);
     }
 
+    /**
+     * Set the version for the Maven project model.
+     *
+     * @param version the version to set, must not be null or empty
+     */
     public void setVersion(String version) {
         model.setVersion(version);
     }
 
+    /**
+     * Set the name for the Maven project model.
+     *
+     * @param name the name to set, can be null or empty
+     */
     public void setName(String name) {
         model.setName(name);
     }
 
+    /**
+     * Set the description for the Maven project model.
+     *
+     * @param description the description to set, can be null or empty
+     */
     public void setDescription(String description) {
         model.setDescription(description);
     }
 
+    /**
+     * Add a dependency to the dependencies section of the Maven project model.
+     * @param dep the Dependency object to add, must not be null
+     */
     public void addDependency(Dependency dep) {
         List<org.apache.maven.model.Dependency> dependencies = model.getDependencies();
         if (dependencies == null) {
@@ -110,6 +145,11 @@ public class MavenProject extends DataType {
         return dependency;
     }
 
+    /**
+     * Adds a dependency to the dependency management section of the Maven project model.
+     *
+     * @param dep the Dependency object to add, must not be null
+     */
     public void addToDependencyManagement(Dependency dep) {
         if (model.getDependencyManagement() == null) {
             model.setDependencyManagement(new org.apache.maven.model.DependencyManagement());
@@ -117,10 +157,21 @@ public class MavenProject extends DataType {
         model.getDependencyManagement().addDependency(convert(dep));
     }
 
+    /**
+     * Gets the Maven project model.
+     *
+     * @return the Model object representing the Maven project, never null
+     */
     public Model getModel() {
         return model;
     }
 
+    /**
+     * Writes the Maven project model to the specified Writer in POM format.
+     *
+     * @param writer the Writer to write the POM to, must not be null
+     * @throws IOException if an I/O error occurs while writing
+     */
     public void toPom(Writer writer) throws IOException {
         MavenXpp3Writer pomWriter = new MavenXpp3Writer();
         pomWriter.write(writer, model);

@@ -36,34 +36,74 @@ public class License extends DataType {
         super();
     }
 
+    /**
+     * Gets the name of the license.
+     *
+     * @return the name of the license, or null if not set
+     */
     public String getName() {
         return name == null ? null : name.getText();
     }
 
+    /**
+     * Gets the URL associated with the license.
+     *
+     * @return the URL of the license, or null if not set
+     */
     public String getUrl() {
         return url == null ? null : url.getText();
     }
 
+    /**
+     * Gets the comments associated with the license.
+     *
+     * @return the comments of the license, or null if not set
+     */
     public String getComments() {
         return comments == null ? null : comments.getText();
     }
 
+    /**
+     * Gets the distribution type of the license.
+     *
+     * @return the distribution of the license, or null if not set
+     */
     public String getDistribution() {
         return distribution == null ? null : distribution.getText();
     }
 
+    /**
+     * Adds a name to the license.
+     *
+     * @param name the name element to be added
+     */
     public void addName(Name name) {
         this.name = name;
     }
 
+    /**
+     * Adds a URL to the license.
+     *
+     * @param url the url element to be added
+     */
     public void addUrl(Url url) {
         this.url = url;
     }
 
+    /**
+     * Adds comments to the license.
+     *
+     * @param comments the comments element to be added
+     */
     public void addComments(Comments comments) {
         this.comments = comments;
     }
 
+    /**
+     * Adds a distribution type to the license.
+     *
+     * @param distribution the distribution element to be added
+     */
     public void addDistribution(Distribution distribution) {
         this.distribution = distribution;
     }

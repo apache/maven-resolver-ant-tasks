@@ -31,6 +31,11 @@ public class Repository extends DataType {
     Releases releases; // actually a boolean
     Snapshots snapshots; // actually a boolean
 
+    /**
+     * Adds an identifier to the repository.
+     *
+     * @param id the id element to add, must not be null
+     */
     public void addId(Id id) {
         if (id == null) {
             throw new IllegalArgumentException("Id cannot be null");
@@ -38,10 +43,20 @@ public class Repository extends DataType {
         this.id = id;
     }
 
+    /**
+     * Gets the identifier of the repository.
+     *
+     * @return the id as a String, never null
+     */
     public String getId() {
         return id.getText();
     }
 
+    /**
+     * Adds a name to the repository.
+     *
+     * @param name the name element to add, must not be null
+     */
     public void addName(Name name) {
         if (name == null) {
             throw new IllegalArgumentException("Name cannot be null");
@@ -49,10 +64,20 @@ public class Repository extends DataType {
         this.name = name;
     }
 
+    /**
+     * Gets the name of the repository.
+     *
+     * @return the name as a String, or null if not set
+     */
     public String getName() {
         return name == null ? null : name.getText();
     }
 
+    /**
+     * Adds a URL to the repository.
+     *
+     * @param url the url element to add, must not be null
+     */
     public void addUrl(Url url) {
         if (url == null) {
             throw new IllegalArgumentException("Url cannot be null");
@@ -60,10 +85,20 @@ public class Repository extends DataType {
         this.url = url;
     }
 
+    /**
+     * Gets the URL of the repository.
+     *
+     * @return the URL as a String, or null if not set
+     */
     public String getUrl() {
         return url == null ? null : url.getText();
     }
 
+    /**
+     * Adds a layout to the repository.
+     *
+     * @param layout the layout element to add, must not be null
+     */
     public void addLayout(Layout layout) {
         if (layout == null) {
             throw new IllegalArgumentException("Layout cannot be null");
@@ -71,18 +106,39 @@ public class Repository extends DataType {
         this.layout = layout;
     }
 
+    /**
+     * Gets the layout of the repository.
+     *
+     * @return the layout as a String, or null if not set
+     */
     public String getLayout() {
         return layout == null ? null : layout.getText();
     }
 
+    /**
+     * Gets the releases configuration of the repository.
+     *
+     * @return the Releases object, never null
+     */
     public Releases getReleases() {
         return releases;
     }
 
+    /**
+     * Gets the snapshots configuration of the repository.
+     *
+     * @return the Snapshots object, never null
+     */
     public Snapshots getSnapshots() {
         return snapshots;
     }
 
+    /**
+     * Adds releases configuration to the repository.
+     *
+     * @param releases the Releases object to add, must not be null
+     * @throws IllegalArgumentException if releases is null
+     */
     public void addReleases(Releases releases) {
         if (releases == null) {
             throw new IllegalArgumentException("Releases cannot be null");
@@ -90,6 +146,12 @@ public class Repository extends DataType {
         this.releases = releases;
     }
 
+    /**
+     * Adds snapshots configuration to the repository.
+     *
+     * @param snapshots the Snapshots object to add, must not be null
+     * @throws IllegalArgumentException if snapshots is null
+     */
     public void addSnapshots(Snapshots snapshots) {
         if (snapshots == null) {
             throw new IllegalArgumentException("Snapshots cannot be null");

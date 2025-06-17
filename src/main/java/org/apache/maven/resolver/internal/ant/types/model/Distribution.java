@@ -28,10 +28,20 @@ public class Distribution extends DataType {
 
     public Distribution() {}
 
+    /**
+     * Adds text to the distribution element.
+     *
+     * @param distribution the distribution text to add
+     */
     public void addText(String distribution) {
         this.distribution = getProject().replaceProperties(distribution);
     }
 
+    /**
+     * Gets the distribution text (the value).
+     *
+     * @return the distribution text
+     */
     public String getText() {
         return distribution;
     }

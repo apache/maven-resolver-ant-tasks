@@ -28,14 +28,30 @@ public class Releases extends org.apache.tools.ant.types.DataType {
         super();
     }
 
+    /**
+     * Adds an Enabled element to the releases section.
+     *
+     * @param enabled the Enabled element to add
+     */
     public void addEnabled(Enabled enabled) {
         this.enabled = enabled;
     }
 
+    /**
+     * Returns the Enabled element of the releases section.
+     *
+     * @return the Enabled element
+     */
     public Enabled getEnabled() {
         return enabled;
     }
 
+    /**
+     * Returns the enabled value of the releases section.
+     * If no Enabled element is present, it returns false.
+     *
+     * @return true if enabled, false otherwise
+     */
     public boolean getEnabledValue() {
         if (enabled == null) {
             return false;

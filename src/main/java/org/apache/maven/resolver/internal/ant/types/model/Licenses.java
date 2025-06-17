@@ -31,10 +31,21 @@ public class Licenses extends DataType {
 
     private final List<License> licenses = new ArrayList<>();
 
+    /**
+     * gets the list of licenses.
+     *
+     * @return a list of License objects, never null
+     */
     public List<License> getLicenses() {
         return licenses;
     }
 
+    /**
+     * Adds a License to the collection.
+     *
+     * @param license the License object to add, must not be null
+     * @throws IllegalArgumentException if the license is null
+     */
     public void addLicense(License license) {
         if (license == null) {
             throw new IllegalArgumentException("License cannot be null");

@@ -28,14 +28,30 @@ public class Snapshots extends org.apache.tools.ant.types.DataType {
         super();
     }
 
+    /**
+     * Adds an enabled element to the snapshots section.
+     *
+     * @param enabled the enabled element to add, must not be null
+     */
     public void addEnabled(Enabled enabled) {
         this.enabled = enabled;
     }
 
+    /**
+     * Gets the enabled element of the snapshots section.
+     *
+     * @return the Enabled object, may be null if not set
+     */
     public Enabled getEnabled() {
         return enabled;
     }
 
+    /**
+     * Returns the boolean value of the enabled element.
+     * If the enabled element is not set, it returns false.
+     *
+     * @return true if enabled is set and true, false otherwise
+     */
     public boolean getEnabledValue() {
         if (enabled == null) {
             return false;

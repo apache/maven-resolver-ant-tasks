@@ -30,10 +30,20 @@ public class Name extends DataType {
 
     public Name() {}
 
+    /**
+     * Adds text to the name element, replacing any properties in the text.
+     *
+     * @param name the name text to add
+     */
     public void addText(String name) {
         this.name = getProject().replaceProperties(name);
     }
 
+    /**
+     * Returns the text of the name element.
+     *
+     * @return the name text
+     */
     public String getText() {
         return name;
     }

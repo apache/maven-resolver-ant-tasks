@@ -26,10 +26,20 @@ import org.apache.tools.ant.types.DataType;
 public class Id extends DataType {
     String id;
 
+    /**
+     * Adds text to the id element.
+     *
+     * @param id the id to add, which should be a valid identifier
+     */
     public void addText(String id) {
         this.id = getProject().replaceProperties(id);
     }
 
+    /**
+     * Gets the id text.
+     *
+     * @return the id text
+     */
     public String getText() {
         return id;
     }

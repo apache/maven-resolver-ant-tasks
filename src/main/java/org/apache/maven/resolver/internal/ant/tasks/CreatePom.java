@@ -46,14 +46,25 @@ public class CreatePom extends Task {
     private Boolean skipPomRegistration = false;
 
     /**
+     * Default constructor.
+     */
+    public CreatePom() {
+        // Default constructor
+    }
+
+    /**
      * The target file path for the POM i.e., the path to the file that the pom content should be written to.
+     *
+     * @param pomTarget the target file for the POM
      */
     public void setPomTarget(String pomTarget) {
         pomFile = new File(getProject().replaceProperties(pomTarget));
     }
 
     /**
-     * The target file for the POM i.e., the path to the file that the pom content should be written to
+     * The target file for the POM i.e., the path to the file that the pom content should be written to.
+     *
+     * @param pomTarget the target file for the POM
      */
     public void setPomTarget(File pomTarget) {
         pomFile = pomTarget;
@@ -63,6 +74,8 @@ public class CreatePom extends Task {
      * The reference to the dependency management section.
      * This should point to the id attribute of a &lt;dependencyManagement&gt;
      * element defined elsewhere in the build file.
+     *
+     * @param dependencyManagementRef the reference (id) to the dependency management section
      */
     public void setDependencyManagementRef(String dependencyManagementRef) {
         this.dependencyManagementRef = getProject().replaceProperties(dependencyManagementRef);
@@ -72,6 +85,8 @@ public class CreatePom extends Task {
      * The reference to the dependencies section.
      * This should point to the id attribute of a &lt;dependencies&gt;
      * element defined elsewhere in the build file.
+     *
+     * @param dependenciesRef the reference (id) to the dependencies section
      */
     public void setDependenciesRef(String dependenciesRef) {
         this.dependenciesRef = getProject().replaceProperties(dependenciesRef);
@@ -80,6 +95,8 @@ public class CreatePom extends Task {
     /**
      * Set the groupId for the POM.
      * The groupId can include properties that will be replaced at runtime.
+     *
+     * @param groupId the groupId for the POM
      */
     public void setGroupId(String groupId) {
         this.groupId = getProject().replaceProperties(groupId);
@@ -88,6 +105,8 @@ public class CreatePom extends Task {
     /**
      * Set the artifactId for the POM.
      * The artifactId can include properties that will be replaced at runtime.
+     *
+     * @param artifactId the artifactId for the POM
      */
     public void setArtifactId(String artifactId) {
         this.artifactId = getProject().replaceProperties(artifactId);
@@ -96,6 +115,8 @@ public class CreatePom extends Task {
     /**
      * Set the version for the POM.
      * The version can include properties that will be replaced at runtime.
+     *
+     * @param version the version for the POM
      */
     public void setVersion(String version) {
         this.version = getProject().replaceProperties(version);
@@ -104,6 +125,8 @@ public class CreatePom extends Task {
     /**
      * Set the name for the POM.
      * The name can include properties that will be replaced at runtime.
+     *
+     * @param name the name for the POM
      */
     public void setName(String name) {
         this.name = getProject().replaceProperties(name);
@@ -111,6 +134,8 @@ public class CreatePom extends Task {
 
     /**
      * Get the description for the POM.
+     *
+     * @return the description for the POM
      */
     public String getName() {
         return name;
@@ -119,6 +144,8 @@ public class CreatePom extends Task {
     /**
      * Set the description for the POM.
      * The description can include properties that will be replaced at runtime.
+     *
+     * @param description the description for the POM
      */
     public void setDescription(String description) {
         this.description = getProject().replaceProperties(description);
@@ -126,10 +153,13 @@ public class CreatePom extends Task {
 
     /**
      * skipPomRegistration is a flag to indicate whether the POM should be registered in the project after creation.
-     * Setting this to true is equivalent to doing
+     * Setting this to false is equivalent to doing
      * <pre><code>
-     *   <pom file="${pomFile}"/>
+     *   &lt;pom file="${pomFile}"/&gt;
      * </code></pre>
+     * Default is false, meaning the POM will be registered.
+     *
+     * @param skipPomRegistration true to skip registration, false to register the POM
      */
     public void setSkipPomRegistration(Boolean skipPomRegistration) {
         this.skipPomRegistration = skipPomRegistration;
@@ -138,6 +168,8 @@ public class CreatePom extends Task {
     /**
      * Get the groupId.
      * If the groupId is not set, it will return a default value based on the project property 'groupId'.
+     *
+     * @return the groupId for the POM
      */
     public String getGroupId() {
         if (groupId == null || "null".equals(groupId)) {
@@ -149,6 +181,8 @@ public class CreatePom extends Task {
     /**
      * Get the artifactId.
      * If the artifactId is not set, it will return a default value based on the project property 'artifactId'.
+     *
+     * @return the artifactId for the POM
      */
     public String getArtifactId() {
         if (artifactId == null || "null".equals(artifactId)) {
@@ -160,6 +194,8 @@ public class CreatePom extends Task {
     /**
      * Get the version.
      * If the version is not set, it will return a default value based on the project property 'version'.
+     *
+     * @return the version for the POM
      */
     public String getVersion() {
         if (version == null || "null".equals(version)) {
@@ -171,6 +207,8 @@ public class CreatePom extends Task {
     /**
      * Get the description.
      * If the description is not set, it will return a default value based on the project property 'description'.
+     *
+     * @return the description for the POM
      */
     public String getDescription() {
         return description == null ? super.getDescription() : description;
@@ -179,6 +217,8 @@ public class CreatePom extends Task {
     /**
      * Add a licenses element to the POM.
      * This allows you to specify one or more licenses that the project is distributed under.
+     *
+     * @param licenses the licenses to add to the POM
      */
     public void addLicenses(Licenses licenses) {
         this.licenses = licenses;
@@ -188,6 +228,8 @@ public class CreatePom extends Task {
      * Add a repositories element to the POM.
      * This allows you to specify one or more repositories where dependencies can be found. Note that
      * specifying repositories in the pom is discouraged if you aim to publish to maven central.
+     *
+     * @param repositories the repositories to add to the POM
      */
     public void addRepositories(Repositories repositories) {
         this.repositories = repositories;

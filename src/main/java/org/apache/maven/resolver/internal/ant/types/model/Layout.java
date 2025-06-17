@@ -29,10 +29,20 @@ public class Layout extends org.apache.tools.ant.types.DataType {
         super();
     }
 
+    /**
+     * Adds text to the layout element.
+     *
+     * @param layout the layout to add, which should be a valid layout identifier
+     */
     public void addText(String layout) {
         this.layout = getProject().replaceProperties(layout);
     }
 
+    /**
+     * Gets the layout text.
+     *
+     * @return the layout text
+     */
     public String getText() {
         return layout;
     }

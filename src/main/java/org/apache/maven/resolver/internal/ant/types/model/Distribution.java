@@ -20,6 +20,9 @@ package org.apache.maven.resolver.internal.ant.types.model;
 
 import org.apache.tools.ant.types.DataType;
 
+/**
+ * Represents the distribution in a license section.
+ */
 public class Distribution extends DataType {
     String distribution;
 

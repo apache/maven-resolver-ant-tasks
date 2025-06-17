@@ -18,6 +18,9 @@
  */
 package org.apache.maven.resolver.internal.ant.types.model;
 
+/**
+ * Represents a snapshots section in the repository section of the project object model.
+ */
 public class Snapshots extends org.apache.tools.ant.types.DataType {
     private Enabled enabled;
 

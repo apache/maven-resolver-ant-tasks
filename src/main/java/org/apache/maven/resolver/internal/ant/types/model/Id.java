@@ -20,6 +20,9 @@ package org.apache.maven.resolver.internal.ant.types.model;
 
 import org.apache.tools.ant.types.DataType;
 
+/**
+ * Represents an id in a repository section.
+ */
 public class Id extends DataType {
     String id;
 

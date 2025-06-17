@@ -20,6 +20,9 @@ package org.apache.maven.resolver.internal.ant.types.model;
 
 import org.apache.tools.ant.types.DataType;
 
+/**
+ * Represents a repository in a project model.
+ */
 public class Repository extends DataType {
     Id id;
     Name name;

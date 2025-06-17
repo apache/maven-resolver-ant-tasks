@@ -18,6 +18,10 @@
  */
 package org.apache.maven.resolver.internal.ant.types.model;
 
+/**
+ * Represents a layout in a repository section.
+ * The layout is used to determine how artifacts are stored in the repository.
+ */
 public class Layout extends org.apache.tools.ant.types.DataType {
     private String layout;
 

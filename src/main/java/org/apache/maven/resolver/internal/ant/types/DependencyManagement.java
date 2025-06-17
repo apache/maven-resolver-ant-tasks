@@ -63,7 +63,7 @@ public class DependencyManagement extends DataType {
 
     /**
      * Sets the dependencies for this DependencyManagement instance.
-     * There can be only one <dependencies> element.
+     * There can be only one dependencies element.
      *
      * @param dependencies the dependencies to set
      * @throws IllegalStateException if dependencies are already set

@@ -21,6 +21,10 @@ package org.apache.maven.resolver.internal.ant.types.model;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.DataType;
 
+/**
+ * Represents an enabled/disabled state in a configuration used in Releases and Snapshots sections of a repository
+ * section.
+ */
 public class Enabled extends DataType {
     private boolean enabled;
 

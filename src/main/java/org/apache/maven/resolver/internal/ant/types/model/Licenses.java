@@ -23,6 +23,10 @@ import java.util.List;
 
 import org.apache.tools.ant.types.DataType;
 
+/**
+ * Represents a collection of licenses in a project model.
+ * This class allows adding multiple License objects and retrieving them as a list.
+ */
 public class Licenses extends DataType {
 
     private final List<License> licenses = new ArrayList<>();

@@ -23,6 +23,10 @@ import java.util.List;
 
 import org.apache.tools.ant.types.DataType;
 
+/**
+ * Represents a collection of repository sections in a project model.
+ * This class allows adding multiple repository objects and retrieving them as a list.
+ */
 public class Repositories extends DataType {
 
     private final List<Repository> repositories = new ArrayList<>();

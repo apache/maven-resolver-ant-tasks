@@ -22,6 +22,10 @@ import java.util.StringJoiner;
 
 import org.apache.tools.ant.types.DataType;
 
+/**
+ * Represents a license in a project model.
+ * This class encapsulates the license information including name, URL, comments, and distribution.
+ */
 public class License extends DataType {
     Name name;
     Url url;

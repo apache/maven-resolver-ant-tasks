@@ -20,6 +20,9 @@ package org.apache.maven.resolver.internal.ant.types.model;
 
 import org.apache.tools.ant.types.DataType;
 
+/**
+ * Represents comments in a license section.
+ */
 public class Comments extends DataType {
     String comments;
 

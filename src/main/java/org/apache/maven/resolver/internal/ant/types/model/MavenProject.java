@@ -28,6 +28,11 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.apache.maven.resolver.internal.ant.types.Dependency;
 import org.apache.tools.ant.types.DataType;
 
+/**
+ * Represents a Maven project model.
+ * This class encapsulates the Maven POM model and provides methods to manipulate it,
+ * such as adding licenses, dependencies, and setting project properties.
+ */
 public class MavenProject extends DataType {
     private final Model model;
 

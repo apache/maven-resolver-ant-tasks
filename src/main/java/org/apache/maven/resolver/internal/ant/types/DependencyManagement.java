@@ -22,6 +22,12 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.Reference;
 
+/**
+ * Represents the dependency management section in an Ant build file.
+ * This class allows you to define and manage dependencies for a project.
+ * Note that for this to work, you must produce and register a pom file before calling resolve.
+ * The createPom task can be used for this purpose.
+ */
 public class DependencyManagement extends DataType {
     Dependencies dependencies;
 
@@ -46,6 +52,11 @@ public class DependencyManagement extends DataType {
         return dependencyManagement.getRef();
     }
 
+    /**
+     * Gets the dependencies defined in this DependencyManagement instance.
+     *
+     * @return the dependencies, or null if none are set
+     */
     public Dependencies getDependencies() {
         return dependencies;
     }

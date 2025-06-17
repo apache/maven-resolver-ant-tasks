@@ -18,14 +18,7 @@
  */
 package org.apache.maven.resolver.internal.ant.tasks;
 
-import javax.xml.XMLConstants;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.SchemaFactory;
-
 import java.io.*;
-import java.net.URI;
-import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.maven.model.RepositoryPolicy;
@@ -35,6 +28,10 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
+/**
+ * Task to create a Maven POM file.
+ * This task allows you to define dependencies, dependency management, licenses, and repositories for the POM.
+ */
 public class CreatePom extends Task {
     private String dependenciesRef;
     private String dependencyManagementRef;
@@ -48,50 +45,100 @@ public class CreatePom extends Task {
     private Repositories repositories;
     private Boolean skipPomRegistration = false;
 
+    /**
+     * The target file path for the POM i.e., the path to the file that the pom content should be written to.
+     */
     public void setPomTarget(String pomTarget) {
         pomFile = new File(getProject().replaceProperties(pomTarget));
     }
 
+    /**
+     * The target file for the POM i.e., the path to the file that the pom content should be written to
+     */
     public void setPomTarget(File pomTarget) {
         pomFile = pomTarget;
     }
 
+    /**
+     * The reference to the dependency management section.
+     * This should point to the id attribute of a &lt;dependencyManagement&gt;
+     * element defined elsewhere in the build file.
+     */
     public void setDependencyManagementRef(String dependencyManagementRef) {
         this.dependencyManagementRef = getProject().replaceProperties(dependencyManagementRef);
     }
 
+    /**
+     * The reference to the dependencies section.
+     * This should point to the id attribute of a &lt;dependencies&gt;
+     * element defined elsewhere in the build file.
+     */
     public void setDependenciesRef(String dependenciesRef) {
         this.dependenciesRef = getProject().replaceProperties(dependenciesRef);
     }
 
+    /**
+     * Set the groupId for the POM.
+     * The groupId can include properties that will be replaced at runtime.
+     */
     public void setGroupId(String groupId) {
         this.groupId = getProject().replaceProperties(groupId);
     }
 
+    /**
+     * Set the artifactId for the POM.
+     * The artifactId can include properties that will be replaced at runtime.
+     */
     public void setArtifactId(String artifactId) {
         this.artifactId = getProject().replaceProperties(artifactId);
     }
 
+    /**
+     * Set the version for the POM.
+     * The version can include properties that will be replaced at runtime.
+     */
     public void setVersion(String version) {
         this.version = getProject().replaceProperties(version);
     }
 
+    /**
+     * Set the name for the POM.
+     * The name can include properties that will be replaced at runtime.
+     */
     public void setName(String name) {
         this.name = getProject().replaceProperties(name);
     }
 
+    /**
+     * Get the description for the POM.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Set the description for the POM.
+     * The description can include properties that will be replaced at runtime.
+     */
     public void setDescription(String description) {
         this.description = getProject().replaceProperties(description);
     }
 
+    /**
+     * skipPomRegistration is a flag to indicate whether the POM should be registered in the project after creation.
+     * Setting this to true is equivalent to doing
+     * <pre><code>
+     *   <pom file="${pomFile}"/>
+     * </code></pre>
+     */
     public void setSkipPomRegistration(Boolean skipPomRegistration) {
         this.skipPomRegistration = skipPomRegistration;
     }
 
+    /**
+     * Get the groupId.
+     * If the groupId is not set, it will return a default value based on the project property 'groupId'.
+     */
     public String getGroupId() {
         if (groupId == null || "null".equals(groupId)) {
             return getProject().getProperty("groupId");
@@ -99,6 +146,10 @@ public class CreatePom extends Task {
         return groupId;
     }
 
+    /**
+     * Get the artifactId.
+     * If the artifactId is not set, it will return a default value based on the project property 'artifactId'.
+     */
     public String getArtifactId() {
         if (artifactId == null || "null".equals(artifactId)) {
             return getProject().getProperty("artifactId");
@@ -106,6 +157,10 @@ public class CreatePom extends Task {
         return artifactId;
     }
 
+    /**
+     * Get the version.
+     * If the version is not set, it will return a default value based on the project property 'version'.
+     */
     public String getVersion() {
         if (version == null || "null".equals(version)) {
             return getProject().getProperty("version");
@@ -113,18 +168,35 @@ public class CreatePom extends Task {
         return version;
     }
 
+    /**
+     * Get the description.
+     * If the description is not set, it will return a default value based on the project property 'description'.
+     */
     public String getDescription() {
         return description == null ? super.getDescription() : description;
     }
 
+    /**
+     * Add a licenses element to the POM.
+     * This allows you to specify one or more licenses that the project is distributed under.
+     */
     public void addLicenses(Licenses licenses) {
         this.licenses = licenses;
     }
 
+    /**
+     * Add a repositories element to the POM.
+     * This allows you to specify one or more repositories where dependencies can be found. Note that
+     * specifying repositories in the pom is discouraged if you aim to publish to maven central.
+     */
     public void addRepositories(Repositories repositories) {
         this.repositories = repositories;
     }
 
+    /**
+     * Execute the task to create the POM file.
+     * This method will create the POM file with the specified properties and dependencies.
+     */
     @Override
     public void execute() {
         if (!pomFile.getParentFile().exists()) {
@@ -205,7 +277,7 @@ public class CreatePom extends Task {
         }
     }
 
-    static void appendDependencies(Dependencies dependencies, MavenProject pom) {
+    private static void appendDependencies(Dependencies dependencies, MavenProject pom) {
         dependencies.getDependencyContainers().forEach(container -> {
             if (container instanceof Dependency) {
                 Dependency dep = (Dependency) container;
@@ -214,48 +286,12 @@ public class CreatePom extends Task {
         });
     }
 
-    static void appendManagedDependencies(Dependencies dependencies, MavenProject mavenProject) {
+    private static void appendManagedDependencies(Dependencies dependencies, MavenProject mavenProject) {
         dependencies.getDependencyContainers().forEach(it -> {
             if (it instanceof Dependency) {
                 Dependency dep = (Dependency) it;
                 mavenProject.addToDependencyManagement(dep);
             }
         });
-    }
-
-    static Map<String, String> toMap(Dependency dep) {
-        Map<String, String> params = new HashMap<>();
-        if (dep.getGroupId() != null) {
-            params.put("groupId", dep.getGroupId());
-        }
-        if (dep.getArtifactId() != null) {
-            params.put("artifactId", dep.getArtifactId());
-        }
-        if (dep.getVersion() != null) {
-            params.put("version", dep.getVersion());
-        }
-        if (dep.getClassifier() != null) {
-            params.put("classifier", dep.getClassifier());
-        }
-        if (dep.getType() != null) {
-            params.put("type", dep.getType());
-        }
-        if (dep.getScope() != null) {
-            params.put("scope", dep.getScope());
-        }
-        return params;
-    }
-
-    static void validatePomContent(String content, String schemaLocation) {
-        try {
-            URL xsdLocation = new URI(schemaLocation).toURL();
-
-            SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-                    .newSchema(xsdLocation)
-                    .newValidator()
-                    .validate(new StreamSource(new StringReader(content)));
-        } catch (Exception e) {
-            throw new BuildException("Failed to validate pom: ${e.message}", e);
-        }
     }
 }

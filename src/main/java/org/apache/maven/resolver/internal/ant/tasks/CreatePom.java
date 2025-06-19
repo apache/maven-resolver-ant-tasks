@@ -286,12 +286,12 @@ public class CreatePom extends Task {
                 repo.setLayout(repository.getLayout());
                 if (repository.getReleases() != null) {
                     RepositoryPolicy policy = new RepositoryPolicy();
-                    policy.setEnabled(repository.getReleases().getEnabledValue());
+                    policy.setEnabled(repository.getReleases().isEnabled());
                     repo.setReleases(policy);
                 }
                 if (repository.getSnapshots() != null) {
                     RepositoryPolicy policy = new RepositoryPolicy();
-                    policy.setEnabled(repository.getSnapshots().getEnabledValue());
+                    policy.setEnabled(repository.getSnapshots().isEnabled());
                     repo.setSnapshots(policy);
                 }
                 pom.getModel().getRepositories().add(repo);

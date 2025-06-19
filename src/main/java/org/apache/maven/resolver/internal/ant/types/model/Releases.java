@@ -52,7 +52,7 @@ public class Releases extends org.apache.tools.ant.types.DataType {
      *
      * @return true if enabled, false otherwise
      */
-    public boolean getEnabledValue() {
+    public boolean isEnabled() {
         if (enabled == null) {
             return false;
         } else {

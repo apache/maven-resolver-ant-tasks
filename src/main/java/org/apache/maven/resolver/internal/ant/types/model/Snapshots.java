@@ -52,7 +52,7 @@ public class Snapshots extends org.apache.tools.ant.types.DataType {
      *
      * @return true if enabled is set and true, false otherwise
      */
-    public boolean getEnabledValue() {
+    public boolean isEnabled() {
         if (enabled == null) {
             return false;
         } else {

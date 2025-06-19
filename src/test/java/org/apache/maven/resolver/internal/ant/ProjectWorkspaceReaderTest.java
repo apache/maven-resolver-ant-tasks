@@ -28,8 +28,10 @@ import org.eclipse.aether.artifact.DefaultArtifact;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 public class ProjectWorkspaceReaderTest {
     public static junit.framework.Test suite() {

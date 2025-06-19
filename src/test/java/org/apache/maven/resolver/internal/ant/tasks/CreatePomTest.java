@@ -25,7 +25,11 @@ import java.io.Reader;
 import java.util.List;
 
 import junit.framework.JUnit4TestAdapter;
-import org.apache.maven.model.*;
+import org.apache.maven.model.Dependency;
+import org.apache.maven.model.DependencyManagement;
+import org.apache.maven.model.License;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.Repository;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.resolver.internal.ant.AntBuildsTest;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;

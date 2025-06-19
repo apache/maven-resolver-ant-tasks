@@ -78,10 +78,10 @@ public class CreatePom extends Task {
 
     /**
      * The reference to the dependency management section.
-     * This should point to the id attribute of a &lt;dependencyManagement&gt;
-     * element defined elsewhere in the build file.
+     * This should point to the id attribute of a dependencyManagement element
+     * defined elsewhere in the build file.
      *
-     * @param dependencyManagementRef the reference (id) to the dependency management section
+     * @param dependencyManagementRef the reference to the id of the dependency management section
      */
     public void setDependencyManagementRef(String dependencyManagementRef) {
         this.dependencyManagementRef = getProject().replaceProperties(dependencyManagementRef);
@@ -89,10 +89,10 @@ public class CreatePom extends Task {
 
     /**
      * The reference to the dependencies section.
-     * This should point to the id attribute of a &lt;dependencies&gt;
+     * This should point to the id attribute of a dependencies
      * element defined elsewhere in the build file.
      *
-     * @param dependenciesRef the reference (id) to the dependencies section
+     * @param dependenciesRef the reference to the id of the dependencies section
      */
     public void setDependenciesRef(String dependenciesRef) {
         this.dependenciesRef = getProject().replaceProperties(dependenciesRef);

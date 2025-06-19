@@ -27,10 +27,10 @@ import org.apache.tools.ant.types.DataType;
  * This class encapsulates the license information including name, URL, comments, and distribution.
  */
 public class License extends DataType {
-    Name name;
-    Url url;
-    Comments comments;
-    Distribution distribution;
+    private Name name;
+    private Url url;
+    private Comments comments;
+    private Distribution distribution;
 
     public License() {
         super();

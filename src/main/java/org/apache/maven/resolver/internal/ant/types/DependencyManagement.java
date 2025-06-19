@@ -29,7 +29,7 @@ import org.apache.tools.ant.types.Reference;
  * The createPom task can be used for this purpose.
  */
 public class DependencyManagement extends DataType {
-    Dependencies dependencies;
+    private Dependencies dependencies;
 
     /**
      * Fetches a DependencyManagement instance from the given project using the specified reference.

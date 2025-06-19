@@ -24,7 +24,7 @@ import org.apache.tools.ant.types.DataType;
  * Represents a url element in the project model. The url element is used in license and repository elements.
  */
 public class Url extends DataType {
-    String url;
+    private String url;
 
     public Url() {}
 

@@ -24,7 +24,7 @@ import org.apache.tools.ant.types.DataType;
  * Represents comments in a license section.
  */
 public class Comments extends DataType {
-    String comments;
+    private String comments;
 
     /**
      * Default constructor for Comments.

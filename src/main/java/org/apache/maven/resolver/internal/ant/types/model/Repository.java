@@ -24,12 +24,12 @@ import org.apache.tools.ant.types.DataType;
  * Represents a repository in a project model.
  */
 public class Repository extends DataType {
-    Id id;
-    Name name;
-    Url url;
-    Layout layout;
-    Releases releases; // actually a boolean
-    Snapshots snapshots; // actually a boolean
+    private Id id;
+    private Name name;
+    private Url url;
+    private Layout layout;
+    private Releases releases; // actually a boolean
+    private Snapshots snapshots; // actually a boolean
 
     /**
      * Adds an identifier to the repository.

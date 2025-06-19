@@ -46,7 +46,6 @@ public class MavenProject extends DataType {
      * Adds a license to the Maven project model.
      *
      * @param license the License object to add, must not be null
-     * @throws IllegalArgumentException if the license is null
      */
     public void addLicense(License license) {
         org.apache.maven.model.License lic = new org.apache.maven.model.License();

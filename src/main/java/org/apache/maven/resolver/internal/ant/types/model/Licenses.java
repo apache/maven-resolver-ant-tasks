@@ -44,7 +44,6 @@ public class Licenses extends DataType {
      * Adds a License to the collection.
      *
      * @param license the License object to add, must not be null
-     * @throws IllegalArgumentException if the license is null
      */
     public void addLicense(License license) {
         licenses.add(license);

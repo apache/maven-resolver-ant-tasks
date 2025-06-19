@@ -125,7 +125,6 @@ public class Repository extends DataType {
      * Adds releases configuration to the repository.
      *
      * @param releases the Releases object to add, must not be null
-     * @throws IllegalArgumentException if releases is null
      */
     public void addReleases(Releases releases) {
         this.releases = releases;
@@ -135,7 +134,6 @@ public class Repository extends DataType {
      * Adds snapshots configuration to the repository.
      *
      * @param snapshots the Snapshots object to add, must not be null
-     * @throws IllegalArgumentException if snapshots is null
      */
     public void addSnapshots(Snapshots snapshots) {
         this.snapshots = snapshots;

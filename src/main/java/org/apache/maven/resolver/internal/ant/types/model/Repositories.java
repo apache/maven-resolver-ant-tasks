@@ -44,7 +44,6 @@ public class Repositories extends DataType {
      * Adds a repository to the list of repositories.
      *
      * @param repository the Repository object to add, must not be null
-     * @throws IllegalArgumentException if the repository is null
      */
     public void addRepository(Repository repository) {
         repositories.add(repository);

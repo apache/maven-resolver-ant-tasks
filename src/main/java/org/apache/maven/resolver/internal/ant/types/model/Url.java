@@ -32,7 +32,6 @@ public class Url extends DataType {
      * Adds a url string to the url element.
      *
      * @param url the URL to add, must not be null
-     * @throws IllegalArgumentException if the URL is null
      */
     public void addText(String url) {
         this.url = getProject().replaceProperties(url);

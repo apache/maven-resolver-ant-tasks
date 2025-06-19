@@ -33,9 +33,9 @@ import org.apache.maven.model.Repository;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.resolver.internal.ant.AntBuildsTest;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.junit.Assert;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
 
 public class CreatePomTest extends AntBuildsTest {
     public static junit.framework.Test suite() {
@@ -51,40 +51,40 @@ public class CreatePomTest extends AntBuildsTest {
         executeTarget("setup");
         String pomPath = getProject().getProperty("pomFile");
 
-        assertNotNull("pomFile property should not be null", pomPath);
+        Assert.assertNotNull("pomFile property should not be null", pomPath);
         File pomFile = new File(pomPath);
 
         Model model = readPomFile(pomFile);
-        assertNotNull("Model should not be null", model);
-        assertEquals("modelVersion", "4.0.0", model.getModelVersion());
-        assertEquals("groupId", "test.resolver.dm", model.getGroupId());
-        assertEquals("artifactId", "dependency-management", model.getArtifactId());
-        assertEquals("version", "1.0-SNAPSHOT", model.getVersion());
+        Assert.assertNotNull("Model should not be null", model);
+        Assert.assertEquals("modelVersion", "4.0.0", model.getModelVersion());
+        Assert.assertEquals("groupId", "test.resolver.dm", model.getGroupId());
+        Assert.assertEquals("artifactId", "dependency-management", model.getArtifactId());
+        Assert.assertEquals("version", "1.0-SNAPSHOT", model.getVersion());
         DependencyManagement dm = model.getDependencyManagement();
         List<Dependency> dependencies = dm.getDependencies();
-        assertEquals("dependencies should have 2 entries", 2, dependencies.size());
+        Assert.assertEquals("dependencies should have 2 entries", 2, dependencies.size());
         Dependency matrix = dependencies.get(0);
-        assertEquals("matrix dependency groupId", "se.alipsa.matrix", matrix.getGroupId());
-        assertEquals("matrix dependency artifactId", "matrix-bom", matrix.getArtifactId());
-        assertEquals("matrix dependency version", "2.2.0", matrix.getVersion());
-        assertEquals("matrix dependency type", "pom", matrix.getType());
-        assertEquals("matrix dependency scope", "import", matrix.getScope());
+        Assert.assertEquals("matrix dependency groupId", "se.alipsa.matrix", matrix.getGroupId());
+        Assert.assertEquals("matrix dependency artifactId", "matrix-bom", matrix.getArtifactId());
+        Assert.assertEquals("matrix dependency version", "2.2.0", matrix.getVersion());
+        Assert.assertEquals("matrix dependency type", "pom", matrix.getType());
+        Assert.assertEquals("matrix dependency scope", "import", matrix.getScope());
 
         License license = model.getLicenses().get(0);
-        assertEquals("license name should match", "The Apache Software License, Version 2.0", license.getName());
-        assertEquals("license url should match", "http://www.apache.org/licenses/LICENSE-2.0.txt", license.getUrl());
-        assertEquals("license distribution should match", "repo", license.getDistribution());
+        Assert.assertEquals("license name should match", "The Apache Software License, Version 2.0", license.getName());
+        Assert.assertEquals("license url should match", "http://www.apache.org/licenses/LICENSE-2.0.txt", license.getUrl());
+        Assert.assertEquals("license distribution should match", "repo", license.getDistribution());
 
         Repository repo = model.getRepositories().get(0);
-        assertEquals("repository id should match", "my-internal-site", repo.getId());
-        assertEquals("repository url should match", "https://myserver/repo", repo.getUrl());
-        assertEquals("repository layout should match", "default", repo.getLayout());
-        assertTrue("repository snapshots should be enabled", repo.getSnapshots().isEnabled());
-        assertTrue("repository releases should be enabled", repo.getReleases().isEnabled());
+        Assert.assertEquals("repository id should match", "my-internal-site", repo.getId());
+        Assert.assertEquals("repository url should match", "https://myserver/repo", repo.getUrl());
+        Assert.assertEquals("repository layout should match", "default", repo.getLayout());
+        Assert.assertTrue("repository snapshots should be enabled", repo.getSnapshots().isEnabled());
+        Assert.assertTrue("repository releases should be enabled", repo.getReleases().isEnabled());
     }
 
     public static Model readPomFile(File pomFile) throws IOException, XmlPullParserException {
-        assertTrue("pomFile (" + pomFile + ") should exist", pomFile.exists());
+        Assert.assertTrue("pomFile (" + pomFile + ") should exist", pomFile.exists());
         try (Reader reader = new FileReader(pomFile)) {
             MavenXpp3Reader pomReader = new MavenXpp3Reader();
             return pomReader.read(reader);

@@ -18,7 +18,9 @@
  */
 package org.apache.maven.resolver.internal.ant.tasks;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Map;
 
 import org.apache.maven.model.RepositoryPolicy;

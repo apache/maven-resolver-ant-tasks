@@ -36,7 +36,6 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.junit.Assert;
 import org.junit.Test;
 
-
 public class CreatePomTest extends AntBuildsTest {
     public static junit.framework.Test suite() {
         return new JUnit4TestAdapter(CreatePomTest.class);
@@ -72,15 +71,18 @@ public class CreatePomTest extends AntBuildsTest {
 
         License license = model.getLicenses().get(0);
         Assert.assertEquals("license name should match", "The Apache Software License, Version 2.0", license.getName());
-        Assert.assertEquals("license url should match", "http://www.apache.org/licenses/LICENSE-2.0.txt", license.getUrl());
+        Assert.assertEquals(
+                "license url should match", "http://www.apache.org/licenses/LICENSE-2.0.txt", license.getUrl());
         Assert.assertEquals("license distribution should match", "repo", license.getDistribution());
 
         Repository repo = model.getRepositories().get(0);
         Assert.assertEquals("repository id should match", "my-internal-site", repo.getId());
         Assert.assertEquals("repository url should match", "https://myserver/repo", repo.getUrl());
         Assert.assertEquals("repository layout should match", "default", repo.getLayout());
-        Assert.assertTrue("repository snapshots should be enabled", repo.getSnapshots().isEnabled());
-        Assert.assertTrue("repository releases should be enabled", repo.getReleases().isEnabled());
+        Assert.assertTrue(
+                "repository snapshots should be enabled", repo.getSnapshots().isEnabled());
+        Assert.assertTrue(
+                "repository releases should be enabled", repo.getReleases().isEnabled());
     }
 
     public static Model readPomFile(File pomFile) throws IOException, XmlPullParserException {

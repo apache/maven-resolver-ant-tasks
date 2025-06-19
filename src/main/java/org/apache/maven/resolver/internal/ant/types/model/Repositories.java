@@ -47,9 +47,6 @@ public class Repositories extends DataType {
      * @throws IllegalArgumentException if the repository is null
      */
     public void addRepository(Repository repository) {
-        if (repository == null) {
-            throw new IllegalArgumentException("Repository cannot be null");
-        }
         repositories.add(repository);
     }
 }

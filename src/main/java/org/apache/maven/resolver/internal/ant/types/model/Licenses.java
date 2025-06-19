@@ -47,9 +47,6 @@ public class Licenses extends DataType {
      * @throws IllegalArgumentException if the license is null
      */
     public void addLicense(License license) {
-        if (license == null) {
-            throw new IllegalArgumentException("License cannot be null");
-        }
         licenses.add(license);
     }
 }

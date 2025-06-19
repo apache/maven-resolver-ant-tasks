@@ -39,12 +39,6 @@ public class DependencyManagement extends DataType {
      * @return the DependencyManagement instance
      */
     public static DependencyManagement get(Project project, String dependencyManagementRef) {
-        if (dependencyManagementRef == null) {
-            throw new IllegalArgumentException("dependencyManagementRef must not be null");
-        }
-        if (project == null) {
-            throw new IllegalArgumentException("Project must not be null");
-        }
         DependencyManagement dependencyManagement = new DependencyManagement();
         dependencyManagement.setProject(project);
         Reference ref = new Reference(project, dependencyManagementRef);

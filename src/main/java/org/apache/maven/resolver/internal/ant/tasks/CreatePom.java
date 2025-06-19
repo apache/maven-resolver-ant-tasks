@@ -22,8 +22,14 @@ import java.io.*;
 import java.util.Map;
 
 import org.apache.maven.model.RepositoryPolicy;
-import org.apache.maven.resolver.internal.ant.types.*;
-import org.apache.maven.resolver.internal.ant.types.model.*;
+import org.apache.maven.resolver.internal.ant.types.Dependencies;
+import org.apache.maven.resolver.internal.ant.types.Dependency;
+import org.apache.maven.resolver.internal.ant.types.DependencyManagement;
+import org.apache.maven.resolver.internal.ant.types.Pom;
+import org.apache.maven.resolver.internal.ant.types.model.License;
+import org.apache.maven.resolver.internal.ant.types.model.Licenses;
+import org.apache.maven.resolver.internal.ant.types.model.MavenProject;
+import org.apache.maven.resolver.internal.ant.types.model.Repositories;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -43,7 +49,7 @@ public class CreatePom extends Task {
     private String description;
     private Licenses licenses;
     private Repositories repositories;
-    private Boolean skipPomRegistration = false;
+    private boolean skipPomRegistration;
 
     /**
      * Default constructor.
@@ -161,7 +167,7 @@ public class CreatePom extends Task {
      *
      * @param skipPomRegistration true to skip registration, false to register the POM
      */
-    public void setSkipPomRegistration(Boolean skipPomRegistration) {
+    public void setSkipPomRegistration(boolean skipPomRegistration) {
         this.skipPomRegistration = skipPomRegistration;
     }
 
@@ -172,7 +178,7 @@ public class CreatePom extends Task {
      * @return the groupId for the POM
      */
     public String getGroupId() {
-        if (groupId == null || "null".equals(groupId)) {
+        if (groupId == null) {
             return getProject().getProperty("groupId");
         }
         return groupId;
@@ -185,7 +191,7 @@ public class CreatePom extends Task {
      * @return the artifactId for the POM
      */
     public String getArtifactId() {
-        if (artifactId == null || "null".equals(artifactId)) {
+        if (artifactId == null) {
             return getProject().getProperty("artifactId");
         }
         return artifactId;
@@ -198,7 +204,7 @@ public class CreatePom extends Task {
      * @return the version for the POM
      */
     public String getVersion() {
-        if (version == null || "null".equals(version)) {
+        if (version == null) {
             return getProject().getProperty("version");
         }
         return version;
@@ -255,13 +261,15 @@ public class CreatePom extends Task {
             DependencyManagement dependencyManagement = DependencyManagement.get(getProject(), dependencyManagementRef);
             appendManagedDependencies(dependencyManagement.getDependencies(), pom);
         }
-        Dependencies dependencies = new Dependencies();
-        dependencies.setProject(getProject());
-        org.apache.tools.ant.types.Reference ref =
-                new org.apache.tools.ant.types.Reference(getProject(), dependenciesRef);
-        dependencies.setRefid(ref);
+        if (dependenciesRef != null) {
+            Dependencies dependencies = new Dependencies();
+            dependencies.setProject(getProject());
+            org.apache.tools.ant.types.Reference ref =
+                    new org.apache.tools.ant.types.Reference(getProject(), dependenciesRef);
+            dependencies.setRefid(ref);
 
-        appendDependencies(dependencies, pom);
+            appendDependencies(dependencies, pom);
+        }
 
         if (licenses != null) {
             for (License l : licenses.getLicenses()) {
@@ -292,14 +300,14 @@ public class CreatePom extends Task {
 
         try (FileWriter fw = new FileWriter(pomFile)) {
             pom.toPom(fw);
+            log("Created the pom file " + pomFile.getAbsolutePath(), Project.MSG_VERBOSE);
         } catch (IOException e) {
-            throw new BuildException("Failed to create pom file: ${e.message}", e);
+            throw new BuildException("Failed to create pom file", e);
         }
 
         if (!skipPomRegistration) {
             registerPom();
-        } else {
-            log("Created pom file ${pomFile.canonicalPath}", Project.MSG_INFO);
+            log("Registered the pom file", Project.MSG_VERBOSE);
         }
     }
 
@@ -312,14 +320,10 @@ public class CreatePom extends Task {
         pom.setProject(getProject());
         pom.setFile(pomFile);
         pom.execute();
-        try {
-            log("Created and registered the pom file " + pomFile.getCanonicalPath(), Project.MSG_INFO);
-        } catch (IOException e) {
-            log("Failed to get canonical path for pom file: " + e.getMessage(), e, Project.MSG_INFO);
-        }
     }
 
     private static void appendDependencies(Dependencies dependencies, MavenProject pom) {
+
         dependencies.getDependencyContainers().forEach(container -> {
             if (container instanceof Dependency) {
                 Dependency dep = (Dependency) container;

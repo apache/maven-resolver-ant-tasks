@@ -37,9 +37,6 @@ public class Repository extends DataType {
      * @param id the id element to add, must not be null
      */
     public void addId(Id id) {
-        if (id == null) {
-            throw new IllegalArgumentException("Id cannot be null");
-        }
         this.id = id;
     }
 
@@ -58,9 +55,6 @@ public class Repository extends DataType {
      * @param name the name element to add, must not be null
      */
     public void addName(Name name) {
-        if (name == null) {
-            throw new IllegalArgumentException("Name cannot be null");
-        }
         this.name = name;
     }
 
@@ -79,9 +73,6 @@ public class Repository extends DataType {
      * @param url the url element to add, must not be null
      */
     public void addUrl(Url url) {
-        if (url == null) {
-            throw new IllegalArgumentException("Url cannot be null");
-        }
         this.url = url;
     }
 
@@ -100,9 +91,6 @@ public class Repository extends DataType {
      * @param layout the layout element to add, must not be null
      */
     public void addLayout(Layout layout) {
-        if (layout == null) {
-            throw new IllegalArgumentException("Layout cannot be null");
-        }
         this.layout = layout;
     }
 
@@ -140,9 +128,6 @@ public class Repository extends DataType {
      * @throws IllegalArgumentException if releases is null
      */
     public void addReleases(Releases releases) {
-        if (releases == null) {
-            throw new IllegalArgumentException("Releases cannot be null");
-        }
         this.releases = releases;
     }
 
@@ -153,9 +138,6 @@ public class Repository extends DataType {
      * @throws IllegalArgumentException if snapshots is null
      */
     public void addSnapshots(Snapshots snapshots) {
-        if (snapshots == null) {
-            throw new IllegalArgumentException("Snapshots cannot be null");
-        }
         this.snapshots = snapshots;
     }
 }

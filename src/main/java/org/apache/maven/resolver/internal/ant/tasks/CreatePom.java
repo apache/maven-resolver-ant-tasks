@@ -59,7 +59,7 @@ public class CreatePom extends Task {
     }
 
     /**
-     * The target file path for the POM i.e., the path to the file that the pom content should be written to.
+     * The path to the file that the pom content should be written to.
      *
      * @param pomTarget the target file for the POM
      */
@@ -68,7 +68,7 @@ public class CreatePom extends Task {
     }
 
     /**
-     * The target file for the POM i.e., the path to the file that the pom content should be written to.
+     * The path to the file that the pom content should be written to.
      *
      * @param pomTarget the target file for the POM
      */

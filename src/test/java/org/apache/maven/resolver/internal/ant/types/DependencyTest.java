@@ -21,7 +21,7 @@ package org.apache.maven.resolver.internal.ant.types;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  */

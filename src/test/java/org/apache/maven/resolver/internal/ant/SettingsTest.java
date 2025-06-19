@@ -24,8 +24,9 @@ import java.io.IOException;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
 
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.equalTo;
 
 public class SettingsTest extends AntBuildsTest {
     public static junit.framework.Test suite() {

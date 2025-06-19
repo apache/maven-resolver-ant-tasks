@@ -21,7 +21,10 @@ package org.apache.maven.resolver.internal.ant;
 import java.io.File;
 import java.io.PrintStream;
 
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.DefaultLogger;
+import org.apache.tools.ant.Project;
 import org.eclipse.aether.internal.test.util.TestFileUtils;
 import org.junit.After;
 import org.junit.Before;

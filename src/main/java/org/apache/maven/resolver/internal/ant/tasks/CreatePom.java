@@ -61,7 +61,7 @@ public class CreatePom extends Task {
     }
 
     /**
-     * The path to the file that the pom content should be written to.
+     * The path to the file that the POM content should be written to.
      *
      * @param pomTarget the target file for the POM
      */
@@ -70,7 +70,7 @@ public class CreatePom extends Task {
     }
 
     /**
-     * The path to the file that the pom content should be written to.
+     * The path to the file that the POM content should be written to.
      *
      * @param pomTarget the target file for the POM
      */
@@ -235,7 +235,7 @@ public class CreatePom extends Task {
     /**
      * Add a repositories element to the POM.
      * This allows you to specify one or more repositories where dependencies can be found. Note that
-     * specifying repositories in the pom is discouraged if you aim to publish to maven central.
+     * specifying repositories in the POM is discouraged if you aim to publish to maven central.
      *
      * @param repositories the repositories to add to the POM
      */
@@ -302,14 +302,14 @@ public class CreatePom extends Task {
 
         try (FileWriter fw = new FileWriter(pomFile)) {
             pom.toPom(fw);
-            log("Created the pom file " + pomFile.getAbsolutePath(), Project.MSG_VERBOSE);
+            log("Created the POM file " + pomFile.getAbsolutePath(), Project.MSG_VERBOSE);
         } catch (IOException e) {
-            throw new BuildException("Failed to create pom file", e);
+            throw new BuildException("Failed to create POM file", e);
         }
 
         if (!skipPomRegistration) {
             registerPom();
-            log("Registered the pom file", Project.MSG_VERBOSE);
+            log("Registered the POM file", Project.MSG_VERBOSE);
         }
     }
 

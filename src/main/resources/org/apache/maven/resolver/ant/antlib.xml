@@ -32,10 +32,11 @@
   <typedef name="artifact"             classname="org.apache.maven.resolver.internal.ant.types.Artifact"/>
   <typedef name="artifacts"            classname="org.apache.maven.resolver.internal.ant.types.Artifacts"/>
   <typedef name="settings"             classname="org.apache.maven.resolver.internal.ant.types.Settings"/>
+  <typedef name="dependencyManagement" classname="org.apache.maven.resolver.internal.ant.types.DependencyManagement" />
 
   <taskdef name="resolve"              classname="org.apache.maven.resolver.internal.ant.tasks.Resolve"/>
   <taskdef name="install"              classname="org.apache.maven.resolver.internal.ant.tasks.Install"/>
   <taskdef name="deploy"               classname="org.apache.maven.resolver.internal.ant.tasks.Deploy"/>
   <taskdef name="pom"                  classname="org.apache.maven.resolver.internal.ant.types.Pom"/>
-
+  <taskdef name="createPom"            classname="org.apache.maven.resolver.internal.ant.tasks.CreatePom"/>
 </antlib>

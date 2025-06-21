@@ -34,12 +34,10 @@
   <property name='targetDir' value='${basedir}/target'/>
   <property name='mainBuildDir' value='${targetDir}/classes'/>
 
-  <repo:dependencies id='compile'>
-    <repo:dependency groupId='org.apache.commons' artifactId='commons-lang3' version='3.17.0'/>
-  </repo:dependencies>
 
   <target name='configurePaths' description='Configure paths for compilation using the pom file for dependencies'>
-    <repo:resolve dependenciesref='compile'>
+    <repo:pom file="${basedir}/pom.xml"/>
+    <repo:resolve>
       <path refId='compilePath' classpath='compile'/>
     </repo:resolve>
   </target>
@@ -62,28 +60,16 @@
   </target>
 
   <target name='jar' depends='compile'>
-    <echo>Creating jar file</echo>
+    <!-- The pom type makes the artifactId and version properties available -->
     <property name='jarFile' value='${targetDir}/${artifactId}-${version}.jar'/>
+    <echo>Creating jar file ${jarFile}</echo>
     <jar destfile='${jarFile}'>
       <fileset dir='${mainBuildDir}'/>
     </jar>
     <repo:artifact file='${jarFile}' type='jar' id='mainJar'/>
   </target>
 
-  <target name='pom' depends='jar'>
-    <property name='pomFile' value='${targetDir}/${artifactId}-${version}.pom'/>
-    <echo>Creating and registering pom file ${pomFile}</echo>
-    <createPom pomTarget='${pomFile}' dependenciesRef='compile' name='example3'>
-      <licenses>
-        <license>
-          <name>MIT</name>
-          <url>https://opensource.org/license/mit</url>
-        </license>
-      </licenses>
-    </createPom>
-  </target>
-
-  <target name='install' depends='jar, pom'>
+  <target name='install' depends='jar'>
     <echo>Publishing to local maven repository</echo>
     <repo:artifacts id='localArtifacts'>
       <repo:artifact refid='mainJar'/>

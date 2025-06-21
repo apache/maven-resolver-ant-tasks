@@ -19,7 +19,7 @@
 package org.apache.maven.resolver.internal.ant.types.model;
 
 import java.io.IOException;
-import java.io.Writer;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,16 +103,16 @@ public class MavenProject extends DataType {
 
     /**
      * Add a dependency to the dependencies section of the Maven project model.
-     * @param dep the Dependency object to add, must not be null
+     * @param dependency the Dependency object to add, must not be null
      */
-    public void addDependency(Dependency dep) {
+    public void addDependency(Dependency dependency) {
         List<org.apache.maven.model.Dependency> dependencies = model.getDependencies();
         if (dependencies == null) {
             dependencies = new ArrayList<>();
             model.setDependencies(dependencies);
         }
-        org.apache.maven.model.Dependency dependency = convert(dep);
-        dependencies.add(dependency);
+        org.apache.maven.model.Dependency pomDependency = convert(dependency);
+        dependencies.add(pomDependency);
     }
 
     private org.apache.maven.model.Dependency convert(Dependency dep) {
@@ -168,11 +168,11 @@ public class MavenProject extends DataType {
     /**
      * Writes the Maven project model to the specified Writer in POM format.
      *
-     * @param writer the Writer to write the POM to, must not be null
+     * @param pomStream the OutputStream to write the POM to, must not be null
      * @throws IOException if an I/O error occurs while writing
      */
-    public void toPom(Writer writer) throws IOException {
+    public void toPom(OutputStream pomStream) throws IOException {
         MavenXpp3Writer pomWriter = new MavenXpp3Writer();
-        pomWriter.write(writer, model);
+        pomWriter.write(pomStream, model);
     }
 }

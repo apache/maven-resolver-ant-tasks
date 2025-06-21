@@ -20,9 +20,7 @@ package org.apache.maven.resolver.internal.ant.tasks;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.Map;
 
@@ -303,8 +301,8 @@ public class CreatePom extends Task {
             });
         }
 
-        try (Writer writer = new OutputStreamWriter(Files.newOutputStream(pomFile.toPath()), StandardCharsets.UTF_8)) {
-            pom.toPom(writer);
+        try (OutputStream pomOutputStream = Files.newOutputStream(pomFile.toPath())) {
+            pom.toPom(pomOutputStream);
             log("Created the POM file " + pomFile.getAbsolutePath(), Project.MSG_VERBOSE);
         } catch (IOException e) {
             throw new BuildException("Failed to create POM file", e);

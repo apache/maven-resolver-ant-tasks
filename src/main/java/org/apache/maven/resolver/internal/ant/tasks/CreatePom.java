@@ -19,8 +19,11 @@
 package org.apache.maven.resolver.internal.ant.tasks;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Map;
 
 import org.apache.maven.model.RepositoryPolicy;
@@ -83,10 +86,10 @@ public class CreatePom extends Task {
      * This should point to the id attribute of a dependencyManagement element
      * defined elsewhere in the build file.
      *
-     * @param dependencyManagementRef the reference to the id of the dependency management section
+     * @param dependencyManagementRefId the reference to the id of the dependency management section
      */
-    public void setDependencyManagementRef(String dependencyManagementRef) {
-        this.dependencyManagementRef = getProject().replaceProperties(dependencyManagementRef);
+    public void setDependencyManagementRef(String dependencyManagementRefId) {
+        this.dependencyManagementRef = getProject().replaceProperties(dependencyManagementRefId);
     }
 
     /**
@@ -94,10 +97,10 @@ public class CreatePom extends Task {
      * This should point to the id attribute of a dependencies
      * element defined elsewhere in the build file.
      *
-     * @param dependenciesRef the reference to the id of the dependencies section
+     * @param dependenciesRefId the reference to the id of the dependencies section
      */
-    public void setDependenciesRef(String dependenciesRef) {
-        this.dependenciesRef = getProject().replaceProperties(dependenciesRef);
+    public void setDependenciesRef(String dependenciesRefId) {
+        this.dependenciesRef = getProject().replaceProperties(dependenciesRefId);
     }
 
     /**
@@ -300,8 +303,8 @@ public class CreatePom extends Task {
             });
         }
 
-        try (FileWriter fw = new FileWriter(pomFile)) {
-            pom.toPom(fw);
+        try (Writer writer = new OutputStreamWriter(Files.newOutputStream(pomFile.toPath()), StandardCharsets.UTF_8)) {
+            pom.toPom(writer);
             log("Created the POM file " + pomFile.getAbsolutePath(), Project.MSG_VERBOSE);
         } catch (IOException e) {
             throw new BuildException("Failed to create POM file", e);

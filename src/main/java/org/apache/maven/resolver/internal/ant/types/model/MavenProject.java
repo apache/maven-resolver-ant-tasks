@@ -48,12 +48,12 @@ public class MavenProject extends DataType {
      * @param license the License object to add, must not be null
      */
     public void addLicense(License license) {
-        org.apache.maven.model.License lic = new org.apache.maven.model.License();
-        lic.setName(license.getName());
-        lic.setUrl(license.getUrl());
-        lic.setComments(license.getComments());
-        lic.setDistribution(license.getDistribution());
-        model.getLicenses().add(lic);
+        org.apache.maven.model.License pomLicense = new org.apache.maven.model.License();
+        pomLicense.setName(license.getName());
+        pomLicense.setUrl(license.getUrl());
+        pomLicense.setComments(license.getComments());
+        pomLicense.setDistribution(license.getDistribution());
+        model.getLicenses().add(pomLicense);
     }
 
     /**

@@ -42,8 +42,8 @@ import org.apache.tools.ant.Task;
  * This task allows you to define dependencies, dependency management, licenses, and repositories for the POM.
  */
 public class CreatePom extends Task {
-    private String dependenciesRef;
-    private String dependencyManagementRef;
+    private String dependenciesIdReference;
+    private String dependencyManagementIdReference;
     private File pomFile;
     private String groupId;
     private String artifactId;
@@ -87,7 +87,7 @@ public class CreatePom extends Task {
      * @param dependencyManagementRefId the reference to the id of the dependency management section
      */
     public void setDependencyManagementRef(String dependencyManagementRefId) {
-        this.dependencyManagementRef = getProject().replaceProperties(dependencyManagementRefId);
+        this.dependencyManagementIdReference = getProject().replaceProperties(dependencyManagementRefId);
     }
 
     /**
@@ -95,10 +95,10 @@ public class CreatePom extends Task {
      * This should point to the id attribute of a dependencies
      * element defined elsewhere in the build file.
      *
-     * @param dependenciesRefId the reference to the id of the dependencies section
+     * @param dependenciesIdReference the reference to the id of the dependencies section
      */
-    public void setDependenciesRef(String dependenciesRefId) {
-        this.dependenciesRef = getProject().replaceProperties(dependenciesRefId);
+    public void setDependenciesRef(String dependenciesIdReference) {
+        this.dependenciesIdReference = getProject().replaceProperties(dependenciesIdReference);
     }
 
     /**
@@ -260,15 +260,16 @@ public class CreatePom extends Task {
         pom.setName(getName());
         pom.setDescription(getDescription());
 
-        if (dependencyManagementRef != null) {
-            DependencyManagement dependencyManagement = DependencyManagement.get(getProject(), dependencyManagementRef);
+        if (dependencyManagementIdReference != null) {
+            DependencyManagement dependencyManagement =
+                    DependencyManagement.get(getProject(), dependencyManagementIdReference);
             appendManagedDependencies(dependencyManagement.getDependencies(), pom);
         }
-        if (dependenciesRef != null) {
+        if (dependenciesIdReference != null) {
             Dependencies dependencies = new Dependencies();
             dependencies.setProject(getProject());
             org.apache.tools.ant.types.Reference ref =
-                    new org.apache.tools.ant.types.Reference(getProject(), dependenciesRef);
+                    new org.apache.tools.ant.types.Reference(getProject(), dependenciesIdReference);
             dependencies.setRefid(ref);
 
             appendDependencies(dependencies, pom);

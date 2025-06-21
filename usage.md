@@ -1,6 +1,6 @@
 # Using Maven Resolver Ant Tasks
 
-See the [Maven Resolver Ant tasks usage documentation](https://maven.apache.org/plugins/maven-dependency-plugin/usage.html) for the main documentation.
+See the [Maven Resolver Ant tasks usage documentation](https://maven.apache.org/resolver-ant-tasks/) for the main documentation.
 
 Below are some additional pointers and examples.
 

@@ -16,19 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.mygroup.example1;
+package test.mygroup.example5;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.junit.Test;
+import org.mygroup.example5.Greeting;
 
-public class Greeting {
+import org.junit.Assert;
 
-  public String greet(String[] words) {
-    return ArrayUtils.toString(words) + "!";
-  }
+public class GreetingTest {
 
-  public static void main(String[] args) {
+  @Test
+  public void testGreeting() {
     Greeting greeting = new Greeting();
-    String[] words = {"Hello", "World"};
-    System.out.println(greeting.greet(words));
+    String greetingResult = greeting.greet(new String[] {"hello", "world"});
+    Assert.assertEquals("{hello, world}!", greetingResult);
   }
 }

@@ -18,7 +18,10 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<project xmlns:repo='antlib:org.apache.maven.resolver.ant'>
+<project xmlns:repo='antlib:org.apache.maven.resolver.ant' default='install'>
+  <echo level='info'>*********************</echo>
+  <echo level='info'>* Building example4 *</echo>
+  <echo level='info'>*********************</echo>
   <!-- create a path to the maven resolver ant tasks uber jar -->
   <path id='antlib.classpath'>
     <fileset dir='${basedir}/../../target'>
@@ -28,18 +31,16 @@
   <!-- define the maven resolver ant tasks types and tasks -->
   <taskdef uri='antlib:org.apache.maven.resolver.ant' resource='org/apache/maven/resolver/ant/antlib.xml'
            classpathref='antlib.classpath' />
-  <property name="groupId" value="org.mygroup"/>
-  <property name="artifactId" value="example3"/>
-  <property name="version" value="1.0-SNAPSHOT"/>
   <property name='targetDir' value='${basedir}/target'/>
   <property name='mainBuildDir' value='${targetDir}/classes'/>
 
 
   <target name='configurePaths' description='Configure paths for compilation using the pom file for dependencies'>
-    <repo:pom file="${basedir}/pom.xml"/>
+    <repo:pom file='${basedir}/pom.xml'/>
     <repo:resolve>
       <path refId='compilePath' classpath='compile'/>
     </repo:resolve>
+    <echo level='info'>GroupId: ${pom.groupId}, artifactId: ${pom.artifactId}, version: ${pom.version}</echo>
   </target>
 
   <target name='init' depends='configurePaths' description='Create the directories needed for the build'>
@@ -52,7 +53,7 @@
   </target>
 
   <target name='compile' depends='init' description='Compile the main classes using the path we set up with resolve'>
-    <echo>Compiling main classes</echo>
+    <echo level='info'>Compiling main classes</echo>
     <javac srcdir='${basedir}/src/main/java'
            destdir='${mainBuildDir}'
            classpathref='compilePath'
@@ -61,8 +62,8 @@
 
   <target name='jar' depends='compile'>
     <!-- The pom type makes the artifactId and version properties available -->
-    <property name='jarFile' value='${targetDir}/${artifactId}-${version}.jar'/>
-    <echo>Creating jar file ${jarFile}</echo>
+    <property name='jarFile' value='${targetDir}/${pom.artifactId}-${pom.version}.jar'/>
+    <echo level='info'>Creating jar file ${jarFile}</echo>
     <jar destfile='${jarFile}'>
       <fileset dir='${mainBuildDir}'/>
     </jar>
@@ -70,10 +71,12 @@
   </target>
 
   <target name='install' depends='jar'>
-    <echo>Publishing to local maven repository</echo>
+    <echo level='info'>Publishing to local maven repository</echo>
     <repo:artifacts id='localArtifacts'>
       <repo:artifact refid='mainJar'/>
     </repo:artifacts>
     <repo:install artifactsref='localArtifacts'/>
   </target>
+
+  <target name='installAndClean' depends='install, clean'/>
 </project>

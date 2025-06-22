@@ -14,8 +14,9 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-# Example 2 — define the dependencies in your ant build
+# Example 6 — using Maven Resolver Ant Tasks from a groovy script
 
-This example shows how to define your dependencies in your ant build script. 
+This example shows how to define your dependencies in a groovy that uses AntBuilder. 
 
-It also contains an example of doing the same thing in groovy using AntBuilder.
+- If you have groovy installed run `groovy run.groovy`
+- To run the groovy script via ant just do `ant run`

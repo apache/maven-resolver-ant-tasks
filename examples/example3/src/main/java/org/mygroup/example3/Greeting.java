@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.mygroup.example1;
+package org.mygroup.example3;
 
 import org.apache.commons.lang3.ArrayUtils;
 

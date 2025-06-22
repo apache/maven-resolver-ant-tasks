@@ -16,12 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.mygroup.example1;
+package org.mygroup.example5;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+/**
+ * A simple greeter
+ */
 public class Greeting {
 
+  /**
+   * Using commons lang3 to convert an array to a string
+   *
+   * @param words a string array
+   * @return a string representation of the array followed by an exclamation mark.
+   */
   public String greet(String[] words) {
     return ArrayUtils.toString(words) + "!";
   }

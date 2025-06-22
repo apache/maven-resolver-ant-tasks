@@ -18,9 +18,9 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<project xmlns:repo='antlib:org.apache.maven.resolver.ant' default='compile'>
+<project xmlns:repo='antlib:org.apache.maven.resolver.ant' default='run'>
   <echo level='info'>*********************</echo>
-  <echo level='info'>* Building example2 *</echo>
+  <echo level='info'>* Building example6 *</echo>
   <echo level='info'>*********************</echo>
   <!-- create a path to the maven resolver ant tasks uber jar -->
   <path id='antlib.classpath'>
@@ -35,7 +35,9 @@
   <property name='mainBuildDir' value='${targetDir}/classes'/>
 
   <repo:dependencies id='compile'>
-    <repo:dependency groupId='org.apache.commons' artifactId='commons-lang3' version='3.17.0'/>
+    <repo:dependency groupId='org.apache.groovy' artifactId='groovy' version='4.0.27'/>
+    <repo:dependency groupId='org.apache.groovy' artifactId='groovy-ant' version='4.0.27'/>
+    <repo:dependency groupId='org.apache.ivy' artifactId='ivy' version='2.5.3'/>
   </repo:dependencies>
 
   <target name='configurePaths' description='Configure paths for compilation using the pom file for dependencies'>
@@ -44,22 +46,19 @@
     </repo:resolve>
   </target>
 
-  <target name='init' depends='configurePaths' description='Create the directories needed for the build'>
-    <mkdir dir='${targetDir}'/>
-    <mkdir dir='${mainBuildDir}'/>
+  <target name='clean'>
+    <delete dir='${basedir}/target'/>
   </target>
 
-  <target name='clean' description='Clean the build directory (target)'>
-    <delete dir='${targetDir}' quiet='true'/>
+  <target name='run' depends='configurePaths' description='Run the groovy script to enable calling it from maven'>
+    <path id='runPath'>
+      <path refid='antlib.classpath'/>
+      <path refid='compilePath'/>
+    </path>
+    <java classname='groovy.lang.GroovyShell' fork='true' classpathref='runPath'>
+      <arg value='${basedir}/antBuilderExample.groovy'/>
+    </java>
   </target>
 
-  <target name='compile' depends='init' description='Compile the main classes using the path we set up with resolve'>
-    <echo level='info'>Compiling main classes</echo>
-    <javac srcdir='${basedir}/src/main/java' destdir='${mainBuildDir}' classpathref='compilePath' includeantruntime='false'>
-      <compilerarg value='-Xlint:unchecked'/>
-      <compilerarg value='-Xlint:deprecation'/>
-    </javac>
-  </target>
-
-  <target name='compileAndClean' depends='compile, clean'/>
+  <target name='runAndClean' depends='run, clean'/>
 </project>

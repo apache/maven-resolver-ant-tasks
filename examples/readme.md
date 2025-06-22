@@ -14,7 +14,11 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-# Example 5 — use dependency management, generate pom and install
+# Maven Resolver Ant Tasks Examples
 
-This example shows how to use a dependency management section in your project to use a bom, abd then reference that when calling the createPom task to generate and register a pom file.
-
+1. [Example 1](example1) — using a separate pom file in your ant build
+2. [Example 2](example2) — define the dependencies in your ant build
+3. [Example 3](example3) — generate pom and install
+4. [Example 4](example4) — use pom file to install
+5. [Example 5](example5) — use dependency management, generate pom and install
+6. [Example 6](example6) — using Maven Resolver Ant Tasks from a groovy script

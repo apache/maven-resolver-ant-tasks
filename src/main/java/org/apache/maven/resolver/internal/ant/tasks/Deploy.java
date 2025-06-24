@@ -24,6 +24,65 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Reference;
 
 /**
+ * Ant task to deploy artifacts to a remote Maven repository.
+ * <p>
+ * This task uploads artifacts, POM files, and optionally metadata such as licenses or dependencies
+ * to a remote repository using Maven Resolver. It mimics the behavior of {@code mvn deploy}
+ * but is integrated into Ant build scripts.
+ * </p>
+ *
+ * <h2>Usage Example:</h2>
+ * <pre>{@code
+ * <repo:deploy>
+ *   <repo:artifact file='build/libs/my-lib.jar'
+ *             groupId='com.example'
+ *             artifactId='my-lib'
+ *             version='1.0.0'
+ *             packaging='jar'/>
+ *   <repo:repository id="snapshots" url='https://my.repo.com/snapshots'>
+ *     <repo:authentication username='user' password='pass'/>
+ *   </repo:repository>
+ * </repo:deploy>
+ * }</pre>
+ * * If you have used the pom task to register an existing POM, or you used the
+ * createPom task to generate and register a POM, you can instead do this:
+ * <pre>{@code
+ * <repo:artifacts id='remoteArtifacts'>
+ *       <repo:artifact refid='jar'/>
+ *       <repo:artifact refid='sourceJar'/>
+ *       <repo:artifact refid='javadocJar'/>
+ * </repo:artifacts>
+ * <repo:deploy artifactsref='remoteArtifacts'>
+ *   <repo:remoteRepo id='localNexus', url='http://localhost:8081/repository/repo/'/>
+ * </repo:deploy>
+ * }</pre>
+ * <h2>Attributes:</h2>
+ * <ul>
+ *   <li><strong>failOnMissingPom</strong> — whether to fail if no POM information is provided (default: true)</li>
+ * </ul>
+ *
+ * <h2>Nested Elements:</h2>
+ * <ul>
+ *   <li>{@code <artifact>} — specifies the artifact file and its coordinates to be deployed</li>
+ *   <li>{@code <pom>} — (optional) provides the POM file to upload, or one will be generated</li>
+ *   <li>{@code <repository>} — defines the target repository for deployment</li>
+ * </ul>
+ *
+ * <h2>Behavior:</h2>
+ * <ul>
+ *   <li>If no POM is provided, a basic one will be generated using the artifact's metadata</li>
+ *   <li>Uploads artifacts using Maven's supported protocols (e.g., HTTP/S with authentication)</li>
+ *   <li>Supports deployment to both snapshot and release repositories</li>
+ * </ul>
+ *
+ * <p>
+ * This task is typically used in CI/CD pipelines or custom release scripts that need to publish artifacts from Ant.
+ * </p>
+ *
+ * @see org.apache.maven.resolver.internal.ant.tasks.CreatePom
+ * @see org.apache.maven.resolver.internal.ant.types.Artifact
+ * @see org.apache.maven.resolver.internal.ant.types.Pom
+ * @see org.apache.maven.resolver.internal.ant.types.RemoteRepository
  */
 public class Deploy extends AbstractDistTask {
 

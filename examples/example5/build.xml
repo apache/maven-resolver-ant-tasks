@@ -50,9 +50,9 @@
     <repo:dependency groupId='org.junit.platform' artifactId='junit-platform-launcher' scope='test'/>
   </repo:dependencies>
 
-  <target name='configurePaths' description='Configure paths for compilation using the pom file for dependencies'>
+  <target name='configurePaths' description='Configure paths for compilation'>
     <property name='pomFile' value='${targetDir}/${artifactId}-${version}.pom'/>
-    <createPom pomTarget='${pomFile}' dependenciesRef='compile' dependencyManagementRef='dm'
+    <repo:createPom pomTarget='${pomFile}' dependenciesRef='compile' dependencyManagementRef='dm'
                name='example5' description='A simple example of a publishable library'>
       <licenses>
         <license>
@@ -60,7 +60,7 @@
           <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
       </licenses>
-    </createPom>
+    </repo:createPom>
     <repo:resolve>
       <path refId='compilePath' classpath='compile'/>
       <path refId='testPath' classpath='test'/>
@@ -120,7 +120,7 @@
     <jar destfile='${srcJarFile}'>
       <fileset dir='${sourceDir}'/>
     </jar>
-    <artifact file='${srcJarFile}' type='jar' classifier='sources' id='sourceJar'/>
+    <repo:artifact file='${srcJarFile}' type='jar' classifier='sources' id='sourceJar'/>
   </target>
 
   <target name='javadoc' depends='init'>
@@ -136,15 +136,15 @@
     <jar destfile='${javadocJarFile}'>
       <fileset dir='${javadocDir}'/>
     </jar>
-    <artifact file='${javadocJarFile}' type='jar' classifier='javadocs' id='javadocJar'/>
+    <repo:artifact file='${javadocJarFile}' type='jar' classifier='javadocs' id='javadocJar'/>
   </target>
 
   <target name='install' depends='jar, sourcesJar, javadocJar'>
     <echo level='info'>Publishing to local maven repository</echo>
     <repo:artifacts id='localArtifacts'>
-      <artifact refid='jar'/>
-      <artifact refid='sourceJar'/>
-      <artifact refid='javadocJar'/>
+      <repo:artifact refid='jar'/>
+      <repo:artifact refid='sourceJar'/>
+      <repo:artifact refid='javadocJar'/>
     </repo:artifacts>
     <repo:install artifactsref='localArtifacts'/>
   </target>

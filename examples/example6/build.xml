@@ -18,9 +18,9 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<project xmlns:repo='antlib:org.apache.maven.resolver.ant' default='run'>
+<project xmlns:repo='antlib:org.apache.maven.resolver.ant' default='install'>
   <echo level='info'>*********************</echo>
-  <echo level='info'>* Building example6 *</echo>
+  <echo level='info'>* Building example5 *</echo>
   <echo level='info'>*********************</echo>
   <!-- create a path to the maven resolver ant tasks uber jar -->
   <path id='antlib.classpath'>
@@ -31,34 +31,105 @@
   <!-- define the maven resolver ant tasks types and tasks -->
   <taskdef uri='antlib:org.apache.maven.resolver.ant' resource='org/apache/maven/resolver/ant/antlib.xml'
            classpathref='antlib.classpath' />
+  <property name="sourceDir" value="${basedir}/src/main/java"/>
   <property name='targetDir' value='${basedir}/target'/>
   <property name='mainBuildDir' value='${targetDir}/classes'/>
-
-  <repo:dependencies id='compile'>
-    <repo:dependency groupId='org.apache.groovy' artifactId='groovy' version='4.0.27'/>
-    <repo:dependency groupId='org.apache.groovy' artifactId='groovy-ant' version='4.0.27'/>
-    <repo:dependency groupId='org.apache.ivy' artifactId='ivy' version='2.5.3'/>
-  </repo:dependencies>
+  <property name='testBuildDir' value='${targetDir}/test-classes'/>
 
   <target name='configurePaths' description='Configure paths for compilation using the pom file for dependencies'>
-    <repo:resolve dependenciesref='compile'>
+    <repo:pom file='${basedir}/pom.xml'/>
+    <repo:resolve>
       <path refId='compilePath' classpath='compile'/>
+      <path refId='testPath' classpath='test'/>
     </repo:resolve>
   </target>
 
-  <target name='clean'>
-    <delete dir='${basedir}/target'/>
+  <target name='init' depends='configurePaths' description='Create the directories needed for the build'>
+    <mkdir dir='${targetDir}'/>
+    <mkdir dir='${mainBuildDir}'/>
   </target>
 
-  <target name='run' depends='configurePaths' description='Run the groovy script to enable calling it from maven'>
-    <path id='runPath'>
-      <path refid='antlib.classpath'/>
-      <path refid='compilePath'/>
-    </path>
-    <java classname='groovy.lang.GroovyShell' fork='true' classpathref='runPath'>
-      <arg value='${basedir}/antBuilderExample.groovy'/>
-    </java>
+  <target name='clean' description='Clean the build directory (target)'>
+    <delete dir='${targetDir}' quiet='true'/>
   </target>
 
-  <target name='runAndClean' depends='run, clean'/>
+  <target name='compile' depends='init' description='Compile the main classes using the path we set up with resolve'>
+    <echo level='info'>Compiling main classes</echo>
+    <javac srcdir='${basedir}/src/main/java'
+           destdir='${mainBuildDir}'
+           classpathref='compilePath'
+           includeantruntime='false'/>
+  </target>
+
+  <target name='test' depends='compile' description='Compile and run tests'>
+    <echo level='info'>Compiling test classes</echo>
+
+    <mkdir dir='${testBuildDir}'/>
+    <javac
+      srcdir='src/test/java'
+      destdir='${testBuildDir}'
+      classpathref='testClassPath'
+    />
+
+    <junit printsummary='true' haltonfailure='true'>
+      <classpath>
+        <pathelement location='${mainBuildDir}'/>
+        <pathelement location='${testBuildDir}'/>
+        <path refid='testPath'/>
+      </classpath>
+      <formatter type='plain'/>
+      <test name='my.test.TestCase'/>
+    </junit>
+  </target>
+
+  <target name='jar' depends='compile'>
+    <echo level='info'>Creating jar file</echo>
+    <property name='jarFile' value='${targetDir}/${pom.artifactId}-${pom.version}.jar'/>
+    <jar destfile='${jarFile}'>
+      <fileset dir='${mainBuildDir}'/>
+    </jar>
+    <repo:artifact file='${jarFile}' type='jar' id='mainJar'/>
+  </target>
+
+  <target name='sourcesJar' depends="configurePaths">
+    <echo level='info'>Creating sources jar file</echo>
+    <property name='srcJarFile' value='${targetDir}/${pom.artifactId}-${pom.version}-sources.jar'/>
+    <jar destfile='${srcJarFile}'>
+      <fileset dir='${sourceDir}'/>
+    </jar>
+    <repo:artifact file='${srcJarFile}' type='jar' classifier='sources' id='srcJar'/>
+  </target>
+
+  <target name='javadoc' depends='compile'>
+    <echo level='info'>Creating javadoc</echo>
+    <property name='javadocDir' value='${targetDir}/javadoc'/>
+    <mkdir dir='${javadocDir}'/>
+    <javadoc destdir='${javadocDir}' sourcepath='${sourceDir}'>
+      <classpath>
+        <path refId="compilePath"/>
+        <pathelement location="${mainBuildDir}"/>
+      </classpath>
+    </javadoc>
+  </target>
+
+  <target name='javadocJar' depends='javadoc'>
+    <echo level='info'>Creating groovydoc jar file</echo>
+    <property name='javadocJarFile' value='${targetDir}/${pom.artifactId}-${pom.version}-javadoc.jar'/>
+    <jar destfile='${javadocJarFile}'>
+      <fileset dir='${javadocDir}'/>
+    </jar>
+    <repo:artifact file='${javadocJarFile}' type='jar' classifier='javadocs' id='javadocJar'/>
+  </target>
+
+  <target name='install' depends='jar, sourcesJar, javadocJar'>
+    <echo level='info'>Publishing to local maven repository</echo>
+    <repo:artifacts id='localArtifacts'>
+      <repo:artifact refid='mainJar'/>
+      <repo:artifact refid='srcJar'/>
+      <repo:artifact refid='javadocJar'/>
+    </repo:artifacts>
+    <repo:install artifactsref='localArtifacts'/>
+  </target>
+
+  <target name='installAndClean' depends='install, clean'/>
 </project>

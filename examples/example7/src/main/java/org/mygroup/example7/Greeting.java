@@ -16,39 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.mygroup.example6;
+package org.mygroup.example7;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-/**
- * A simple greeter
- */
 public class Greeting {
 
-  /**
-   * Default constructor for Greeting class.
-   * This constructor does not take any parameters to initialize a Greeting.
-   */
-  public Greeting() {
-    // Default constructor
-  }
-
-  /**
-   * Using commons lang3 to convert an array to a string
-   *
-   * @param words a string array
-   * @return a string representation of the array followed by an exclamation mark.
-   */
   public String greet(String[] words) {
     return ArrayUtils.toString(words) + "!";
   }
 
-  /**
-   * Main method to demonstrate the Greeting functionality.
-   * It creates an instance of Greeting and prints a greeting message.
-   *
-   * @param args command line arguments (not used)
-   */
   public static void main(String[] args) {
     Greeting greeting = new Greeting();
     String[] words = {"Hello", "World"};

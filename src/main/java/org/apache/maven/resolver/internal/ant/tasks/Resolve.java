@@ -53,6 +53,54 @@ import org.eclipse.aether.util.artifact.SubArtifact;
 import org.eclipse.aether.util.filter.ScopeDependencyFilter;
 
 /**
+ * Ant task to resolve dependencies using Maven Resolver.
+ * <p>
+ * This task reads dependency and repository definitions (either inline or via references)
+ * and resolves them according to the specified scopes and remote repositories. Resolved artifacts
+ * can be stored in Ant references or used for further processing (e.g., setting up classpaths).
+ * </p>
+ *
+ * <h2>Usage Example:</h2>
+ * <pre>{@code
+ * <resolve>
+ *   <dependencies>
+ *     <dependency groupId="org.apache.commons" artifactId="commons-lang3" version="3.12.0"/>
+ *   </dependencies>
+ *   <repositories>
+ *     <repository id="central" url="https://repo.maven.apache.org/maven2"/>
+ *   </repositories>
+ *   <path id="my.classpath"/>
+ * </resolve>
+ * }</pre>
+ *
+ * <h2>Attributes:</h2>
+ * <ul>
+ *   <li><strong>failOnMissingDescriptor</strong> — whether to fail if a POM file cannot be resolved (default: false)</li>
+ *   <li><strong>offline</strong> — whether to operate in offline mode (default: false)</li>
+ * </ul>
+ *
+ * <h2>Nested Elements:</h2>
+ * <ul>
+ *   <li>{@code <dependencies>} — defines one or more dependencies to resolve</li>
+ *   <li>{@code <repositories>} — a container for one or more {@code <repository>} elements</li>
+ *   <li>{@code <repository>} — specifies a remote Maven repository</li>
+ *   <li>{@code <path>} — optionally defines an Ant path to which resolved artifacts are added</li>
+ * </ul>
+ *
+ * <h2>Ant References Created:</h2>
+ * <ul>
+ *   <li>May register resolved artifacts under a path reference if {@code <path>} is used</li>
+ * </ul>
+ *
+ * <h2>Typical Use Cases:</h2>
+ * <ul>
+ *   <li>Resolving Maven artifacts for use in compilation, testing, or runtime</li>
+ *   <li>Dynamically constructing classpaths using Maven coordinates</li>
+ * </ul>
+ *
+ * @see org.apache.maven.resolver.internal.ant.types.Dependencies
+ * @see org.apache.maven.resolver.internal.ant.types.RemoteRepository
+ * @see org.apache.tools.ant.types.Path
  */
 public class Resolve extends AbstractResolvingTask {
 

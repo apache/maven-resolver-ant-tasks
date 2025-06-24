@@ -14,8 +14,9 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-# Example 6 — use dependency management, with a separate pom.xml to define dependencies
+# Example 7 — using Maven Resolver Ant Tasks from a groovy script
 
-This example shows how to use a pom file for dependency management and dependencies in your project to use a bom, and then register it with 
-the pom task.
+This example shows how to define your dependencies in a groovy that uses AntBuilder. 
 
+- If you have groovy installed run `groovy run.groovy`
+- To run the groovy script via ant just do `ant run`

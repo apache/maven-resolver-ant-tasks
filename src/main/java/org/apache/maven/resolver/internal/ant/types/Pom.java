@@ -32,7 +32,62 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Reference;
 
 /**
+ * Represents a Maven POM file as an Ant {@code DataType}.
+ * <p>
+ * This type allows an existing {@code pom.xml} file to be loaded into the Ant build environment.
+ * The POM's metadata (such as groupId, artifactId, version, etc.) can be accessed directly or reused
+ * in other Maven Resolver tasks like {@link org.apache.maven.resolver.internal.ant.tasks.Deploy Deploy},
+ * {@link org.apache.maven.resolver.internal.ant.tasks.Install Install}
+ * </p>
+ *
+ * <h2>Usage Example:</h2>
+ * <pre>{@code
+ * <pom file="target/generated-pom.xml" id="my.pom"/>
+ *
+ * <echo message="Group ID is ${pom.groupId}"/>
+ * <echo message="Version is ${pom.version}"/>
+ *
+ * <deploy>
+ *   <pom refid="my.pom"/>
+ *   <repository id="release" url="https://repo.mycompany.com/releases"/>
+ * </deploy>
+ * }</pre>
+ *
+ * <h2>Attributes:</h2>
+ * <ul>
+ *   <li><strong>file</strong> — the path to the {@code pom.xml} file to load</li>
+ * </ul>
+ *
+ * <h2>Exposed Ant Properties:</h2>
+ * When a POM is loaded, the following properties become available for use in your build script:
+ * <ul>
+ *   <li>{@code ${pom.groupId}}</li>
+ *   <li>{@code ${pom.artifactId}}</li>
+ *   <li>{@code ${pom.version}}</li>
+ *   <li>{@code ${pom.packaging}}</li>
+ *   <li>{@code ${pom.name}}</li>
+ *   <li>{@code ${pom.description}} (if present)</li>
+ * </ul>
+ *
+ * These properties enable consistent reuse of project metadata across Ant targets and tasks.
+ * <p>
+ * If you want a different property prefix, you can set it when you register the POM, e.g.:
+ * <pre>{@code
+ * <pom file="target/generated-pom.xml" id="my.pom" prefix="lib"/>
+ * }</pre>
+ * </p>
+ * <h2>Typical Use Cases:</h2>
+ * <ul>
+ *   <li>Reusing existing Maven coordinates in Ant-based deployments</li>
+ *   <li>Injecting POM metadata into artifact creation or reporting tasks</li>
+ *   <li>Keeping build logic in sync with Maven configuration</li>
+ * </ul>
+ *
+ * @see org.apache.maven.resolver.internal.ant.tasks.Deploy
+ * @see org.apache.maven.resolver.internal.ant.tasks.Install
+ * @see org.apache.maven.resolver.internal.ant.tasks.CreatePom
  */
+
 public class Pom extends RefTask {
 
     private Model model;

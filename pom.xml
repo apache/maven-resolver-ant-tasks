@@ -366,7 +366,8 @@
                 <!--ant antfile="${basedir}/examples/example3/build.xml" dir="${basedir}/examples/example3" target="installAndClean"/-->
                 <ant antfile="${basedir}/examples/example4/build.xml" dir="${basedir}/examples/example4" target="installAndClean" />
                 <!--ant antfile="${basedir}/examples/example5/build.xml" dir="${basedir}/examples/example5" target="installAndClean"/-->
-                <ant antfile="${basedir}/examples/example6/build.xml" dir="${basedir}/examples/example6" target="runAndClean" />
+                <ant antfile="${basedir}/examples/example6/build.xml" dir="${basedir}/examples/example6" target="installAndClean" />
+                <ant antfile="${basedir}/examples/example7/build.xml" dir="${basedir}/examples/example7" target="runAndClean" />
               </target>
             </configuration>
           </execution>

@@ -18,6 +18,8 @@
 
 See the [Maven Resolver Ant tasks usage documentation](https://maven.apache.org/resolver-ant-tasks/) for the main documentation.
 
+The javadoc for the Maven Resolver Ant tasks can be found [here](https://maven.apache.org/resolver-ant-tasks/apidocs/).
+
 Below are some additional pointers and examples.
 
 To use the Maven Resolver Ant tasks, you need to include the Uber jar in your classpath. Either by copying it into you ant lib dir or by adding it to your classpath in your build script.
@@ -36,6 +38,9 @@ If you are using the Groovy Antbuilder, you can use grab to fetch the normal jar
 import groovy.ant.AntBuilder
 def ant = new AntBuilder()
 ant.with {
+  /* Calling antlib.xml to register the Maven Resolver Ant tasks does not work 
+  with Groovy AntBuilder. You need to use the taskdef and typedef elements 
+  directly.*/
   typedef(name:"dependency", classname:"org.apache.maven.resolver.internal.ant.types.Dependency")
   typedef(name:"dependencies", classname:"org.apache.maven.resolver.internal.ant.types.Dependencies")
   taskdef(name:"resolve", classname:"org.apache.maven.resolver.internal.ant.tasks.Resolve")
@@ -53,6 +58,8 @@ ant.with {
   // etc...
 }
 ```
+[example7](examples/example7) shows how to use the Maven Resolver Ant tasks 
+in a Groovy script using AntBuilder.
 
 # Dependencies
 There are two ways to define dependencies in your ant build using the Maven Resolver Ant tasks:
@@ -102,6 +109,8 @@ You can find fully working examples in the [examples directory](examples) but he
   </target>
 </project>
 ```
+See [example1](examples/example1) for a complete example of using a pom file to define dependencies.
+
 ## Example of defining dependencies in the ant build file
 ```xml
 <project xmlns:repo='antlib:org.apache.maven.resolver.ant'>
@@ -126,8 +135,53 @@ You can find fully working examples in the [examples directory](examples) but he
   </target>
 </project>
 ```
+See [example2](examples/example2) for a complete example of defing dependencies in your ant build file.
 
 # Dependency Management
+There are two ways to handle bill of materials (BOM's) using mavens  dependency management in your Ant build:
+1. **Using a POM file**: You can create a POM file that includes the BOM in its dependency management section. Then, use the `pom` task to register this POM file in your Ant build script.
+2. **Using the `dependencyManagement` tyope**: You can define the BOM directly in your Ant build script using the `dependencyManagement` type.
 
-# Install
-# Deploy
+The syntax for both methods is similar, but the first method requires a separate POM file, while the second method allows you to define the BOM directly in your Ant build script.
+
+[Example 5](examples/example5) shows how to use the `dependencyManagement` type directly in the Ant build script.
+
+[Example 6](examples/example6) shows how to use a separate POM file for dependency management and dependencies in your project to use a BOM, and then register it with the `pom` task.
+
+# Notes
+## Using XML Namespaces in Apache Ant
+Apache Ant does not enforce XML namespaces for nested elements of custom tasks in the same way XML parsers typically would. This is because Ant uses a custom XML parsing and object instantiation model, not a strict XML namespace-aware DOM or SAX parser. Here's how and why that works:
+1. Ant uses introspection-based configuration
+Ant's core processing looks for addXyz() or createXyz() methods in the task class to match nested elements (e.g., addLicenses() for `<licenses>`). These methods are matched by local element name, not by namespace.
+
+2. Namespace is only used at task level (taskdef/typedef)
+When you define a namespace like:
+
+```xml
+<project xmlns:repo='antlib:org.apache.maven.resolver.ant'>
+  
+</project>
+```
+you're associating the prefix repo: with a task library (a group of task definitions). This only matters for top-level tasks or types like:
+
+```xml
+<repo:createPom ... />
+```
+3. Nested elements are resolved contextually
+Once a task like <repo:createPom> is instantiated, Ant assumes any nested elements are part of its internal structure, and it uses method names (like addLicenses) on the task class to resolve them. Namespaces are ignored here — Ant does not scope nested elements using XML namespaces.
+
+### Example
+This works:
+
+```xml
+<repo:createPom ...>
+  <licenses>...</licenses> <!-- No namespace needed -->
+</repo:createPom>
+```
+This also works:
+
+```xml
+<repo:createPom ...>
+  <repo:licenses>...</repo:licenses> <!-- But this is not necessary -->
+</repo:createPom>
+```

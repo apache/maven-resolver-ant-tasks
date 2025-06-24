@@ -76,14 +76,14 @@
   <target name='pom' depends='jar'>
     <property name='pomFile' value='${targetDir}/${artifactId}-${version}.pom'/>
     <echo level='info'>Creating and registering pom file ${pomFile}</echo>
-    <createPom pomTarget='${pomFile}' dependenciesRef='compile' name='example3'>
+    <repo:createPom pomTarget='${pomFile}' dependenciesRef='compile' name='example3'>
       <licenses>
         <license>
           <name>MIT</name>
           <url>https://opensource.org/license/mit</url>
         </license>
       </licenses>
-    </createPom>
+    </repo:createPom>
   </target>
 
   <target name='install' depends='jar, pom'>

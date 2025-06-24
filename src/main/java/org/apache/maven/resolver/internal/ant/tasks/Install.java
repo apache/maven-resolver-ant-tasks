@@ -22,6 +22,62 @@ import org.apache.maven.resolver.internal.ant.AntRepoSys;
 import org.apache.tools.ant.BuildException;
 
 /**
+ * Ant task to install artifacts into the local Maven repository.
+ * <p>
+ * This task allows you to manually install artifacts into the local repository
+ * (usually {@code ~/.m2/repository}) by specifying coordinates, files, and optional POM metadata.
+ * It mimics the behavior of {@code mvn install:install-file} but is usable in Ant build scripts.
+ * </p>
+ *
+ * <h2>Usage Example:</h2>
+ * <pre>{@code
+ * <repo:install>
+ *   <repo:artifact file="build/libs/my-lib.jar"
+ *             groupId="com.example"
+ *             artifactId="my-lib"
+ *             version="1.0.0"
+ *             packaging="jar"/>
+ * </repo:install>
+ * }</pre>
+ *
+ * If you have used the pom task to register an existing POM, or you used the
+ * createPom task to generate and register a POM, you can instead do this:
+ * <pre>{@code
+ *     <repo:artifacts id='localArtifacts'>
+ *       <repo:artifact refid='mainJar'/>
+ *       <repo:artifact file='${srcJarFile}'
+ *                      type='jar'
+ *                      classifier='sources'
+ *                      id='srcJar'/>
+ *       <repo:artifact file='${javadocJarFile}'
+ *                      type='jar'
+ *                      classifier='javadocs'
+ *                      id='javadocJar'/>
+ *     </repo:artifacts>
+ *     <repo:install artifactsref='localArtifacts'/>
+ * }</pre>
+ * <h2>Attributes:</h2>
+ * <ul>
+ *   <li><strong>failOnMissingPom</strong> — whether to fail if no POM information is provided (default: true)</li>
+ * </ul>
+ *
+ * <h2>Nested Elements:</h2>
+ * <ul>
+ *   <li>{@code <artifact>} — specifies the artifact file and coordinates to install</li>
+ *   <li>{@code <pom>} — (optional) specifies the POM file to install along with the artifact</li>
+ * </ul>
+ *
+ * <h2>Behavior:</h2>
+ * <ul>
+ *   <li>If a POM is not explicitly provided, a minimal one will be generated</li>
+ *   <li>Installs to the local repository used by Maven and compatible tools</li>
+ * </ul>
+ *
+ * <p>This task is useful in custom build pipelines, testing, or deploying non-Maven-built artifacts to the local repo.</p>
+ *
+ * @see org.apache.maven.resolver.internal.ant.tasks.CreatePom
+ * @see org.apache.maven.resolver.internal.ant.types.Artifact
+ * @see org.apache.maven.resolver.internal.ant.types.Pom
  */
 public class Install extends AbstractDistTask {
 

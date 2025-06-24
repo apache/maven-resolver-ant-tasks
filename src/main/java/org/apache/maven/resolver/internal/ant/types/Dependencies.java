@@ -30,7 +30,67 @@ import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.Reference;
 
 /**
+ * Container for multiple Maven dependencies in an Ant build script.
+ * <p>
+ * This Ant {@code DataType} represents a collection of {@link Dependency} elements.
+ * It is typically used within tasks like {@link org.apache.maven.resolver.internal.ant.tasks.Resolve Resolve},
+ * {@link org.apache.maven.resolver.internal.ant.tasks.CreatePom CreatePom},
+ * {@link org.apache.maven.resolver.internal.ant.tasks.Deploy Deploy}, and
+ * {@link org.apache.maven.resolver.internal.ant.tasks.Install Install} to provide
+ * structured dependency information.
+ * </p>
+ *
+ * <h2>Usage Example (inline):</h2>
+ * <pre>{@code
+ * <repo:resolve>
+ *   <repo:dependencies>
+ *     <repo:dependency groupId="org.apache.commons" artifactId="commons-lang3" version="3.12.0"/>
+ *     <repo:dependency groupId="com.google.guava" artifactId="guava" version="32.0.2"/>
+ *   </repo:dependencies>
+ *   <path id="my.classpath"/>
+ * </resolve>
+ * }</pre>
+ *
+ * <h2>Usage Example (referenced):</h2>
+ * <pre>{@code
+ * <dependencies id="compile.deps">
+ *   <dependency groupId="org.slf4j" artifactId="slf4j-api" version="2.0.7"/>
+ * </dependencies>
+ *
+ * <resolve dependenciesRef="compile.deps">
+ *   <path id="compile.classpath"/>
+ * </resolve>
+ * }</pre>
+ *
+ * <h2>Attributes:</h2>
+ * <ul>
+ *   <li><strong>id</strong> — optional Ant reference ID, allowing reuse in multiple tasks</li>
+ * </ul>
+ *
+ * <h2>Nested Elements:</h2>
+ * <ul>
+ *   <li>{@code <dependency>} — defines a single Maven dependency (see {@link Dependency})</li>
+ * </ul>
+ *
+ * <h2>Typical Use Cases:</h2>
+ * <ul>
+ *   <li>Providing dependencies to resolution tasks like Resolve or CreatePom</li>
+ *   <li>Reusing a named set of dependencies across tasks via {@code dependenciesRef}</li>
+ * </ul>
+ *
+ * <h2>Behavior:</h2>
+ * After being referenced by a task (e.g. via {@code dependenciesRef}), the container is
+ * evaluated and each contained {@code <dependency>} is passed to the task’s resolution
+ * or POM generation logic.
+ * </p>
+ *
+ * @see Dependency
+ * @see org.apache.maven.resolver.internal.ant.tasks.Resolve
+ * @see org.apache.maven.resolver.internal.ant.tasks.CreatePom
+ * @see org.apache.maven.resolver.internal.ant.tasks.Deploy
+ * @see org.apache.maven.resolver.internal.ant.tasks.Install
  */
+
 public class Dependencies extends DataType implements DependencyContainer {
 
     private File file;
@@ -43,6 +103,12 @@ public class Dependencies extends DataType implements DependencyContainer {
 
     private boolean nestedDependencies;
 
+    /**
+     * Performs the check for circular references and returns the Dependencies object.
+     * This is equivalent to calling getCheckedRef(Dependencies.class)
+     *
+     * @return The Dependencies
+     */
     protected Dependencies getRef() {
         return getCheckedRef(Dependencies.class);
     }
@@ -80,12 +146,22 @@ public class Dependencies extends DataType implements DependencyContainer {
         super.setRefid(ref);
     }
 
+    /**
+     * Set the file attribute.
+     *
+     * @param file the File to set
+     */
     public void setFile(File file) {
         checkAttributesAllowed();
         this.file = file;
         checkExternalSources();
     }
 
+    /**
+     * Get the file attribute.
+     *
+     * @return the File.
+     */
     public File getFile() {
         if (isReference()) {
             return getRef().getFile();
@@ -93,6 +169,12 @@ public class Dependencies extends DataType implements DependencyContainer {
         return file;
     }
 
+    /**
+     * Allows ant to add the pom element specified in the build file.
+     * Only one pom element is allowed.
+     *
+     * @param pom the Pom element to add.
+     */
     public void addPom(Pom pom) {
         checkChildrenAllowed();
         if (this.pom != null) {

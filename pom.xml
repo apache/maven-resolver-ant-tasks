@@ -57,8 +57,8 @@
   </distributionManagement>
 
   <properties>
-    <mavenVersion>3.9.10</mavenVersion>
-    <resolverVersion>1.9.23</resolverVersion>
+    <mavenVersion>3.9.11-SNAPSHOT</mavenVersion>
+    <resolverVersion>1.9.24-SNAPSHOT</resolverVersion>
     <antVersion>1.10.15</antVersion>
     <javaVersion>8</javaVersion>
     <junitVersion>4.13.2</junitVersion>
@@ -302,6 +302,7 @@
                     <exclude>META-INF/NOTICE.txt</exclude>
                     <exclude>META-INF/DEPENDENCIES</exclude>
                     <exclude>META-INF/MANIFEST.MF</exclude>
+                    <exclude>META-INF/versions/*/module-info.class</exclude>
                   </excludes>
                 </filter>
               </filters>

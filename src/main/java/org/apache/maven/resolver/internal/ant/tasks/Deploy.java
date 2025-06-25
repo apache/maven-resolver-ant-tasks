@@ -90,6 +90,15 @@ public class Deploy extends AbstractDistTask {
 
     private RemoteRepository snapshotRepository;
 
+    /**
+     * Default constructor for the Deploy task.
+     * <p>
+     * Initializes a new instance of the Deploy task.
+     * </p>
+     */
+    public Deploy() {
+    }
+
     @Override
     protected void validate() {
         super.validate();
@@ -105,6 +114,35 @@ public class Deploy extends AbstractDistTask {
         }
     }
 
+    /**
+     * Allows ant to add a remote repository to which artifacts will be deployed.
+     * <p>
+     * This method is invoked by Ant when a {@code <repository>} nested element is defined
+     * inside the {@code <deploy>} task. Each repository must specify a unique {@code id}
+     * and a deployment {@code url}, and may optionally include layout and authentication information.
+     * </p>
+     *
+     * <p>
+     * Multiple repositories can be specified, though typically only one is used for deployment.
+     * </p>
+     *
+     * <b>Example:</b>
+     * <pre>{@code
+     * <deploy>
+     *   <artifact ... />
+     *   <repository id="release"
+     *               url="https://repo.example.com/releases"
+     *               layout="default">
+     *     <authentication username="user" password="pass"/>
+     *   </repository>
+     * </deploy>
+     * }</pre>
+     *
+     * @param repository the remote repository configuration to add
+     *
+     * @see org.apache.maven.resolver.internal.ant.types.RemoteRepository
+     * @see #execute()
+     */
     public void addRemoteRepo(RemoteRepository repository) {
         if (this.repository != null) {
             throw new BuildException("You must not specify multiple <remoteRepo> elements");
@@ -112,6 +150,35 @@ public class Deploy extends AbstractDistTask {
         this.repository = repository;
     }
 
+    /**
+     * Sets a reference to a predefined {@code <repository>} element to be used as the deployment target.
+     * <p>
+     * This allows the {@code <deploy>} task to reuse a {@link org.apache.maven.resolver.internal.ant.types.RemoteRepository}
+     * definition declared elsewhere in the build script using an {@code id} and {@code refid}.
+     * </p>
+     *
+     * <p>
+     * This is functionally equivalent to defining a {@code <repository>} nested element inline, but enables
+     * reuse across multiple deployment tasks.
+     * </p>
+     *
+     * <b>Example:</b>
+     * <pre>{@code
+     * <repository id="release.repo" url="https://repo.example.com/releases" layout="default">
+     *   <authentication username="deploy" password="secret"/>
+     * </repository>
+     *
+     * <deploy>
+     *   <artifact ... />
+     *   <remoteRepo refid="release.repo"/>
+     * </deploy>
+     * }</pre>
+     *
+     * @param ref the Ant reference to a {@code <repository>} definition
+     *
+     * @see org.apache.maven.resolver.internal.ant.types.RemoteRepository
+     * @see #addRemoteRepo(RemoteRepository)
+     */
     public void setRemoteRepoRef(Reference ref) {
         if (repository == null) {
             repository = new RemoteRepository();
@@ -120,6 +187,37 @@ public class Deploy extends AbstractDistTask {
         repository.setRefid(ref);
     }
 
+    /**
+     * Adds a snapshot repository to which snapshot artifacts will be deployed.
+     * <p>
+     * This method is invoked by Ant when a {@code <snapshotRepository>} nested element is defined
+     * within the {@code <deploy>} task. It provides a separate deployment target specifically
+     * for artifacts whose version ends with {@code -SNAPSHOT}.
+     * </p>
+     *
+     * <p>
+     * If no snapshot repository is provided, and a regular {@code <repository>} is defined,
+     * all artifacts (including snapshots) will be deployed to that single repository.
+     * </p>
+     *
+     * <b>Example:</b>
+     * <pre>{@code
+     * <deploy>
+     *   <artifact ... />
+     *
+     *   <repository id="release.repo" url="https://repo.example.com/releases"/>
+     *
+     *   <snapshotRepository id="snapshot.repo" url="https://repo.example.com/snapshots">
+     *     <authentication username="deploy" password="secret"/>
+     *   </snapshotRepository>
+     * </deploy>
+     * }</pre>
+     *
+     * @param snapshotRepository the snapshot repository configuration to use for {@code -SNAPSHOT} artifacts
+     *
+     * @see org.apache.maven.resolver.internal.ant.types.RemoteRepository
+     * @see #addRemoteRepo(RemoteRepository)
+     */
     public void addSnapshotRepo(RemoteRepository snapshotRepository) {
         if (this.snapshotRepository != null) {
             throw new BuildException("You must not specify multiple <snapshotRepo> elements");
@@ -127,6 +225,37 @@ public class Deploy extends AbstractDistTask {
         this.snapshotRepository = snapshotRepository;
     }
 
+    /**
+     * Sets a reference to a predefined {@code <snapshotRepository>} element.
+     * <p>
+     * This allows the {@code <deploy>} task to reuse an existing
+     * {@link org.apache.maven.resolver.internal.ant.types.RemoteRepository} configuration
+     * for deploying snapshot artifacts (i.e., versions ending in {@code -SNAPSHOT}).
+     * </p>
+     *
+     * <p>
+     * This is equivalent to defining a {@code <snapshotRepository>} nested element,
+     * but enables reuse across multiple tasks or modules by referencing a shared definition
+     * declared elsewhere in the build file.
+     * </p>
+     *
+     * <b>Example:</b>
+     * <pre>{@code
+     * <repository id="snap.repo" url="https://repo.example.com/snapshots" layout="default">
+     *   <authentication username="deploy" password="secret"/>
+     * </repository>
+     *
+     * <deploy>
+     *   <artifact ... />
+     *   <snapshotRepository refid="snap.repo"/>
+     * </deploy>
+     * }</pre>
+     *
+     * @param ref an Ant {@link org.apache.tools.ant.types.Reference} to a snapshot repository definition
+     *
+     * @see org.apache.maven.resolver.internal.ant.types.RemoteRepository
+     * @see #addSnapshotRepo(RemoteRepository)
+     */
     public void setSnapshotRepoRef(Reference ref) {
         if (snapshotRepository == null) {
             snapshotRepository = new RemoteRepository();

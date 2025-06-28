@@ -82,7 +82,6 @@ import org.apache.tools.ant.types.Reference;
  * After being referenced by a task (e.g. via {@code dependenciesRef}), the container is
  * evaluated and each contained {@code <dependency>} is passed to the task’s resolution
  * or POM generation logic.
- * </p>
  *
  * @see Dependency
  * @see org.apache.maven.resolver.internal.ant.tasks.Resolve
@@ -102,6 +101,13 @@ public class Dependencies extends DataType implements DependencyContainer {
     private final List<Exclusion> exclusions = new ArrayList<>();
 
     private boolean nestedDependencies;
+
+    /**
+     * Default constructor for the Dependencies data type.
+     */
+    public Dependencies() {
+        // Default constructor
+    }
 
     /**
      * Performs the check for circular references and returns the Dependencies object.
@@ -184,6 +190,11 @@ public class Dependencies extends DataType implements DependencyContainer {
         checkExternalSources();
     }
 
+    /**
+     * Returns the {@link Pom} element if one was added to this container.
+     *
+     * @return the {@link Pom} or {@code null} if none
+     */
     public Pom getPom() {
         if (isReference()) {
             return getRef().getPom();
@@ -191,6 +202,14 @@ public class Dependencies extends DataType implements DependencyContainer {
         return pom;
     }
 
+    /**
+     * Assigns a reference to a {@link Pom} element that defines the dependencies.
+     * <p>
+     * This is an alternative to specifying nested {@code <dependency>} elements directly.
+     * </p>
+     *
+     * @param ref the reference to a {@link Pom} element
+     */
     public void setPomRef(Reference ref) {
         if (pom == null) {
             pom = new Pom();
@@ -200,6 +219,11 @@ public class Dependencies extends DataType implements DependencyContainer {
         checkExternalSources();
     }
 
+    /**
+     * Checks for conflicting use of external sources (POM or file) with nested dependencies.
+     *
+     * @throws BuildException if both external and nested dependency definitions are used
+     */
     private void checkExternalSources() {
         if (file != null && pom != null) {
             throw new BuildException("You must not specify both a text file and a POM to list dependencies");
@@ -209,11 +233,26 @@ public class Dependencies extends DataType implements DependencyContainer {
         }
     }
 
+    /**
+     * Adds a single {@link Dependency} to this container.
+     *
+     * @param dependency the dependency to add
+     */
     public void addDependency(Dependency dependency) {
         checkChildrenAllowed();
         containers.add(dependency);
     }
 
+    /**
+     * Adds another {@link Dependencies} container to this one.
+     * <p>
+     * Allows for nesting of dependency collections. This can be useful when
+     * grouping dependencies by purpose or configuration.
+     * </p>
+     *
+     * @param dependencies another {@code Dependencies} object to merge
+     * @throws BuildException if attempting to add self or if usage conflicts with other sources
+     */
     public void addDependencies(Dependencies dependencies) {
         checkChildrenAllowed();
         if (dependencies == this) {
@@ -224,6 +263,12 @@ public class Dependencies extends DataType implements DependencyContainer {
         checkExternalSources();
     }
 
+    /**
+     * Returns the list of contained {@link DependencyContainer} instances.
+     * This may include {@link Dependency} elements or nested {@link Dependencies}.
+     *
+     * @return list of dependency containers
+     */
     public List<DependencyContainer> getDependencyContainers() {
         if (isReference()) {
             return getRef().getDependencyContainers();
@@ -231,11 +276,24 @@ public class Dependencies extends DataType implements DependencyContainer {
         return containers;
     }
 
+    /**
+     * Adds an {@link Exclusion} element to apply to all dependencies in this container.
+     * <p>
+     * Exclusions can be used to omit specific transitive dependencies.
+     * </p>
+     *
+     * @param exclusion the exclusion to apply
+     */
     public void addExclusion(Exclusion exclusion) {
         checkChildrenAllowed();
         this.exclusions.add(exclusion);
     }
 
+    /**
+     * Returns the list of exclusions applied to this container.
+     *
+     * @return list of {@link Exclusion} objects
+     */
     public List<Exclusion> getExclusions() {
         if (isReference()) {
             return getRef().getExclusions();

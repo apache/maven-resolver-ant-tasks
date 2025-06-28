@@ -35,9 +35,15 @@ import org.eclipse.aether.util.artifact.ArtifactIdUtils;
 /**
  * Workspace reader caching available POMs and artifacts for ant builds.
  * <p>
+ * This reader helps Maven Resolver resolve artifacts and POMs from the build workspace
+ * without accessing a remote or local repository, useful during dependency resolution
+ * and POM inheritance scenarios where temporary or generated models are involved.
+ * </p>
+ * <p>
  * &lt;pom&gt; elements are cached if they are defined by the 'file'-attribute, as they reference a backing pom.xml file that
  * can be used for resolution with Aether. &lt;artifact&gt; elements are cached if they directly define a 'pom'-attribute
  * or child. The POM may be file-based or in-memory.
+ * </p>
  */
 public class ProjectWorkspaceReader implements WorkspaceReader {
 
@@ -47,6 +53,12 @@ public class ProjectWorkspaceReader implements WorkspaceReader {
 
     private final Map<String, Artifact> artifacts = new ConcurrentHashMap<>();
 
+    /**
+     * Registers a {@link Pom} into the workspace. Only POMs backed by a file
+     * are accepted and cached.
+     *
+     * @param pom the POM to register
+     */
     public void addPom(Pom pom) {
         if (pom.getFile() != null) {
             Model model = pom.getModel(pom);
@@ -58,6 +70,12 @@ public class ProjectWorkspaceReader implements WorkspaceReader {
         }
     }
 
+    /**
+     * Registers an {@link org.apache.maven.resolver.internal.ant.types.Artifact} along with its
+     * associated POM. Only artifacts that reference a POM are accepted.
+     *
+     * @param artifact the artifact to register
+     */
     public void addArtifact(org.apache.maven.resolver.internal.ant.types.Artifact artifact) {
         if (artifact.getPom() != null) {
             Pom pom = artifact.getPom();
@@ -85,21 +103,45 @@ public class ProjectWorkspaceReader implements WorkspaceReader {
         }
     }
 
+    /**
+     * Computes the string coordinate used to uniquely identify an artifact in the workspace.
+     *
+     * @param artifact the artifact to identify
+     * @return a coordinate string (usually {@code groupId:artifactId:type:classifier:version})
+     */
     private String coords(Artifact artifact) {
         return ArtifactIdUtils.toId(artifact);
     }
 
+    /**
+     * Returns the workspace repository used for this reader. This is always
+     * named {@code "ant"}.
+     *
+     * @return the workspace repository
+     */
     @Override
     public WorkspaceRepository getRepository() {
         return new WorkspaceRepository("ant");
     }
 
+    /**
+     * Attempts to resolve the artifact file for the given artifact from the workspace.
+     *
+     * @param artifact the artifact to locate
+     * @return the associated file if found, or {@code null} if not registered
+     */
     @Override
     public File findArtifact(Artifact artifact) {
         artifact = artifacts.get(coords(artifact));
         return (artifact != null) ? artifact.getFile() : null;
     }
 
+    /**
+     * Lists all known versions of the given artifact in the workspace.
+     *
+     * @param artifact the artifact (ignoring version) to search for
+     * @return list of available versions; may be empty but never {@code null}
+     */
     @Override
     public List<String> findVersions(Artifact artifact) {
         List<String> versions = new ArrayList<>();
@@ -111,8 +153,17 @@ public class ProjectWorkspaceReader implements WorkspaceReader {
         return versions;
     }
 
+    /**
+     * Internal constructor. Use {@link #getInstance()} to retrieve the singleton instance.
+     */
     ProjectWorkspaceReader() {}
 
+    /**
+     * Returns the singleton instance of this workspace reader.
+     * Creates the instance lazily and ensures thread safety.
+     *
+     * @return the global {@link ProjectWorkspaceReader} instance
+     */
     public static ProjectWorkspaceReader getInstance() {
         if (instance == null) {
             synchronized (LOCK) {
@@ -124,6 +175,9 @@ public class ProjectWorkspaceReader implements WorkspaceReader {
         return instance;
     }
 
+    /**
+     * Resets the singleton instance. Primarily intended for unit tests.
+     */
     static void dropInstance() {
         instance = null;
     }

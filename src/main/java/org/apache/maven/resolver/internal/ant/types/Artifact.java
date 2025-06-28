@@ -101,10 +101,33 @@ public class Artifact extends RefTask implements ArtifactContainer {
 
     private Pom pom;
 
+    /**
+     * Default constructor for the {@code Artifact} data type.
+     */
+    public Artifact() {
+        // Default constructor
+    }
+
+    /**
+     * Returns the referenced {@link Artifact} if this instance is a reference.
+     * <p>
+     * This method delegates to {@link #getCheckedRef()} and casts the result to {@code Artifact}.
+     * It is used internally to retrieve the effective delegate when this object is a reference to another artifact.
+     * </p>
+     *
+     * @return the referenced {@code Artifact} instance
+     * @throws BuildException if the reference is invalid or not of type {@code Artifact}
+     */
     protected Artifact getRef() {
         return (Artifact) getCheckedRef();
     }
 
+    /**
+     * Validates that all required attributes are present and that the file exists.
+     *
+     * @param task the Ant task that owns this data type (used for context in error messages)
+     * @throws BuildException if required attributes are missing or invalid
+     */
     @Override
     public void validate(final Task task) {
         if (isReference()) {
@@ -121,6 +144,12 @@ public class Artifact extends RefTask implements ArtifactContainer {
         }
     }
 
+    /**
+     * Sets a reference to another {@code Artifact} instance.
+     *
+     * @param ref the reference ID
+     * @throws BuildException if conflicting attributes are already set
+     */
     @Override
     public void setRefid(final Reference ref) {
         if (file != null || type != null || classifier != null) {
@@ -129,6 +158,11 @@ public class Artifact extends RefTask implements ArtifactContainer {
         super.setRefid(ref);
     }
 
+    /**
+     * Returns the artifact file.
+     *
+     * @return the artifact file
+     */
     public File getFile() {
         if (isReference()) {
             return getRef().getFile();
@@ -136,6 +170,11 @@ public class Artifact extends RefTask implements ArtifactContainer {
         return file;
     }
 
+    /**
+     * Sets the artifact file to be deployed or installed.
+     *
+     * @param file the artifact file
+     */
     public void setFile(final File file) {
         checkAttributesAllowed();
         this.file = file;
@@ -149,6 +188,11 @@ public class Artifact extends RefTask implements ArtifactContainer {
         }
     }
 
+    /**
+     * Returns the type/packaging of the artifact (e.g., {@code jar}, {@code pom}).
+     *
+     * @return the artifact type
+     */
     public String getType() {
         if (isReference()) {
             return getRef().getType();
@@ -156,11 +200,21 @@ public class Artifact extends RefTask implements ArtifactContainer {
         return (type != null) ? type : "jar";
     }
 
+    /**
+     * Sets the artifact's packaging or type (e.g., {@code jar}, {@code pom}).
+     *
+     * @param type the artifact type
+     */
     public void setType(final String type) {
         checkAttributesAllowed();
         this.type = type;
     }
 
+    /**
+     * Returns the optional classifier of the artifact (e.g., {@code sources}, {@code javadoc}).
+     *
+     * @return the classifier or an empty string if not set
+     */
     public String getClassifier() {
         if (isReference()) {
             return getRef().getClassifier();
@@ -168,11 +222,21 @@ public class Artifact extends RefTask implements ArtifactContainer {
         return (classifier != null) ? classifier : "";
     }
 
+    /**
+     * Sets the optional classifier for the artifact.
+     *
+     * @param classifier the classifier
+     */
     public void setClassifier(final String classifier) {
         checkAttributesAllowed();
         this.classifier = classifier;
     }
 
+    /**
+     * Sets a reference to a {@link Pom} element to associate with this artifact.
+     *
+     * @param ref the reference to the POM
+     */
     public void setPomRef(final Reference ref) {
         checkAttributesAllowed();
         final Pom pom = new Pom();
@@ -181,11 +245,21 @@ public class Artifact extends RefTask implements ArtifactContainer {
         this.pom = pom;
     }
 
+    /**
+     * Adds a nested {@link Pom} element to associate with this artifact.
+     *
+     * @param pom the POM object
+     */
     public void addPom(final Pom pom) {
         checkChildrenAllowed();
         this.pom = pom;
     }
 
+    /**
+     * Returns the associated POM for this artifact, if any.
+     *
+     * @return the POM object, or {@code null} if none is set
+     */
     public Pom getPom() {
         if (isReference()) {
             return getRef().getPom();
@@ -193,16 +267,29 @@ public class Artifact extends RefTask implements ArtifactContainer {
         return pom;
     }
 
+    /**
+     * Returns a list containing this single artifact.
+     *
+     * @return a singleton list with this artifact
+     */
     @Override
     public List<Artifact> getArtifacts() {
         return Collections.singletonList(this);
     }
 
+    /**
+     * Registers this artifact in the {@link ProjectWorkspaceReader} for internal resolution.
+     */
     @Override
     public void execute() throws BuildException {
         ProjectWorkspaceReader.getInstance().addArtifact(this);
     }
 
+    /**
+     * Returns a string representation of the artifact, showing its type and classifier.
+     *
+     * @return a human-readable string describing the artifact
+     */
     @Override
     public String toString() {
         final String pomRepr = getPom() != null ? "(" + getPom().toString() + ":)" : "";

@@ -81,6 +81,13 @@ import org.apache.tools.ant.BuildException;
  */
 public class Install extends AbstractDistTask {
 
+    /**
+     * Default constructor used by Ant to create an <code>Install</code> task instance.
+     */
+    public Install() {
+        // Default constructor for Ant task
+    }
+
     @Override
     public void execute() throws BuildException {
         validate();

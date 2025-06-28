@@ -21,8 +21,39 @@ package org.apache.maven.resolver.internal.ant.types;
 import org.apache.tools.ant.Task;
 
 /**
+ * Common interface for Ant types that can contain Maven dependencies.
+ * <p>
+ * This interface is implemented by types such as {@link Dependency} and {@link Dependencies}
+ * to allow uniform handling of dependency validation within tasks like
+ * {@code <resolve>}, {@code <install>}, or {@code <createPom>}.
+ * </p>
+ *
+ * <p>
+ * Implementations must provide a {@link #validate(Task)} method that verifies
+ * their internal state is consistent and suitable for use during build execution.
+ * </p>
+ *
+ * <h2>Typical Implementations:</h2>
+ * <ul>
+ *   <li>{@link Dependency} — defines a single Maven dependency</li>
+ *   <li>{@link Dependencies} — defines a container of dependencies, POMs, or exclusions</li>
+ * </ul>
+ *
+ * @see Dependency
+ * @see Dependencies
  */
 public interface DependencyContainer {
 
+    /**
+     * Validates the container's internal structure and attributes.
+     * <p>
+     * This method is typically invoked by Ant tasks during execution to ensure
+     * that dependency definitions are well-formed, unambiguous, and do not conflict.
+     * </p>
+     *
+     * @param task the Ant task requesting validation, typically used for error context
+     *
+     * @throws org.apache.tools.ant.BuildException if the container is misconfigured
+     */
     void validate(Task task);
 }

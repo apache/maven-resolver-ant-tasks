@@ -23,10 +23,39 @@ import java.util.List;
 import org.apache.tools.ant.Task;
 
 /**
+ * Common interface for Ant data types that hold one or more {@link RemoteRepository} definitions.
+ * <p>
+ * This abstraction allows reuse of repository containers across tasks such as
+ * dependency resolution, deployment, and installation.
+ * </p>
+ *
+ * <h2>Typical Implementations:</h2>
+ * <ul>
+ *   <li>{@link RemoteRepository} — represents a single remote repository</li>
+ *   <li>{@link RemoteRepositories} — represents a collection of repositories</li>
+ * </ul>
+ *
+ * <p>
+ * Implementing classes must support validation and retrieval of all contained {@link RemoteRepository} instances.
+ * </p>
+ *
+ * @see RemoteRepository
+ * @see RemoteRepositories
  */
 public interface RemoteRepositoryContainer {
 
+    /**
+     * Validates the repository configuration in the context of the given Ant task.
+     *
+     * @param task the Ant task requesting validation (typically for logging or error reporting)
+     * @throws org.apache.tools.ant.BuildException if the configuration is invalid
+     */
     void validate(Task task);
 
+    /**
+     * Returns the list of remote repositories represented by this container.
+     *
+     * @return list of {@link RemoteRepository} objects; never {@code null}
+     */
     List<RemoteRepository> getRepositories();
 }

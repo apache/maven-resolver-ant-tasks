@@ -102,6 +102,23 @@ import org.eclipse.aether.util.repository.DefaultMirrorSelector;
 import org.eclipse.aether.util.repository.DefaultProxySelector;
 
 /**
+ * Central utility for managing Maven repository system configuration and sessions within Ant builds.
+ * <p>
+ * This class handles the lifecycle of a {@link RepositorySystem} and provides access to its components,
+ * such as mirror selectors, proxy selectors, authentication, session management, and settings resolution.
+ * It also provides methods for resolving dependencies, installing, and deploying artifacts.
+ * </p>
+ *
+ * <p>
+ * An instance of this class is typically retrieved via {@link #getInstance(Project)} and registered under
+ * a predefined reference ID for reuse throughout the Ant build.
+ * </p>
+ *
+ * <p>
+ * This class supports merging default and user-defined repositories and processing settings from
+ * {@code settings.xml} files, including mirrors, proxies, and server credentials.
+ * </p>
+ *
  */
 public class AntRepoSys {
     private static final Date STARTED = new Date();
@@ -138,6 +155,13 @@ public class AntRepoSys {
         return Objects.equals(o1, o2);
     }
 
+    /**
+     * Returns the singleton instance of {@code AntRepoSys} associated with the given Ant {@code Project}.
+     * Registers a new instance if not already present.
+     *
+     * @param project the current Ant project
+     * @return the {@code AntRepoSys} instance
+     */
     public static synchronized AntRepoSys getInstance(Project project) {
         Object obj = project.getReference(Names.ID);
         if (obj instanceof AntRepoSys) {
@@ -172,6 +196,11 @@ public class AntRepoSys {
         project.addReference(Names.ID_DEFAULT_REPOS, repos);
     }
 
+    /**
+     * Returns the {@link RepositorySystem} used for dependency resolution and repository operations.
+     *
+     * @return the repository system instance
+     */
     public synchronized RepositorySystem getSystem() {
         return repoSys;
     }
@@ -180,6 +209,14 @@ public class AntRepoSys {
         return antRepositorySystemSupplier.remoteRepositoryManager;
     }
 
+    /**
+     * Creates and returns a new {@link RepositorySystemSession} for the given task and local repository.
+     * Configures authentication, mirrors, proxies, offline mode, and repository listeners.
+     *
+     * @param task the invoking Ant task (used for logging and listeners)
+     * @param localRepo optional local repository configuration
+     * @return a configured repository system session
+     */
     public RepositorySystemSession getSession(Task task, LocalRepository localRepo) {
         DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
 
@@ -450,6 +487,11 @@ public class AntRepoSys {
         return mergedRepositories;
     }
 
+    /**
+     * Sets the path to the user-level {@code settings.xml} file. If changed, forces reloading of settings.
+     *
+     * @param file the user settings file
+     */
     public synchronized void setUserSettings(File file) {
         if (!eq(this.userSettings, file)) {
             settings = null;
@@ -457,6 +499,12 @@ public class AntRepoSys {
         this.userSettings = file;
     }
 
+    /**
+     * Returns the resolved user-level {@code settings.xml} file path.
+     * Falls back to the default lookup strategy if not explicitly set.
+     *
+     * @return the user settings file
+     */
     /* UT */ File getUserSettings() {
         if (userSettings == null) {
             userSettings = AetherUtils.findUserSettings(project);
@@ -464,6 +512,11 @@ public class AntRepoSys {
         return userSettings;
     }
 
+    /**
+     * Sets the path to the global {@code settings.xml} file. If changed, forces reloading of settings.
+     *
+     * @param file the global settings file
+     */
     public void setGlobalSettings(File file) {
         if (!eq(this.globalSettings, file)) {
             settings = null;
@@ -471,6 +524,12 @@ public class AntRepoSys {
         this.globalSettings = file;
     }
 
+    /**
+     * Returns the resolved global {@code settings.xml} file path.
+     * Falls back to the default lookup strategy if not explicitly set.
+     *
+     * @return the global settings file
+     */
     /* UT */ File getGlobalSettings() {
         if (globalSettings == null) {
             globalSettings = AetherUtils.findGlobalSettings(project);
@@ -478,22 +537,52 @@ public class AntRepoSys {
         return globalSettings;
     }
 
+    /**
+     * Registers a {@link Proxy} to be considered when building the proxy selector.
+     *
+     * @param proxy the proxy configuration
+     */
     public void addProxy(Proxy proxy) {
         proxies.add(proxy);
     }
 
+    /**
+     * Registers a {@link Mirror} to be included in the mirror selector.
+     *
+     * @param mirror the mirror configuration
+     */
     public void addMirror(Mirror mirror) {
         mirrors.add(mirror);
     }
 
+    /**
+     * Registers an {@link Authentication} instance to be used during authentication selection.
+     *
+     * @param authentication the authentication configuration
+     */
     public void addAuthentication(Authentication authentication) {
         authentications.add(authentication);
     }
 
+    /**
+     * Sets the local repository configuration.
+     *
+     * @param localRepository the local repository configuration
+     */
     public void setLocalRepository(LocalRepository localRepository) {
         this.localRepository = localRepository;
     }
 
+    /**
+     * Resolves a {@link Model} from a {@code pom.xml} file, optionally validating it as a local or remote model.
+     *
+     * @param task the Ant task context
+     * @param pomFile the POM file
+     * @param local whether to load the model in strict/local mode
+     * @param remoteRepositories optional custom remote repositories
+     * @return the effective Maven model
+     * @throws BuildException if the POM cannot be loaded or resolved
+     */
     public Model loadModel(Task task, File pomFile, boolean local, RemoteRepositories remoteRepositories) {
         RepositorySystemSession session = getSession(task, null);
 
@@ -556,19 +645,33 @@ public class AntRepoSys {
     }
 
     /**
-     * Sets the default POM.
+     * Sets the default {@link Pom} used for artifact operations when none is explicitly provided.
+     *
+     * @param pom the default POM
      */
     public void setDefaultPom(Pom pom) {
         this.defaultPom = pom;
     }
 
     /**
-     * Returns the current default POM.
+     * Returns the default {@link Pom}, if set.
+     *
+     * @return the default POM or {@code null}
      */
     public Pom getDefaultPom() {
         return defaultPom;
     }
 
+    /**
+     * Performs dependency resolution by collecting transitive dependencies for the given configuration.
+     *
+     * @param task the Ant task context
+     * @param dependencies the root dependencies
+     * @param localRepository optional local repository override
+     * @param remoteRepositories optional custom remote repositories
+     * @return the result of dependency collection
+     * @throws BuildException if the dependency collection fails
+     */
     public CollectResult collectDependencies(
             Task task,
             Dependencies dependencies,
@@ -728,6 +831,14 @@ public class AntRepoSys {
         return dependencies;
     }
 
+    /**
+     * Installs the specified artifacts to the local Maven repository.
+     *
+     * @param task the Ant task context
+     * @param pom the associated POM metadata
+     * @param artifacts the artifacts to install
+     * @throws BuildException if the installation fails
+     */
     public void install(Task task, Pom pom, Artifacts artifacts) {
         RepositorySystemSession session = getSession(task, null);
 
@@ -741,6 +852,16 @@ public class AntRepoSys {
         }
     }
 
+    /**
+     * Deploys the specified artifacts to the configured remote repository (release or snapshot).
+     *
+     * @param task the Ant task context
+     * @param pom the associated POM metadata
+     * @param artifacts the artifacts to deploy
+     * @param releaseRepository the repository for release artifacts
+     * @param snapshotRepository the repository for snapshot artifacts
+     * @throws BuildException if the deployment fails
+     */
     public void deploy(
             Task task,
             Pom pom,

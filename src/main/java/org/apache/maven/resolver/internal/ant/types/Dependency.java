@@ -107,6 +107,12 @@ public class Dependency extends DataType implements DependencyContainer {
     private final List<Exclusion> exclusions = new ArrayList<>();
 
     /**
+     * Default constructor that initializes the dependency with no settings.
+     */
+    public Dependency() {
+        // Default constructor
+    }
+    /**
      * Returns the Ant reference associated with this dependency, if one is set.
      * <p>
      * This allows the dependency to refer to another predefined {@code <dependency>} or

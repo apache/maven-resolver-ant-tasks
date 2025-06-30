@@ -69,7 +69,7 @@ import org.apache.tools.ant.types.Reference;
  *   <li><strong>systemPath</strong> — file path to the artifact for {@code system}-scoped dependencies</li>
  * </ul>
  *
- <h2>Nested Elements:</h2>
+ * <h2>Nested Elements:</h2>
  * <ul>
  *   <li>{@code <exclusion>} — zero or more exclusions to omit specific transitive dependencies.
  *     Each exclusion requires {@code groupId} and {@code artifactId} attributes.</li>

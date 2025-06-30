@@ -96,8 +96,7 @@ public class Deploy extends AbstractDistTask {
      * Initializes a new instance of the Deploy task.
      * </p>
      */
-    public Deploy() {
-    }
+    public Deploy() {}
 
     @Override
     protected void validate() {

@@ -89,7 +89,6 @@ import org.apache.tools.ant.types.Reference;
  * @see org.apache.maven.resolver.internal.ant.tasks.Deploy
  * @see org.apache.maven.resolver.internal.ant.tasks.Install
  */
-
 public class Dependencies extends DataType implements DependencyContainer {
 
     private File file;

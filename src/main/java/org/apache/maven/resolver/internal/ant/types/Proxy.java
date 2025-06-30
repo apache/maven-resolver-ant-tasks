@@ -52,7 +52,6 @@ public class Proxy extends DataType {
 
     private Authentication authentication;
 
-
     /**
      * Default constructor initializes the proxy with no settings.
      * This allows attributes to be set before the project is assigned.

@@ -88,7 +88,6 @@ import org.apache.tools.ant.types.Reference;
  * @see org.apache.maven.resolver.internal.ant.tasks.Install
  * @see org.apache.maven.resolver.internal.ant.tasks.CreatePom
  */
-
 public class Pom extends RefTask {
 
     private Model model;

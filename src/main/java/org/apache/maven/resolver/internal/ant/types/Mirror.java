@@ -88,7 +88,7 @@ public class Mirror extends DataType {
      * or referenced in an Ant build script.
      * </p>
      */
-    public Mirror(){
+    public Mirror() {
         // Default constructor for Ant task
     }
 

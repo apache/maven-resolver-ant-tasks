@@ -43,6 +43,8 @@ class AntTransferListener extends AbstractTransferListener {
     @Override
     public void transferInitiated(final TransferEvent event) throws TransferCancelledException {
         String msg = event.getRequestType() == TransferEvent.RequestType.PUT ? "Uploading" : "Downloading";
+        msg += event.getRequestType() == TransferEvent.RequestType.PUT ? " to" : " from";
+        msg += " " + event.getResource().getRepositoryId();
         msg += " " + event.getResource().getRepositoryUrl()
                 + event.getResource().getResourceName();
         task.log(msg);
@@ -60,6 +62,8 @@ class AntTransferListener extends AbstractTransferListener {
     @Override
     public void transferSucceeded(final TransferEvent event) {
         String msg = event.getRequestType() == TransferEvent.RequestType.PUT ? "Uploaded" : "Downloaded";
+        msg += event.getRequestType() == TransferEvent.RequestType.PUT ? " to" : " from";
+        msg += " " + event.getResource().getRepositoryId();
         msg += " " + event.getResource().getRepositoryUrl()
                 + event.getResource().getResourceName();
 

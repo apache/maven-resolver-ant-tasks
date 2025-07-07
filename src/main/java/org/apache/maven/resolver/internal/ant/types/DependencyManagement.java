@@ -34,9 +34,7 @@ public class DependencyManagement extends DataType {
     /**
      * Default constructor.
      */
-    public DependencyManagement() {
-
-    }
+    public DependencyManagement() {}
 
     /**
      * Fetches a DependencyManagement instance from the given project using the specified reference.

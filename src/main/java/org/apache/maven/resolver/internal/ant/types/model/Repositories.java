@@ -29,6 +29,11 @@ import org.apache.tools.ant.types.DataType;
  */
 public class Repositories extends DataType {
 
+    /**
+     * Default constructor.
+     */
+    public Repositories() {}
+
     private final List<Repository> repositories = new ArrayList<>();
 
     /**

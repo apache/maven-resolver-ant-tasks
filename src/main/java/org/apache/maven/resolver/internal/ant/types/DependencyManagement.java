@@ -32,6 +32,13 @@ public class DependencyManagement extends DataType {
     private Dependencies dependencies;
 
     /**
+     * Default constructor.
+     */
+    public DependencyManagement() {
+
+    }
+
+    /**
      * Fetches a DependencyManagement instance from the given project using the specified reference.
      *
      * @param project the project to fetch the DependencyManagement from
@@ -69,6 +76,12 @@ public class DependencyManagement extends DataType {
         this.dependencies = dependencies;
     }
 
+    /**
+     * Resolves this object if defined as a reference and verifies that it is a {@code DependencyManagement} instance.
+     *
+     * @return the resolved referenced instance
+     * @throws org.apache.tools.ant.BuildException if the reference is invalid
+     */
     public DependencyManagement getRef() {
         return getCheckedRef(DependencyManagement.class);
     }

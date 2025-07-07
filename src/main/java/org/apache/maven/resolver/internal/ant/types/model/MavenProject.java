@@ -36,6 +36,9 @@ import org.apache.tools.ant.types.DataType;
 public class MavenProject extends DataType {
     private final Model model;
 
+    /**
+     * Initialize a new Maven project instance with the modelVersion set to "4.0.0" and packaging to "jar".
+     */
     public MavenProject() {
         model = new Model();
         model.setModelVersion("4.0.0");

@@ -88,9 +88,11 @@ public class Authentication extends DataType {
     }
 
     /**
-     * Resolves this authentication object if it is declared as a reference.
+     * Resolves this object if defined as a reference and verifies that it is a
+     * {@code Authentication} instance.
      *
-     * @return the referenced {@code Authentication} object
+     * @return the referenced {@code Authentication} instance
+     * @throws org.apache.tools.ant.BuildException if the reference is invalid
      */
     protected Authentication getRef() {
         return getCheckedRef(Authentication.class);

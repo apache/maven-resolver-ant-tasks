@@ -130,15 +130,11 @@ public class LocalRepository extends DataType {
     }
 
     /**
-     * Returns the referenced {@code LocalRepository} instance.
-     * <p>
-     * This method is used internally when this object is defined via {@code refid}.
-     * It validates the reference and casts it to the expected type.
-     * </p>
+     * Resolves this object if defined as a reference and verifies that it is a
+     * {@code LocalRepository} instance.
      *
-     * @return the referenced {@code LocalRepository}
-     *
-     * @throws org.apache.tools.ant.BuildException if the reference is not of the correct type
+     * @return the referenced {@code LocalRepository} instance
+     * @throws org.apache.tools.ant.BuildException if the reference is invalid
      *
      * @see #setRefid(org.apache.tools.ant.types.Reference)
      * @see #isReference()

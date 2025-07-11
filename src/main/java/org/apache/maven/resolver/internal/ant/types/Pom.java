@@ -130,16 +130,11 @@ public class Pom extends RefTask {
     }
 
     /**
-     * Returns the referenced {@code Pom} instance if this object is defined as a reference.
-     * <p>
-     * This method is used internally to delegate property access and behavior to the referenced
-     * {@code Pom} when {@link #isReference()} returns {@code true}.
-     * It performs type checking to ensure the reference is of type {@code Pom}.
-     * </p>
+     * Resolves this object if defined as a reference and verifies that it is a
+     * {@code Pom} instance.
      *
      * @return the referenced {@code Pom} instance
-     *
-     * @throws org.apache.tools.ant.BuildException if the reference is missing or not of the expected type
+     * @throws org.apache.tools.ant.BuildException if the reference is invalid
      *
      * @see #isReference()
      * @see #getCheckedRef()

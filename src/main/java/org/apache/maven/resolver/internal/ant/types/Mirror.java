@@ -112,16 +112,11 @@ public class Mirror extends DataType {
     }
 
     /**
-     * Returns the referenced {@code Mirror} instance if this object is defined as a reference.
-     * <p>
-     * This method is used internally to delegate property access to the referenced mirror
-     * when {@code refid} is set. It also performs type-checking to ensure that the
-     * reference is of the expected type.
-     * </p>
+     * Resolves this object if defined as a reference and verifies that it is a
+     * {@code Mirror} instance.
      *
      * @return the referenced {@code Mirror} instance
-     *
-     * @throws org.apache.tools.ant.BuildException if the reference is not of type {@code Mirror}
+     * @throws org.apache.tools.ant.BuildException if the reference is invalid
      *
      * @see #setRefid(org.apache.tools.ant.types.Reference)
      * @see #isReference()
@@ -358,7 +353,7 @@ public class Mirror extends DataType {
      */
     public Authentication getAuthentication() {
         if (isReference()) {
-            getRef().getAuthentication();
+            return getRef().getAuthentication();
         }
         return authentication;
     }

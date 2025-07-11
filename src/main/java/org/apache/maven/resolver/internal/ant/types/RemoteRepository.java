@@ -81,10 +81,11 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
     }
 
     /**
-     * Resolves this instance as a reference and ensures it is a {@link RemoteRepository}.
+     * Resolves this object if defined as a reference and verifies that it is a
+     * {@code RemoteRepository} instance.
      *
-     * @return the referenced {@link RemoteRepository} instance
-     * @throws BuildException if the reference is not valid
+     * @return the referenced {@code RemoteRepository} instance
+     * @throws org.apache.tools.ant.BuildException if the reference is invalid
      */
     protected RemoteRepository getRef() {
         return getCheckedRef(RemoteRepository.class);

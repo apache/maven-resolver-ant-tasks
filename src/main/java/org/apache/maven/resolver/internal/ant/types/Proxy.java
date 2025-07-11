@@ -74,10 +74,11 @@ public class Proxy extends DataType {
     }
 
     /**
-     * Resolves and returns the referenced {@code Proxy} object.
+     * Resolves this object if defined as a reference and verifies that it is a
+     * {@code Proxy} instance.
      *
-     * @return the resolved proxy reference
-     * @throws org.apache.tools.ant.BuildException if the reference is not valid
+     * @return the referenced {@code Proxy} instance
+     * @throws org.apache.tools.ant.BuildException if the reference is invalid
      */
     protected Proxy getRef() {
         return getCheckedRef(Proxy.class);

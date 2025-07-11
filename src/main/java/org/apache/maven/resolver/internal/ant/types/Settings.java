@@ -58,10 +58,11 @@ public class Settings extends DataType {
     }
 
     /**
-     * Resolves this instance as a reference to another {@link Settings} object.
+     * Resolves this object if defined as a reference and verifies that it is a
+     * {@code Settings} instance.
      *
      * @return the referenced {@code Settings} instance
-     * @throws org.apache.tools.ant.BuildException if the reference is not a valid {@code Settings} instance
+     * @throws org.apache.tools.ant.BuildException if the reference is invalid
      */
     protected Settings getRef() {
         return getCheckedRef(Settings.class);

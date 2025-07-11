@@ -56,9 +56,10 @@ public class RemoteRepositories extends DataType implements RemoteRepositoryCont
     }
 
     /**
-     * Resolves this object if defined as a reference and verifies that it is a {@code RemoteRepositories} instance.
+     * Resolves this object if defined as a reference and verifies that it is a
+     * {@code RemoteRepositories} instance.
      *
-     * @return the resolved referenced instance
+     * @return the referenced {@code RemoteRepositories} instance
      * @throws org.apache.tools.ant.BuildException if the reference is invalid
      */
     protected RemoteRepositories getRef() {

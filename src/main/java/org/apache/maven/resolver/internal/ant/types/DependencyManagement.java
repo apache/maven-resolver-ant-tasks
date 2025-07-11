@@ -75,7 +75,8 @@ public class DependencyManagement extends DataType {
     }
 
     /**
-     * Resolves this object if defined as a reference and verifies that it is a {@code DependencyManagement} instance.
+     * Resolves this object if defined as a reference and verifies that it is a
+     * {@code DependencyManagement} instance.
      *
      * @return the resolved referenced instance
      * @throws org.apache.tools.ant.BuildException if the reference is invalid

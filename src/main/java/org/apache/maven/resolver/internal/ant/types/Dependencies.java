@@ -109,10 +109,11 @@ public class Dependencies extends DataType implements DependencyContainer {
     }
 
     /**
-     * Performs the check for circular references and returns the Dependencies object.
-     * This is equivalent to calling getCheckedRef(Dependencies.class)
+     * Resolves this object if defined as a reference and verifies that it is a
+     * {@code Dependencies} instance.
      *
-     * @return The Dependencies
+     * @return the referenced {@code Dependencies} instance
+     * @throws org.apache.tools.ant.BuildException if the reference is invalid
      */
     protected Dependencies getRef() {
         return getCheckedRef(Dependencies.class);
@@ -143,6 +144,14 @@ public class Dependencies extends DataType implements DependencyContainer {
         }
     }
 
+    /**
+     * Sets the reference to another <code>&lt;dependencies&gt;</code> defined elsewhere.
+     * <p>
+     * This allows the current element to inherit the list of dependencies from the referenced element.
+     * No other children are allowed when this reference is set.
+     *
+     * @param ref the reference to use
+     */
     @Override
     public void setRefid(Reference ref) {
         if (pom != null || !exclusions.isEmpty() || !containers.isEmpty()) {

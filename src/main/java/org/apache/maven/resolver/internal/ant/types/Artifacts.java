@@ -75,9 +75,11 @@ public class Artifacts extends DataType implements ArtifactContainer {
     }
 
     /**
-     * Resolves the referenced instance if this object is a reference.
+     * Resolves this object if defined as a reference and verifies that it is a
+     * {@code Artifacts} instance.
      *
-     * @return the resolved {@code Artifacts} object
+     * @return the referenced {@code Artifacts} instance
+     * @throws org.apache.tools.ant.BuildException if the reference is invalid
      */
     protected Artifacts getRef() {
         return getCheckedRef(Artifacts.class);

@@ -109,14 +109,11 @@ public class Artifact extends RefTask implements ArtifactContainer {
     }
 
     /**
-     * Returns the referenced {@link Artifact} if this instance is a reference.
-     * <p>
-     * This method delegates to {@link #getCheckedRef()} and casts the result to {@code Artifact}.
-     * It is used internally to retrieve the effective delegate when this object is a reference to another artifact.
-     * </p>
+     * Resolves this object if defined as a reference and verifies that it is a
+     * {@code Artifact} instance.
      *
      * @return the referenced {@code Artifact} instance
-     * @throws BuildException if the reference is invalid or not of type {@code Artifact}
+     * @throws org.apache.tools.ant.BuildException if the reference is invalid
      */
     protected Artifact getRef() {
         return (Artifact) getCheckedRef();

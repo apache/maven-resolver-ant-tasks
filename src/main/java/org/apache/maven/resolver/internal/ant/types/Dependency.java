@@ -112,22 +112,13 @@ public class Dependency extends DataType implements DependencyContainer {
     public Dependency() {
         // Default constructor
     }
+
     /**
-     * Returns the Ant reference associated with this dependency, if one is set.
-     * <p>
-     * This allows the dependency to refer to another predefined {@code <dependency>} or
-     * {@code <dependencies>} element using the Ant {@code refid} mechanism.
-     * When a reference is set, this object serves as an alias and inherits the configuration
-     * of the referenced object.
-     * </p>
+     * Resolves this object if defined as a reference and verifies that it is a
+     * {@code Dependency} instance.
      *
-     * <p>
-     * This is typically used to share dependency definitions across multiple tasks or containers.
-     * </p>
-     *
-     * @return the Ant {@link org.apache.tools.ant.types.Reference}, or {@code null} if none is set
-     *
-     * @see #setRefid(org.apache.tools.ant.types.Reference)
+     * @return the referenced {@code Dependency} instance
+     * @throws org.apache.tools.ant.BuildException if the reference is invalid
      */
     protected Dependency getRef() {
         return getCheckedRef(Dependency.class);

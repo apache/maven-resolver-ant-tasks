@@ -66,7 +66,7 @@ import org.apache.tools.ant.Task;
  *   <li><strong>pomTarget</strong> - The path to the POM file to create</li>
  *   <li><strong>groupId</strong> - The group id for the artifact(s), if a <code>groupId</code> property is set this
  *   can be omitted</li>
- *   <li><strong>artifactId</string> - The artifact id for the artifact(s), if an <code>artifactId</code> property is
+ *   <li><strong>artifactId</strong> - The artifact id for the artifact(s), if an <code>artifactId</code> property is
  *   set this can be omitted</li>
  *   <li><strong>version</strong> - The version for the artifact(s), if a <code>version</code> property is set this can
  *   be omitted</li>

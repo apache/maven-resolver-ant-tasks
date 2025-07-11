@@ -40,6 +40,51 @@ import org.apache.tools.ant.Task;
 /**
  * Task to create a Maven POM file.
  * This task allows you to define dependencies, dependency management, licenses, and repositories for the POM.
+ * This is useful if you have defined your dependencies in the ant build script instead of in the POM. This task also
+ * registers the POM.
+ * <h2>Usage Example:</h2>
+ * <pre>{@code
+ * <repo:createPom pomTarget='${pomFile}'
+ *                 dependenciesRef='compile'
+ *                 dependencyManagementRef='dm'
+ *                 name='mylib'
+ *                 description='An useful library'>
+ *     <licenses>
+ *         <license>
+ *             <name>Apache License, Version 2.0</name>
+ *             <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+ *         </license>
+ *     </licenses>
+ * </repo:createPom>
+ * }</pre>
+ * <h2>Attributes:</h2>
+ * <ul>
+ *   <li><strong>dependenciesIdRef</strong> - (optional) The reference to the id of the {@code <dependencies>}
+ *   section</li>
+ *   <li><strong>dependencyManagementRef</strong> - (optional) The reference to the id of the
+ *   {@code <dependencyManagement>} section</li>
+ *   <li><strong>pomTarget</strong> - The path to the POM file to create</li>
+ *   <li><strong>groupId</strong> - The group id for the artifact(s), if a <code>groupId</code> property is set this
+ *   can be omitted</li>
+ *   <li><strong>artifactId</string> - The artifact id for the artifact(s), if an <code>artifactId</code> property is
+ *   set this can be omitted</li>
+ *   <li><strong>version</strong> - The version for the artifact(s), if a <code>version</code> property is set this can
+ *   be omitted</li>
+ *   <li><strong>name</strong> - (optional) The name of the project</li>
+ *   <li><strong>description</strong> - (optional) The short description of the project</li>
+ *   <li><strong>skipPomRegistration</strong> - (optional) If set to true, the pom task will not be called to register
+ *   the pom so must be done explicitly in the build script. Defaults to false.</li>
+ * </ul>
+ * <h2>Nested Elements:</h2>
+ * <ul>
+ *   <li>{@code <licenses>} — (optional) specifies the licenses for the artifact.</li>
+ *   <li>{@code <repositories>} — (optional) defines the additional repositories used for resolving dependencies</li>
+ * </ul>
+ * <h2>Behavior:</h2>
+ * <ul>
+ *  <li>groupId, artifactId and version are required. They could either be defined as properties or passed as
+ * attributes to the createPom task.</li>
+ * </ul>
  */
 public class CreatePom extends Task {
     private String dependenciesIdReference;

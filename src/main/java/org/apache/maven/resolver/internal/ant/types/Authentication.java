@@ -219,6 +219,8 @@ public class Authentication extends DataType {
      * </p>
      *
      * @param servers a semicolon- or colon-separated list of server IDs
+     * @throws org.apache.tools.ant.BuildException if attributes are not allowed i.e.
+     * it is defined as a reference.
      */
     public void setServers(String servers) {
         checkAttributesAllowed();

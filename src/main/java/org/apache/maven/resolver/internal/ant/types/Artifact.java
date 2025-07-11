@@ -59,16 +59,17 @@ import org.apache.tools.ant.types.Reference;
  * <target name='jar' depends='compile'>
  *     <property name='jarFile' value='${targetDir}/${artifactId}-${version}.jar'/>
  *     <jar destfile='${jarFile}'>
- *       <fileset dir='${mainBuildDir}'/>
+ *         <fileset dir='${mainBuildDir}'/>
  *     </jar>
  *     <repo:artifact file='${jarFile}' type='jar' id='mainJar'/>
- *   </target>
- *   <target name='install' depends='jar'>
+ * </target>
+ *
+ * <target name='install' depends='jar'>
  *     <repo:artifacts id='localArtifacts'>
- *       <repo:artifact refid='mainJar'/>
+ *         <repo:artifact refid='mainJar'/>
  *     </repo:artifacts>
  *     <repo:install artifactsref='localArtifacts'/>
- *   </target>
+ * </target>
  * }</pre>
  * <h2>Attributes:</h2>
  * <ul>

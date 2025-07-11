@@ -56,7 +56,12 @@ import org.apache.tools.ant.types.Reference;
  *   </dependency>
  * </dependencies>
  * }</pre>
- *
+ * It is also possible to use the short notation when declaring a dependency e.g.
+ * <pre>{@code
+ * <dependencies>
+ *   <dependency coords="org.apache.commons:commons-lang3:3.12.0" scope="compile"/>
+ * </dependencies>
+ * }</pre>
  * <h2>Attributes:</h2>
  * <ul>
  *   <li><strong>groupId</strong> (required) — the Maven coordinate group ID</li>

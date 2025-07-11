@@ -18,7 +18,8 @@
 
 1. [Example 1](example1) — using a separate pom file in your ant build
 2. [Example 2](example2) — define the dependencies in your ant build
-3. [Example 3](example3) — generate pom and install
-4. [Example 4](example4) — use pom file to install
-5. [Example 5](example5) — use dependency management, generate pom and install
-6. [Example 6](example6) — using Maven Resolver Ant Tasks from a groovy script
+3. [Example 3](example3) — generate the pom file and install
+4. [Example 4](example4) — use a pom file to install
+5. [Example 5](example5) — use dependency management, generate the pom file and install
+6. [Example 6](example6) — use a pom file to define dependency management and dependencies
+7. [Example 7](example7) — using Maven Resolver Ant Tasks from a groovy script

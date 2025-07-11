@@ -24,7 +24,13 @@ import org.apache.tools.ant.types.DataType;
  * Represents an id in a repository section.
  */
 public class Id extends DataType {
+
     private String id;
+
+    /**
+     * Default constructor.
+     */
+    public Id() {}
 
     /**
      * Adds text to the id element.

@@ -32,6 +32,9 @@ public class License extends DataType {
     private Comments comments;
     private Distribution distribution;
 
+    /**
+     * Default constructor.
+     */
     public License() {
         super();
     }

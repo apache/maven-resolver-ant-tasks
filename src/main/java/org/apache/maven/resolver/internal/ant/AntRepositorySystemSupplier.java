@@ -26,21 +26,53 @@ import org.eclipse.aether.supplier.RepositorySystemSupplier;
 
 /**
  * The Ant modified supplier, that on repository system creation "remembers" (and exposes) other required components as well.
+ * <p>
+ * This supplier retains references to the {@link ModelBuilder} and {@link RemoteRepositoryManager}
+ * instances created during the initialization of the repository system. These components are used
+ * later by the Ant infrastructure (e.g., for resolving POMs or remote repositories).
+ * </p>
  *
  * @since 1.5.0
  */
 public class AntRepositorySystemSupplier extends RepositorySystemSupplier {
 
+    /**
+     * The model builder used to construct Maven models from POM files.
+     * Initialized during {@link #getModelBuilder()}.
+     */
     ModelBuilder modelBuilder;
 
+    /**
+     * The remote repository manager used for managing mirrors, proxies, and authentication
+     * for remote repositories. Initialized during {@link #getRemoteRepositoryManager(UpdatePolicyAnalyzer, ChecksumPolicyProvider)}.
+     */
     RemoteRepositoryManager remoteRepositoryManager;
 
+    /**
+     * Creates a new instance of {@code AntRepositorySystemSupplier}.
+     */
+    public AntRepositorySystemSupplier() {
+        // Default constructor
+    }
+
+    /**
+     * Returns the {@link ModelBuilder} and stores it in the {@link #modelBuilder} field for later access.
+     *
+     * @return the {@link ModelBuilder} used for building effective models from POMs
+     */
     @Override
     protected ModelBuilder getModelBuilder() {
         modelBuilder = super.getModelBuilder();
         return modelBuilder;
     }
 
+    /**
+     * Returns the {@link RemoteRepositoryManager} and stores it in the {@link #remoteRepositoryManager} field for later access.
+     *
+     * @param updatePolicyAnalyzer the analyzer for update policies
+     * @param checksumPolicyProvider the provider for checksum policies
+     * @return the {@link RemoteRepositoryManager} used for handling repository-specific configurations
+     */
     @Override
     protected RemoteRepositoryManager getRemoteRepositoryManager(
             UpdatePolicyAnalyzer updatePolicyAnalyzer, ChecksumPolicyProvider checksumPolicyProvider) {

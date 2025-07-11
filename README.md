@@ -14,8 +14,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-Contributing to [Apache Maven Artifact Resolver Ant Tasks](https://maven.apache.org/resolver/)
-======================
+# Maven Resolver Ant Tasks
 
 [![Apache License, Version 2.0, January 2004](https://img.shields.io/github/license/apache/maven.svg?label=License)][license]
 [![Maven Central](https://img.shields.io/maven-central/v/org.apache.maven.resolver/maven-resolver-ant-tasks.svg?label=Maven%20Central)](https://search.maven.org/artifact/org.apache.maven.resolver/maven-resolver-ant-tasks)
@@ -23,6 +22,10 @@ Contributing to [Apache Maven Artifact Resolver Ant Tasks](https://maven.apache.
 [![Jenkins Status](https://img.shields.io/jenkins/s/https/ci-maven.apache.org/job/Maven/job/maven-box/job/maven-resolver-ant-tasks/job/master.svg)][build]
 [![Jenkins tests](https://img.shields.io/jenkins/t/https/ci-maven.apache.org/job/Maven/job/maven-box/job/maven-resolver-ant-tasks/job/master.svg)][test-results]
 
+See [usage](usage.md) for usage instructions.
+
+Contributing to [Apache Maven Artifact Resolver Ant Tasks](https://maven.apache.org/resolver/)
+======================
 
 You have found a bug, or you have an idea for a cool new feature? Contributing
 code is a great way to give something back to the open source community. Before

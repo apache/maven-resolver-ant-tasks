@@ -32,6 +32,11 @@ public class Licenses extends DataType {
     private final List<License> licenses = new ArrayList<>();
 
     /**
+     * Default constructor.
+     */
+    public Licenses() {}
+
+    /**
      * gets the list of licenses.
      *
      * @return a list of License objects, never null

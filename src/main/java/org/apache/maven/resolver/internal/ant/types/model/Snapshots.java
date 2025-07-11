@@ -24,6 +24,9 @@ package org.apache.maven.resolver.internal.ant.types.model;
 public class Snapshots extends org.apache.tools.ant.types.DataType {
     private Enabled enabled;
 
+    /**
+     * Default constructor.
+     */
     public Snapshots() {
         super();
     }

@@ -27,9 +27,25 @@ import org.apache.tools.ant.types.Reference;
  * This class allows you to define and manage dependencies for a project.
  * Note that for this to work, you must produce and register a pom file before calling resolve.
  * The createPom task can be used for this purpose.
+ * <h2>Usage Example:</h2>
+ * <pre>{@code
+ *   <repo:dependencyManagement id='dm'>
+ *     <repo:dependencies>
+ *       <repo:dependency groupId='org.junit' artifactId='junit-bom' version='5.12.2' type='pom' scope='import'/>
+ *     </repo:dependencies>
+ *   </repo:dependencyManagement>
+ * }</pre>
+ * This is especially useful when you want to use a BOM such as in the example above. When the type is set to "pom" and
+ * the scope is set to "import", you can then omit version numbers in the regular dependencies section for those
+ * dependencies defined in the BOM.
  */
 public class DependencyManagement extends DataType {
     private Dependencies dependencies;
+
+    /**
+     * Default constructor.
+     */
+    public DependencyManagement() {}
 
     /**
      * Fetches a DependencyManagement instance from the given project using the specified reference.
@@ -69,6 +85,13 @@ public class DependencyManagement extends DataType {
         this.dependencies = dependencies;
     }
 
+    /**
+     * Resolves this object if defined as a reference and verifies that it is a
+     * {@code DependencyManagement} instance.
+     *
+     * @return the resolved referenced instance
+     * @throws org.apache.tools.ant.BuildException if the reference is invalid
+     */
     public DependencyManagement getRef() {
         return getCheckedRef(DependencyManagement.class);
     }

@@ -23,10 +23,48 @@ import java.util.List;
 import org.apache.tools.ant.Task;
 
 /**
+ * Represents a collection of one or more {@link Artifact} instances in an Ant build context.
+ * <p>
+ * This interface is implemented by Ant types that logically group or provide access to Maven artifacts,
+ * such as {@link Artifact}, {@link Artifacts}, or other custom container types.
+ * </p>
+ *
+ * <p>
+ * Implementations must be able to:
+ * <ul>
+ *   <li>Validate their internal artifact structure for consistency and completeness.</li>
+ *   <li>Return all artifacts they contain for further processing (e.g., deployment, installation).</li>
+ * </ul>
+ *
+ * <h2>Known Implementations:</h2>
+ * <ul>
+ *   <li>{@link Artifact} — represents a single Maven artifact</li>
+ *   <li>{@link Artifacts} — represents a group of artifacts or nested artifact containers</li>
+ * </ul>
+ *
+ * <p>This interface is typically used by Ant tasks such as
+ * {@link org.apache.maven.resolver.internal.ant.tasks.Install Install} and
+ * {@link org.apache.maven.resolver.internal.ant.tasks.Deploy Deploy}.</p>
+ *
+ * @see Artifact
+ * @see Artifacts
+ * @see org.apache.maven.resolver.internal.ant.tasks.Install
+ * @see org.apache.maven.resolver.internal.ant.tasks.Deploy
  */
 public interface ArtifactContainer {
 
+    /**
+     * Validates the artifact(s) within this container.
+     *
+     * @param task the Ant task requesting validation; used for context or error reporting
+     * @throws org.apache.tools.ant.BuildException if any artifact is invalid or required attributes are missing
+     */
     void validate(Task task);
 
+    /**
+     * Returns a flat list of all {@link Artifact} instances in this container.
+     *
+     * @return a list of artifacts; never {@code null}, but may be empty
+     */
     List<Artifact> getArtifacts();
 }

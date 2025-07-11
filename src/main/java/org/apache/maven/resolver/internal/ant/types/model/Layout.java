@@ -25,6 +25,9 @@ package org.apache.maven.resolver.internal.ant.types.model;
 public class Layout extends org.apache.tools.ant.types.DataType {
     private String layout;
 
+    /**
+     * Default constructor.
+     */
     public Layout() {
         super();
     }

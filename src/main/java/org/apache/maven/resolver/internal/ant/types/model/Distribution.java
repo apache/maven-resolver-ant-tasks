@@ -26,6 +26,9 @@ import org.apache.tools.ant.types.DataType;
 public class Distribution extends DataType {
     private String distribution;
 
+    /**
+     * Default constructor.
+     */
     public Distribution() {}
 
     /**

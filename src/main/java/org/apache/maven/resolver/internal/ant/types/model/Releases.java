@@ -22,8 +22,12 @@ package org.apache.maven.resolver.internal.ant.types.model;
  * Represents a releases section in the repository section of the project object model.
  */
 public class Releases extends org.apache.tools.ant.types.DataType {
+
     private Enabled enabled;
 
+    /**
+     * Default constructor.
+     */
     public Releases() {
         super();
     }

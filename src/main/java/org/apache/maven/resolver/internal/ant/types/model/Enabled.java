@@ -26,7 +26,13 @@ import org.apache.tools.ant.types.DataType;
  * section.
  */
 public class Enabled extends DataType {
+
     private boolean enabled;
+
+    /**
+     * Default constructor.
+     */
+    public Enabled() {}
 
     /**
      * Set the value for the enabled state.

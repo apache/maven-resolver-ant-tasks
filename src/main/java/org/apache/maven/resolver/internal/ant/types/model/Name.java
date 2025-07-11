@@ -26,8 +26,12 @@ import org.apache.tools.ant.types.DataType;
  * Represents a name element used in a license or a repository section in the project model.
  */
 public class Name extends DataType {
+
     private String name;
 
+    /**
+     * Default constructor.
+     */
     public Name() {}
 
     /**

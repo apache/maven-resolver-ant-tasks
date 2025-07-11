@@ -26,6 +26,9 @@ import org.apache.tools.ant.types.DataType;
 public class Url extends DataType {
     private String url;
 
+    /**
+     * Default constructor.
+     */
     public Url() {}
 
     /**

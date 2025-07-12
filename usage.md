@@ -140,7 +140,7 @@ See [example2](examples/example2) for a complete example of defing dependencies 
 # Dependency Management
 There are two ways to handle bill of materials (BOM's) using mavens  dependency management in your Ant build:
 1. **Using a POM file**: You can create a POM file that includes the BOM in its dependency management section. Then, use the `pom` task to register this POM file in your Ant build script.
-2. **Using the `dependencyManagement` tyope**: You can define the BOM directly in your Ant build script using the `dependencyManagement` type.
+2. **Using the `dependencyManagement` type**: You can define the BOM directly in your Ant build script using the `dependencyManagement` type.
 
 The syntax for both methods is similar, but the first method requires a separate POM file, while the second method allows you to define the BOM directly in your Ant build script.
 

@@ -35,6 +35,7 @@
   <property name='artifactId' value='example5'/>
   <property name='version' value='1.0-SNAPSHOT'/>
   <property name='targetDir' value='${basedir}/target'/>
+  <property name="sourceDir" value="${basedir}/src/main/java"/>
   <property name='mainBuildDir' value='${targetDir}/classes'/>
   <property name='testBuildDir' value='${targetDir}/test-classes'/>
 
@@ -78,7 +79,7 @@
 
   <target name='compile' depends='init' description='Compile the main classes using the path we set up with resolve'>
     <echo level='info'>Compiling main classes</echo>
-    <javac srcdir='${basedir}/src/main/java'
+    <javac srcdir='${sourceDir}'
            destdir='${mainBuildDir}'
            classpathref='compilePath'
            includeantruntime='false'/>
@@ -116,7 +117,7 @@
 
   <target name='sourceJar'>
     <echo level='info'>Creating sources jar file</echo>
-    <property name='srcJarFile' value='${targetDir/${artifactId}-${version}-sources.jar'/>
+    <property name='srcJarFile' value='${targetDir}/${artifactId}-${version}-sources.jar'/>
     <jar destfile='${srcJarFile}'>
       <fileset dir='${sourceDir}'/>
     </jar>
@@ -127,7 +128,12 @@
     <echo level='info'>Creating javadoc</echo>
     <property name='javadocDir' value='${targetDir}/javadoc'/>
     <mkdir dir='${javadocDir}'/>
-    <javadoc destdir='${javadocDir}' sourcepath='sourceDir'/>
+    <javadoc destdir='${javadocDir}' sourcepath='${sourceDir}'>
+      <classpath>
+        <path refId="compilePath"/>
+        <pathelement location="${mainBuildDir}"/>
+      </classpath>
+    </javadoc>
   </target>
 
   <target name='javadocJar' depends='javadoc'>
@@ -139,10 +145,10 @@
     <repo:artifact file='${javadocJarFile}' type='jar' classifier='javadocs' id='javadocJar'/>
   </target>
 
-  <target name='install' depends='jar, sourcesJar, javadocJar'>
+  <target name='install' depends='jar, sourceJar, javadocJar'>
     <echo level='info'>Publishing to local maven repository</echo>
     <repo:artifacts id='localArtifacts'>
-      <repo:artifact refid='jar'/>
+      <repo:artifact refid='mainJar'/>
       <repo:artifact refid='sourceJar'/>
       <repo:artifact refid='javadocJar'/>
     </repo:artifacts>

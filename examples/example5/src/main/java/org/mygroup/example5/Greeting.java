@@ -26,6 +26,11 @@ import org.apache.commons.lang3.ArrayUtils;
 public class Greeting {
 
   /**
+   * Default constructor.
+   */
+  public Greeting() {}
+
+  /**
    * Using commons lang3 to convert an array to a string
    *
    * @param words a string array
@@ -35,6 +40,11 @@ public class Greeting {
     return ArrayUtils.toString(words) + "!";
   }
 
+  /**
+   * Main entry point.
+   *
+   * @param args ignored
+   */
   public static void main(String[] args) {
     Greeting greeting = new Greeting();
     String[] words = {"Hello", "World"};

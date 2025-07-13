@@ -36,7 +36,7 @@ public final class Names {
         // hide constructor
     }
 
-    /** ID namespace prefix used by the resolver: {@code "resolver"}. */
+    /** Namespace prefix used by the resolver: {@code "resolver"}. */
     public static final String ID = "resolver";
 
     /** Default ID for the shared repository list: {@code "resolver.repositories"}. */

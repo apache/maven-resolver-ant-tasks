@@ -114,7 +114,7 @@ public class Deploy extends AbstractDistTask {
     }
 
     /**
-     * Allows ant to add a remote repository to which artifacts will be deployed.
+     * Allows ant to add a remote repository which artifacts will be deployed to.
      * <p>
      * This method is invoked by Ant when a {@code <repository>} nested element is defined
      * inside the {@code <deploy>} task. Each repository must specify a unique {@code id}

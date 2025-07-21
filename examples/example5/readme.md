@@ -14,7 +14,7 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 -->
-# Example 5 — use dependency management, generate pom and install
+# Example 5 — use dependency management, generate pom, and install
 
-This example shows how to use a dependency management section in your project to use a bom, abd then reference that when calling the createPom task to generate and register a pom file.
+This example shows how to use a dependency management section in your project to use a bom, and then reference that when calling the createPom task to generate and register a pom file.
 

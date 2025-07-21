@@ -16,6 +16,6 @@
 -->
 # Example 6 — use dependency management, with a separate pom.xml to define dependencies
 
-This example shows how to use a pom file for dependency management and dependencies in your project to use a bom, and then register it with 
+This example shows how to use a pom file for dependency management (using a bom) and declaring dependencies in your project, and then register that POM file with 
 the pom task.
 

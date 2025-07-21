@@ -71,7 +71,7 @@ public abstract class AbstractDistTask extends Task {
      * Ensures there are no duplicate artifacts, that the POM is defined,
      * and that each artifact's associated POM matches the main POM.
      *
-     * @throws BuildException if validation fails.
+     * @throws BuildException if validation fails
      */
     protected void validate() {
         getArtifacts().validate(this);
@@ -108,7 +108,7 @@ public abstract class AbstractDistTask extends Task {
     }
 
     /**
-     * Validates that an artifact's groupId, artifactId, and version (GAV) matches the main POM's GAV.
+     * Validates that an artifact's groupId, artifactId, and version (GAV) match the main POM's GAV.
      *
      * @param artifact the artifact to validate
      * @throws BuildException if the artifact's GAV does not match the main POM

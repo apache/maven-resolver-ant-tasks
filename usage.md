@@ -135,10 +135,10 @@ See [example1](examples/example1) for a complete example of using a pom file to 
   </target>
 </project>
 ```
-See [example2](examples/example2) for a complete example of defing dependencies in your ant build file.
+See [example2](examples/example2) for a complete example of defining dependencies in your ant build file.
 
 # Dependency Management
-There are two ways to handle bill of materials (BOM's) using mavens  dependency management in your Ant build:
+There are two ways to handle bill of materials (BOM's) using Maven's dependency management in your Ant build:
 1. **Using a POM file**: You can create a POM file that includes the BOM in its dependency management section. Then, use the `pom` task to register this POM file in your Ant build script.
 2. **Using the `dependencyManagement` type**: You can define the BOM directly in your Ant build script using the `dependencyManagement` type.
 

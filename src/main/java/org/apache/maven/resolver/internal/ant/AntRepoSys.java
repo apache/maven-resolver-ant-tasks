@@ -159,7 +159,7 @@ public class AntRepoSys {
         RemoteRepository repo = new RemoteRepository();
         repo.setProject(project);
         repo.setId("central");
-        repo.setUrl("https://repo1.maven.org/maven2/");
+        repo.setUrl("https://repo.maven.apache.org/maven2/");
         project.addReference(Names.ID_CENTRAL, repo);
 
         repo = new RemoteRepository();

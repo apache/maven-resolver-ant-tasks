@@ -31,6 +31,7 @@ public class Developer extends DataType {
     private Id id;
     private Name name;
     private Email email;
+    private Url url;
     private Organization organization;
     private OrganizationUrl organizationUrl;
     private Roles roles;
@@ -42,40 +43,72 @@ public class Developer extends DataType {
         this.id = id;
     }
 
-    public String getId() {
-        return id.getText();
+    public Id getId() {
+        return id;
+    }
+
+    public String getIdText() {
+        return getId() == null ? null : getId().getText();
     }
 
     public void addName(Name name) {
         this.name = name;
     }
 
-    public String getName() {
-        return name == null ? null : name.getText();
+    public Name getName() {
+        return name;
+    }
+
+    public String getNameText() {
+        return getName() == null ? null : getName().getText();
     }
 
     public void addEmail(Email email) {
         this.email = email;
     }
 
-    public String getEmail() {
-        return email == null ? null : email.getText();
+    public Email getEmail() {
+        return email;
+    }
+
+    public String getEmailText() {
+        return getEmail() == null ? null : getEmail().getText();
+    }
+
+    public void addUrl(Url url) {
+        this.url = url;
+    }
+
+    public Url getUrl() {
+        return url;
+    }
+
+    public String getUrlText() {
+        return getUrl() == null ? null : getUrl().getText();
     }
 
     public void addOrganization(Organization organization) {
         this.organization = organization;
     }
 
-    public String getOrganization() {
-        return organization == null ? null : organization.getText();
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public String getOrganizationText() {
+        return getOrganization() == null ? null : getOrganization().getText();
     }
 
     public void addOrganizationUrl(OrganizationUrl organizationUrl) {
         this.organizationUrl = organizationUrl;
     }
 
-    public String getOrganizationUrl() {
-        return organizationUrl == null ? null : organizationUrl.getText();
+    public OrganizationUrl getOrganizationUrl() {
+        return organizationUrl;
+    }
+
+    public String getOrganizationUrlText() {
+        return getOrganizationUrl() == null ? null : getOrganizationUrl().getText();
     }
 
     public void addRoles(Roles roles) {
@@ -90,7 +123,11 @@ public class Developer extends DataType {
         this.timezone = timezone;
     }
 
-    public String getTimezone() {
-        return timezone == null ? null : timezone.getText();
+    public Timezone getTimezone() {
+        return timezone;
+    }
+
+    public String getTimezoneText() {
+        return getTimezone() == null ? null : getTimezone().getText();
     }
 }

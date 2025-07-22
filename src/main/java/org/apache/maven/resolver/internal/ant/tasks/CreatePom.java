@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.apache.maven.model.RepositoryPolicy;
@@ -29,10 +30,12 @@ import org.apache.maven.resolver.internal.ant.types.Dependencies;
 import org.apache.maven.resolver.internal.ant.types.Dependency;
 import org.apache.maven.resolver.internal.ant.types.DependencyManagement;
 import org.apache.maven.resolver.internal.ant.types.Pom;
+import org.apache.maven.resolver.internal.ant.types.model.Developers;
 import org.apache.maven.resolver.internal.ant.types.model.License;
 import org.apache.maven.resolver.internal.ant.types.model.Licenses;
 import org.apache.maven.resolver.internal.ant.types.model.MavenProject;
 import org.apache.maven.resolver.internal.ant.types.model.Repositories;
+import org.apache.maven.resolver.internal.ant.types.model.Scm;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -97,6 +100,8 @@ public class CreatePom extends Task {
     private String description;
     private Licenses licenses;
     private Repositories repositories;
+    private Developers developers;
+    private Scm scm;
     private boolean skipPomRegistration;
 
     /**
@@ -289,6 +294,14 @@ public class CreatePom extends Task {
         this.repositories = repositories;
     }
 
+
+    public void addDevelopers(Developers developers) {
+        this.developers = developers;
+    }
+
+    public void addScm(Scm scm) {
+        this.scm = scm;
+    }
     /**
      * Execute the task to create the POM file.
      * This method will create the POM file with the specified properties and dependencies.
@@ -345,6 +358,34 @@ public class CreatePom extends Task {
                 }
                 pom.getModel().getRepositories().add(repo);
             });
+        }
+
+        if (developers != null) {
+            developers.getDevelopers().forEach(developer -> {
+                org.apache.maven.model.Developer dev = new org.apache.maven.model.Developer();
+                dev.setId(developer.getIdText());
+                dev.setName(developer.getNameText());
+                dev.setEmail(developer.getEmailText());
+                dev.setUrl(developer.getUrlText());
+                dev.setOrganization(developer.getOrganizationText());
+                dev.setOrganizationUrl(developer.getOrganizationUrlText());
+                if (!developer.getRoles().isEmpty()) {
+                    dev.setRoles(new ArrayList<>());
+                    developer.getRoles().forEach(role -> {
+                        dev.getRoles().add(role.getText());
+                    });
+                }
+                dev.setTimezone(developer.getTimezoneText());
+                pom.getModel().getDevelopers().add(dev);
+            });
+        }
+
+        if (scm != null) {
+            org.apache.maven.model.Scm mavenScm = new org.apache.maven.model.Scm();
+            mavenScm.setConnection(scm.getConnectionText());
+            mavenScm.setDeveloperConnection(scm.getDeveloperConnectionText());
+            mavenScm.setUrl(scm.getUrlText());
+            pom.getModel().setScm(mavenScm);
         }
 
         try (OutputStream pomOutputStream = Files.newOutputStream(pomFile.toPath())) {

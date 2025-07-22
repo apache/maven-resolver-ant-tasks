@@ -69,6 +69,21 @@
           <distribution>repo</distribution>
         </license>
       </licenses>
+      <developers>
+        <developer>
+          <id>jdoe</id>
+          <name>John Doe</name>
+          <email>jdoe@example.com</email>
+          <url>http://www.example.com/jdoe</url>
+          <organization>ACME</organization>
+          <organizationUrl>http://www.example.com</organizationUrl>
+          <roles>
+            <role>architect</role>
+            <role>developer</role>
+          </roles>
+          <timezone>America/New_York</timezone>
+        </developer>
+      </developers>
       <repositories>
         <repository>
           <id>my-internal-site</id>
@@ -82,6 +97,11 @@
           </releases>
         </repository>
       </repositories>
+      <scm>
+        <connection>scm:svn:http://127.0.0.1/svn/my-project</connection>
+        <developerConnection>scm:svn:https://127.0.0.1/svn/my-project</developerConnection>
+        <url>http://127.0.0.1/websvn/my-project</url>
+      </scm>
     </repo:createPom>
     <repo:resolve> <!-- resolve will use the pom file we just declared -->
     <path refId='compilePath'  classpath='compile'/>

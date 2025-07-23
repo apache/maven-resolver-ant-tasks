@@ -34,7 +34,6 @@ import org.apache.maven.model.Repository;
 import org.apache.maven.model.Scm;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.resolver.internal.ant.AntBuildsTest;
-import org.apache.maven.resolver.internal.ant.types.model.Developers;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -95,15 +94,23 @@ public class CreatePomTest extends AntBuildsTest {
         Assert.assertEquals("developer email should match", "jdoe@example.com", developer.getEmail());
         Assert.assertEquals("developer url should match", "http://www.example.com/jdoe", developer.getUrl());
         Assert.assertEquals("developer organization should match", "ACME", developer.getOrganization());
-        Assert.assertEquals("developers organizationUrl should match", "http://www.example.com", developer.getOrganizationUrl());
-        Assert.assertEquals("developer should have 2 roles", 2, developer.getRoles().size());
-        Assert.assertTrue("developer should have an architect role", developer.getRoles().contains("architect"));
-        Assert.assertTrue("developer should have a developer role", developer.getRoles().contains("developer"));
+        Assert.assertEquals(
+                "developers organizationUrl should match", "http://www.example.com", developer.getOrganizationUrl());
+        Assert.assertEquals(
+                "developer should have 2 roles", 2, developer.getRoles().size());
+        Assert.assertTrue(
+                "developer should have an architect role", developer.getRoles().contains("architect"));
+        Assert.assertTrue(
+                "developer should have a developer role", developer.getRoles().contains("developer"));
         Assert.assertEquals("developer timezone should match", "America/New_York", developer.getTimezone());
 
         Scm scm = model.getScm();
-        Assert.assertEquals("Scm connection should match","scm:svn:http://127.0.0.1/svn/my-project", scm.getConnection());
-        Assert.assertEquals("Scm developerConnection should match", "scm:svn:https://127.0.0.1/svn/my-project", scm.getDeveloperConnection());
+        Assert.assertEquals(
+                "Scm connection should match", "scm:svn:http://127.0.0.1/svn/my-project", scm.getConnection());
+        Assert.assertEquals(
+                "Scm developerConnection should match",
+                "scm:svn:https://127.0.0.1/svn/my-project",
+                scm.getDeveloperConnection());
         Assert.assertEquals("Scm url should match", "http://127.0.0.1/websvn/my-project", scm.getUrl());
     }
 

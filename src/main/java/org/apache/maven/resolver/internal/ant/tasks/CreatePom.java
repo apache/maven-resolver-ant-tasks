@@ -294,11 +294,20 @@ public class CreatePom extends Task {
         this.repositories = repositories;
     }
 
-
+    /**
+     * Allows ant to add a <code>Developers</code> section.
+     *
+     * @param developers the <code>Developers</code> to add
+     */
     public void addDevelopers(Developers developers) {
         this.developers = developers;
     }
 
+    /**
+     * Allows ant to add a <code>Scm</code> section.
+     *
+     * @param scm the <code>Scm</code> to add
+     */
     public void addScm(Scm scm) {
         this.scm = scm;
     }

@@ -21,25 +21,34 @@ package org.apache.maven.resolver.internal.ant.types.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The developers section is required if you want to publish your POM to
+ * maven central. It contains one or more <code>developer</code> elements.
+ */
 public class Developers {
 
-  private final List<Developer> developers = new ArrayList<>();
+    private final List<Developer> developers = new ArrayList<>();
 
-  /**
-   * Get the list of Developers'
-   *
-   * @return the list of Developer objects, never null.
-   */
-  public List<Developer> getDevelopers() {
-    return developers;
-  }
+    /**
+     * Default constructor.
+     */
+    public Developers() {}
 
-  /**
-   * Allows Ant to add a Developer element to the developers' collection.
-   *
-   * @param developer The Developer to add
-   */
-  public void addDeveloper(Developer developer) {
-    developers.add(developer);
-  }
+    /**
+     * Get the list of Developers'
+     *
+     * @return the list of Developer objects, never null.
+     */
+    public List<Developer> getDevelopers() {
+        return developers;
+    }
+
+    /**
+     * Allows Ant to add a <code>Developer</code> element to the developers' collection.
+     *
+     * @param developer The <code>Developer</code> to add
+     */
+    public void addDeveloper(Developer developer) {
+        developers.add(developer);
+    }
 }

@@ -19,6 +19,7 @@
 package org.apache.maven.resolver.internal.ant.types.model;
 
 import java.util.List;
+
 import org.apache.tools.ant.types.DataType;
 
 /**
@@ -42,7 +43,7 @@ public class Developer extends DataType {
     private Timezone timezone;
 
     /**
-     * No-arg constructor.
+     * Default constructor.
      */
     public Developer() {}
 

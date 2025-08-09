@@ -18,6 +18,7 @@
  */
 package org.apache.maven.resolver.internal.ant.types.model;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.tools.ant.types.DataType;
@@ -221,10 +222,10 @@ public class Developer extends DataType {
     /**
      * Gets the list of roles assigned to the developer.
      *
-     * @return a list of Role objects, or {@code null} if not set
+     * @return a list of Role objects, or {@code empty list} if not set
      */
     public List<Role> getRoles() {
-        return roles == null ? null : roles.getRoles();
+        return roles == null ? Collections.emptyList() : roles.getRoles();
     }
 
     /**

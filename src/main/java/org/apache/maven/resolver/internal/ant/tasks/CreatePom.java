@@ -42,9 +42,11 @@ import org.apache.tools.ant.Task;
 
 /**
  * Task to create a Maven POM file.
- * This task allows you to define dependencies, dependency management, licenses, and repositories for the POM.
+ * This task allows you to define dependencies, dependency management, description, licenses, scm, and repositories for the POM.
  * This is useful if you have defined your dependencies in the ant build script instead of in the POM. This task also
- * registers the POM.
+ * registers the POM. Note: if you want to publish your open source library to maven central using the new
+ * central publisher api, the following 4 additional sections are required in the pom:
+ * description, licenses, developers, and scm.
  * <h2>Usage Example:</h2>
  * <pre>{@code
  * <repo:createPom pomTarget='${pomFile}'
@@ -52,12 +54,23 @@ import org.apache.tools.ant.Task;
  *                 dependencyManagementRef='dm'
  *                 name='mylib'
  *                 description='An useful library'>
- *     <licenses>
- *         <license>
- *             <name>Apache License, Version 2.0</name>
- *             <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
- *         </license>
- *     </licenses>
+ *   <licenses>
+ *     <license>
+ *       <name>MIT</name>
+ *       <url>https://opensource.org/license/mit</url>
+ *     </license>
+ *   </licenses>
+ *   <developers>
+ *     <developer>
+ *       <id>pnyfelt</id>
+ *       <name>Per Nyfelt</name>
+ *     </developer>
+ *   </developers>
+ *  <scm>
+ *    <url>https://github.com/pnyfelt/example3/tree/master</url>
+ *    <connection>scm:git:https://github.com/pnyfelt/example3.git</connection>
+ *    <developerConnection>scm:git:https://github.com/pnyfelt/example3.git</developerConnection>
+ *  </scm>
  * </repo:createPom>
  * }</pre>
  * <h2>Attributes:</h2>

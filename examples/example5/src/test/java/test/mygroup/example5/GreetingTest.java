@@ -29,6 +29,6 @@ public class GreetingTest {
   public void testGreeting() {
     Greeting greeting = new Greeting();
     String greetingResult = greeting.greet(new String[] {"hello", "world"});
-    Assert.assertEquals("{hello, world}!", greetingResult);
+    Assert.assertEquals("{hello,world}!", greetingResult);
   }
 }

@@ -364,12 +364,6 @@
                   </target>
                 </configuration>
               </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <version>3.1.0</version>
-            <executions>
               <execution>
                 <id>run-ant-examples</id>
                 <goals>

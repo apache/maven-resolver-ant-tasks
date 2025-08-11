@@ -30,6 +30,64 @@ import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.Reference;
 
 /**
+ * Container for multiple Maven dependencies in an Ant build script.
+ * <p>
+ * This Ant {@code DataType} represents a collection of {@link Dependency} elements.
+ * It is typically used within tasks like {@link org.apache.maven.resolver.internal.ant.tasks.Resolve Resolve},
+ * {@link org.apache.maven.resolver.internal.ant.tasks.CreatePom CreatePom},
+ * {@link org.apache.maven.resolver.internal.ant.tasks.Deploy Deploy}, and
+ * {@link org.apache.maven.resolver.internal.ant.tasks.Install Install} to provide
+ * structured dependency information.
+ * </p>
+ *
+ * <h2>Usage Example (inline):</h2>
+ * <pre>{@code
+ * <repo:resolve>
+ *   <repo:dependencies>
+ *     <repo:dependency groupId="org.apache.commons" artifactId="commons-lang3" version="3.12.0"/>
+ *     <repo:dependency groupId="com.google.guava" artifactId="guava" version="32.0.2"/>
+ *   </repo:dependencies>
+ *   <path id="my.classpath"/>
+ * </resolve>
+ * }</pre>
+ *
+ * <h2>Usage Example (referenced):</h2>
+ * <pre>{@code
+ * <dependencies id="compile.deps">
+ *   <dependency groupId="org.slf4j" artifactId="slf4j-api" version="2.0.7"/>
+ * </dependencies>
+ *
+ * <resolve dependenciesRef="compile.deps">
+ *   <path id="compile.classpath"/>
+ * </resolve>
+ * }</pre>
+ *
+ * <h2>Attributes:</h2>
+ * <ul>
+ *   <li><strong>id</strong> — optional Ant reference ID, allowing reuse in multiple tasks</li>
+ * </ul>
+ *
+ * <h2>Nested Elements:</h2>
+ * <ul>
+ *   <li>{@code <dependency>} — defines a single Maven dependency (see {@link Dependency})</li>
+ * </ul>
+ *
+ * <h2>Typical Use Cases:</h2>
+ * <ul>
+ *   <li>Providing dependencies to resolution tasks like Resolve or CreatePom</li>
+ *   <li>Reusing a named set of dependencies across tasks via {@code dependenciesRef}</li>
+ * </ul>
+ *
+ * <h2>Behavior:</h2>
+ * After being referenced by a task (e.g. via {@code dependenciesRef}), the container is
+ * evaluated and each contained {@code <dependency>} is passed to the task’s resolution
+ * or POM generation logic.
+ *
+ * @see Dependency
+ * @see org.apache.maven.resolver.internal.ant.tasks.Resolve
+ * @see org.apache.maven.resolver.internal.ant.tasks.CreatePom
+ * @see org.apache.maven.resolver.internal.ant.tasks.Deploy
+ * @see org.apache.maven.resolver.internal.ant.tasks.Install
  */
 public class Dependencies extends DataType implements DependencyContainer {
 
@@ -43,6 +101,20 @@ public class Dependencies extends DataType implements DependencyContainer {
 
     private boolean nestedDependencies;
 
+    /**
+     * Default constructor for the Dependencies data type.
+     */
+    public Dependencies() {
+        // Default constructor
+    }
+
+    /**
+     * Resolves this object if defined as a reference and verifies that it is a
+     * {@code Dependencies} instance.
+     *
+     * @return the referenced {@code Dependencies} instance
+     * @throws org.apache.tools.ant.BuildException if the reference is invalid
+     */
     protected Dependencies getRef() {
         return getCheckedRef(Dependencies.class);
     }
@@ -72,6 +144,14 @@ public class Dependencies extends DataType implements DependencyContainer {
         }
     }
 
+    /**
+     * Sets the reference to another <code>&lt;dependencies&gt;</code> defined elsewhere.
+     * <p>
+     * This allows the current element to inherit the list of dependencies from the referenced element.
+     * No other children are allowed when this reference is set.
+     *
+     * @param ref the reference to use
+     */
     @Override
     public void setRefid(Reference ref) {
         if (pom != null || !exclusions.isEmpty() || !containers.isEmpty()) {
@@ -80,12 +160,22 @@ public class Dependencies extends DataType implements DependencyContainer {
         super.setRefid(ref);
     }
 
+    /**
+     * Set the file attribute.
+     *
+     * @param file the File to set
+     */
     public void setFile(File file) {
         checkAttributesAllowed();
         this.file = file;
         checkExternalSources();
     }
 
+    /**
+     * Get the file attribute.
+     *
+     * @return the File.
+     */
     public File getFile() {
         if (isReference()) {
             return getRef().getFile();
@@ -93,6 +183,12 @@ public class Dependencies extends DataType implements DependencyContainer {
         return file;
     }
 
+    /**
+     * Allows ant to add the pom element specified in the build file.
+     * Only one pom element is allowed.
+     *
+     * @param pom the Pom element to add.
+     */
     public void addPom(Pom pom) {
         checkChildrenAllowed();
         if (this.pom != null) {
@@ -102,6 +198,11 @@ public class Dependencies extends DataType implements DependencyContainer {
         checkExternalSources();
     }
 
+    /**
+     * Returns the {@link Pom} element if one was added to this container.
+     *
+     * @return the {@link Pom} or {@code null} if none
+     */
     public Pom getPom() {
         if (isReference()) {
             return getRef().getPom();
@@ -109,6 +210,14 @@ public class Dependencies extends DataType implements DependencyContainer {
         return pom;
     }
 
+    /**
+     * Assigns a reference to a {@link Pom} element that defines the dependencies.
+     * <p>
+     * This is an alternative to specifying nested {@code <dependency>} elements directly.
+     * </p>
+     *
+     * @param ref the reference to a {@link Pom} element
+     */
     public void setPomRef(Reference ref) {
         if (pom == null) {
             pom = new Pom();
@@ -118,6 +227,11 @@ public class Dependencies extends DataType implements DependencyContainer {
         checkExternalSources();
     }
 
+    /**
+     * Checks for conflicting use of external sources (POM or file) with nested dependencies.
+     *
+     * @throws BuildException if both external and nested dependency definitions are used
+     */
     private void checkExternalSources() {
         if (file != null && pom != null) {
             throw new BuildException("You must not specify both a text file and a POM to list dependencies");
@@ -127,11 +241,26 @@ public class Dependencies extends DataType implements DependencyContainer {
         }
     }
 
+    /**
+     * Adds a single {@link Dependency} to this container.
+     *
+     * @param dependency the dependency to add
+     */
     public void addDependency(Dependency dependency) {
         checkChildrenAllowed();
         containers.add(dependency);
     }
 
+    /**
+     * Adds another {@link Dependencies} container to this one.
+     * <p>
+     * Allows for nesting of dependency collections. This can be useful when
+     * grouping dependencies by purpose or configuration.
+     * </p>
+     *
+     * @param dependencies another {@code Dependencies} object to merge
+     * @throws BuildException if attempting to add self or if usage conflicts with other sources
+     */
     public void addDependencies(Dependencies dependencies) {
         checkChildrenAllowed();
         if (dependencies == this) {
@@ -142,6 +271,12 @@ public class Dependencies extends DataType implements DependencyContainer {
         checkExternalSources();
     }
 
+    /**
+     * Returns the list of contained {@link DependencyContainer} instances.
+     * This may include {@link Dependency} elements or nested {@link Dependencies}.
+     *
+     * @return list of dependency containers
+     */
     public List<DependencyContainer> getDependencyContainers() {
         if (isReference()) {
             return getRef().getDependencyContainers();
@@ -149,11 +284,24 @@ public class Dependencies extends DataType implements DependencyContainer {
         return containers;
     }
 
+    /**
+     * Adds an {@link Exclusion} element to apply to all dependencies in this container.
+     * <p>
+     * Exclusions can be used to omit specific transitive dependencies.
+     * </p>
+     *
+     * @param exclusion the exclusion to apply
+     */
     public void addExclusion(Exclusion exclusion) {
         checkChildrenAllowed();
         this.exclusions.add(exclusion);
     }
 
+    /**
+     * Returns the list of exclusions applied to this container.
+     *
+     * @return list of {@link Exclusion} objects
+     */
     public List<Exclusion> getExclusions() {
         if (isReference()) {
             return getRef().getExclusions();

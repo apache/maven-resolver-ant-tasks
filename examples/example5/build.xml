@@ -1,0 +1,159 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  'License'); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<project xmlns:repo='antlib:org.apache.maven.resolver.ant' default='install'>
+  <echo level='info'>*********************</echo>
+  <echo level='info'>* Building example5 *</echo>
+  <echo level='info'>*********************</echo>
+  <!-- create a path to the maven resolver ant tasks uber jar -->
+  <path id='antlib.classpath'>
+    <fileset dir='${basedir}/../../target'>
+      <include name='*-uber.jar'/>
+    </fileset>
+  </path>
+  <!-- define the maven resolver ant tasks types and tasks -->
+  <taskdef uri='antlib:org.apache.maven.resolver.ant' resource='org/apache/maven/resolver/ant/antlib.xml'
+           classpathref='antlib.classpath' />
+  <property name='groupId' value='org.mygroup'/>
+  <property name='artifactId' value='example5'/>
+  <property name='version' value='1.0-SNAPSHOT'/>
+  <property name='targetDir' value='${basedir}/target'/>
+  <property name="sourceDir" value="${basedir}/src/main/java"/>
+  <property name='mainBuildDir' value='${targetDir}/classes'/>
+  <property name='testBuildDir' value='${targetDir}/test-classes'/>
+
+  <repo:dependencyManagement id='dm'>
+    <repo:dependencies>
+      <repo:dependency groupId='org.junit' artifactId='junit-bom' version='5.12.2' type='pom' scope='import'/>
+    </repo:dependencies>
+  </repo:dependencyManagement>
+
+  <repo:dependencies id='compile'>
+    <repo:dependency groupId='org.apache.commons' artifactId='commons-lang3' version='3.17.0'/>
+    <repo:dependency groupId='org.junit.jupiter' artifactId='junit-jupiter-engine' scope='test'/>
+    <repo:dependency groupId='org.junit.platform' artifactId='junit-platform-launcher' scope='test'/>
+  </repo:dependencies>
+
+  <target name='configurePaths' description='Configure paths for compilation'>
+    <property name='pomFile' value='${targetDir}/${artifactId}-${version}.pom'/>
+    <repo:createPom pomTarget='${pomFile}' dependenciesRef='compile' dependencyManagementRef='dm'
+               name='example5' description='A simple example of a publishable library'>
+      <licenses>
+        <license>
+          <name>Apache License, Version 2.0</name>
+          <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+      </licenses>
+    </repo:createPom>
+    <repo:resolve>
+      <path refId='compilePath' classpath='compile'/>
+      <path refId='testPath' classpath='test'/>
+    </repo:resolve>
+  </target>
+
+  <target name='init' depends='configurePaths' description='Create the directories needed for the build'>
+    <mkdir dir='${targetDir}'/>
+    <mkdir dir='${mainBuildDir}'/>
+  </target>
+
+  <target name='clean' description='Clean the build directory (target)'>
+    <delete dir='${targetDir}' quiet='true'/>
+  </target>
+
+  <target name='compile' depends='init' description='Compile the main classes using the path we set up with resolve'>
+    <echo level='info'>Compiling main classes</echo>
+    <javac srcdir='${sourceDir}'
+           destdir='${mainBuildDir}'
+           classpathref='compilePath'
+           includeantruntime='false'/>
+  </target>
+
+  <target name='test' depends='compile' description='Compile and run tests'>
+    <echo level='info'>Compiling test classes</echo>
+
+    <mkdir dir='${testBuildDir}'/>
+    <javac
+      srcdir='src/test/java'
+      destdir='${testBuildDir}'
+      classpathref='testClassPath'
+    />
+
+    <junit printsummary='true' haltonfailure='true'>
+      <classpath>
+        <pathelement location='${mainBuildDir}'/>
+        <pathelement location='${testBuildDir}'/>
+        <path refid='testPath'/>
+      </classpath>
+      <formatter type='plain'/>
+      <test name='my.test.TestCase'/>
+    </junit>
+  </target>
+
+  <target name='jar' depends='compile'>
+    <echo level='info'>Creating jar file</echo>
+    <property name='jarFile' value='${targetDir}/${artifactId}-${version}.jar'/>
+    <jar destfile='${jarFile}'>
+      <fileset dir='${mainBuildDir}'/>
+    </jar>
+    <repo:artifact file='${jarFile}' type='jar' id='mainJar'/>
+  </target>
+
+  <target name='sourceJar'>
+    <echo level='info'>Creating sources jar file</echo>
+    <property name='srcJarFile' value='${targetDir}/${artifactId}-${version}-sources.jar'/>
+    <jar destfile='${srcJarFile}'>
+      <fileset dir='${sourceDir}'/>
+    </jar>
+    <repo:artifact file='${srcJarFile}' type='jar' classifier='sources' id='sourceJar'/>
+  </target>
+
+  <target name='javadoc' depends='init'>
+    <echo level='info'>Creating javadoc</echo>
+    <property name='javadocDir' value='${targetDir}/javadoc'/>
+    <mkdir dir='${javadocDir}'/>
+    <javadoc destdir='${javadocDir}' sourcepath='${sourceDir}'>
+      <classpath>
+        <path refId="compilePath"/>
+        <pathelement location="${mainBuildDir}"/>
+      </classpath>
+    </javadoc>
+  </target>
+
+  <target name='javadocJar' depends='javadoc'>
+    <echo level='info'>Creating groovydoc jar file</echo>
+    <property name='javadocJarFile' value='${targetDir}/${artifactId}-${version}-javadoc.jar'/>
+    <jar destfile='${javadocJarFile}'>
+      <fileset dir='${javadocDir}'/>
+    </jar>
+    <repo:artifact file='${javadocJarFile}' type='jar' classifier='javadocs' id='javadocJar'/>
+  </target>
+
+  <target name='install' depends='jar, sourceJar, javadocJar'>
+    <echo level='info'>Publishing to local maven repository</echo>
+    <repo:artifacts id='localArtifacts'>
+      <repo:artifact refid='mainJar'/>
+      <repo:artifact refid='sourceJar'/>
+      <repo:artifact refid='javadocJar'/>
+    </repo:artifacts>
+    <repo:install artifactsref='localArtifacts'/>
+  </target>
+
+  <target name='installAndClean' depends='install, clean'/>
+</project>

@@ -19,6 +19,16 @@
 package org.apache.maven.resolver.internal.ant;
 
 /**
+ * Centralized constants used throughout the Maven Resolver Ant tasks.
+ * <p>
+ * This class defines symbolic names for commonly used IDs, property keys,
+ * and filenames used in the integration with Ant, such as default repository identifiers,
+ * offline mode flags, and POM registration keys.
+ * </p>
+ *
+ * <p>
+ * This class is not intended to be instantiated.
+ * </p>
  */
 public final class Names {
 
@@ -26,15 +36,21 @@ public final class Names {
         // hide constructor
     }
 
+    /** Namespace prefix used by the resolver: {@code "resolver"}. */
     public static final String ID = "resolver";
 
+    /** Default ID for the shared repository list: {@code "resolver.repositories"}. */
     public static final String ID_DEFAULT_REPOS = ID + ".repositories";
 
+    /** Default ID for the shared POM reference: {@code "resolver.pom"}. */
     public static final String ID_DEFAULT_POM = ID + ".pom";
 
+    /** Canonical ID for Maven Central repository: {@code "central"}. */
     public static final String ID_CENTRAL = "central";
 
+    /** Property name for controlling offline mode: {@code "resolver.offline"}. */
     public static final String PROPERTY_OFFLINE = ID + ".offline";
 
+    /** Default filename for the Maven settings file: {@code "settings.xml"}. */
     public static final String SETTINGS_XML = "settings.xml";
 }

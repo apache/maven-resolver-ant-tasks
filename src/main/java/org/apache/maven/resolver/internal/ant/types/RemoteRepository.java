@@ -30,6 +30,18 @@ import org.apache.tools.ant.types.Reference;
 import org.eclipse.aether.repository.RepositoryPolicy;
 
 /**
+ * Represents a single remote repository used for dependency resolution or deployment.
+ * <p>
+ * Supports configuration of release and snapshot policies, authentication,
+ * checksum and update strategies, and type-specific behaviors.
+ * </p>
+ * <p>
+ * May be defined inline in Ant build scripts or referenced via {@code refid}.
+ * </p>
+ *
+ * @see RemoteRepositoryContainer
+ * @see RemoteRepositories
+ * @see Authentication
  */
 public class RemoteRepository extends DataType implements RemoteRepositoryContainer {
 
@@ -53,6 +65,13 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
 
     private Authentication authentication;
 
+    /**
+     * Default constructor initializes a new {@code RemoteRepository} instance.
+     */
+    public RemoteRepository() {
+        // Default constructor
+    }
+
     @Override
     public void setProject(Project project) {
         super.setProject(project);
@@ -61,10 +80,24 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         AntRepoSys.getInstance(project);
     }
 
+    /**
+     * Resolves this object if defined as a reference and verifies that it is a
+     * {@code RemoteRepository} instance.
+     *
+     * @return the referenced {@code RemoteRepository} instance
+     * @throws org.apache.tools.ant.BuildException if the reference is invalid
+     */
     protected RemoteRepository getRef() {
         return getCheckedRef(RemoteRepository.class);
     }
 
+    /**
+     * Validates this repository's configuration.
+     * Ensures that both {@code id} and {@code url} are specified unless this is a reference.
+     *
+     * @param task the Ant task requesting validation, used for error reporting
+     * @throws BuildException if required attributes are missing
+     */
     @Override
     public void validate(Task task) {
         if (isReference()) {
@@ -79,6 +112,15 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         }
     }
 
+    /**
+     * Marks this repository as a reference to another {@code RemoteRepository} instance.
+     * <p>
+     * Once set, this instance must not define other attributes or child elements.
+     * </p>
+     *
+     * @param ref the Ant reference to another {@code RemoteRepository}
+     * @throws BuildException if conflicting attributes or children are already set
+     */
     @Override
     public void setRefid(Reference ref) {
         if (id != null || url != null || type != null || checksums != null || updates != null) {
@@ -90,6 +132,11 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         super.setRefid(ref);
     }
 
+    /**
+     * Gets the unique identifier for this repository.
+     *
+     * @return the repository ID
+     */
     public String getId() {
         if (isReference()) {
             return getRef().getId();
@@ -97,10 +144,20 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         return id;
     }
 
+    /**
+     * Sets the unique identifier for this repository.
+     *
+     * @param id the repository ID
+     */
     public void setId(String id) {
         this.id = id;
     }
 
+    /**
+     * Gets the URL of this repository.
+     *
+     * @return the base URL of the repository
+     */
     public String getUrl() {
         if (isReference()) {
             return getRef().getUrl();
@@ -108,11 +165,22 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         return url;
     }
 
+    /**
+     * Sets the URL of this repository.
+     *
+     * @param url the base URL of the repository
+     * @throws BuildException if attributes are not allowed due to refid
+     */
     public void setUrl(String url) {
         checkAttributesAllowed();
         this.url = url;
     }
 
+    /**
+     * Gets the layout type of this repository (e.g., {@code default}, {@code legacy}).
+     *
+     * @return the type of repository layout
+     */
     public String getType() {
         if (isReference()) {
             return getRef().getType();
@@ -120,11 +188,21 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         return (type != null) ? type : "default";
     }
 
+    /**
+     * Sets the layout type of this repository.
+     *
+     * @param type the repository layout type
+     */
     public void setType(String type) {
         checkAttributesAllowed();
         this.type = type;
     }
 
+    /**
+     * Gets the release policy configured for this repository.
+     *
+     * @return the release policy or {@code null} if none is set
+     */
     public Policy getReleasePolicy() {
         if (isReference()) {
             return getRef().getReleasePolicy();
@@ -132,6 +210,12 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         return releasePolicy;
     }
 
+    /**
+     * Allows Ant to add a release policy to this repository.
+     *
+     * @param policy the policy to apply to release artifacts
+     * @throws BuildException if a release policy was already defined
+     */
     public void addReleases(Policy policy) {
         checkChildrenAllowed();
         if (this.releasePolicy != null) {
@@ -140,6 +224,11 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         this.releasePolicy = policy;
     }
 
+    /**
+     * Gets the snapshot policy configured for this repository.
+     *
+     * @return the snapshot policy or {@code null} if none is set
+     */
     public Policy getSnapshotPolicy() {
         if (isReference()) {
             return getRef().getSnapshotPolicy();
@@ -147,6 +236,12 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         return snapshotPolicy;
     }
 
+    /**
+     * Adds a snapshot policy to this repository.
+     *
+     * @param policy the policy to apply to snapshot artifacts
+     * @throws BuildException if a snapshot policy was already defined
+     */
     public void addSnapshots(Policy policy) {
         checkChildrenAllowed();
         if (this.snapshotPolicy != null) {
@@ -155,6 +250,11 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         this.snapshotPolicy = policy;
     }
 
+    /**
+     * Indicates whether releases are enabled for this repository.
+     *
+     * @return {@code true} if releases are enabled, {@code false} otherwise
+     */
     public boolean isReleases() {
         if (isReference()) {
             return getRef().isReleases();
@@ -162,11 +262,21 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         return releases;
     }
 
+    /**
+     * Sets whether releases are enabled for this repository.
+     *
+     * @param releases {@code true} to enable release artifacts
+     */
     public void setReleases(boolean releases) {
         checkAttributesAllowed();
         this.releases = releases;
     }
 
+    /**
+     * Indicates whether snapshots are enabled for this repository.
+     *
+     * @return {@code true} if snapshots are enabled, {@code false} otherwise
+     */
     public boolean isSnapshots() {
         if (isReference()) {
             return getRef().isSnapshots();
@@ -174,11 +284,21 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         return snapshots;
     }
 
+    /**
+     * Sets whether snapshots are enabled for this repository.
+     *
+     * @param snapshots {@code true} to enable snapshot artifacts
+     */
     public void setSnapshots(boolean snapshots) {
         checkAttributesAllowed();
         this.snapshots = snapshots;
     }
 
+    /**
+     * Gets the update policy for this repository.
+     *
+     * @return the update policy (e.g., {@code daily}, {@code always}, {@code never})
+     */
     public String getUpdates() {
         if (isReference()) {
             return getRef().getUpdates();
@@ -186,12 +306,24 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         return (updates != null) ? updates : RepositoryPolicy.UPDATE_POLICY_DAILY;
     }
 
+    /**
+     * Sets the update policy for this repository.
+     *
+     * @param updates the update policy string
+     * @throws BuildException if the policy is not valid
+     */
     public void setUpdates(String updates) {
         checkAttributesAllowed();
         checkUpdates(updates);
         this.updates = updates;
     }
 
+    /**
+     * Validates that the given update policy string is one of the permitted values.
+     *
+     * @param updates the update policy string to validate
+     * @throws BuildException if the policy is not permitted
+     */
     protected static void checkUpdates(String updates) {
         if (!RepositoryPolicy.UPDATE_POLICY_ALWAYS.equals(updates)
                 && !RepositoryPolicy.UPDATE_POLICY_DAILY.equals(updates)
@@ -201,6 +333,11 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         }
     }
 
+    /**
+     * Gets the checksum policy for this repository.
+     *
+     * @return the checksum policy (e.g., {@code fail}, {@code warn}, {@code ignore})
+     */
     public String getChecksums() {
         if (isReference()) {
             return getRef().getChecksums();
@@ -208,12 +345,24 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         return (checksums != null) ? checksums : RepositoryPolicy.CHECKSUM_POLICY_WARN;
     }
 
+    /**
+     * Sets the checksum policy for this repository.
+     *
+     * @param checksums the checksum policy
+     * @throws BuildException if the policy is not valid
+     */
     public void setChecksums(String checksums) {
         checkAttributesAllowed();
         checkChecksums(checksums);
         this.checksums = checksums;
     }
 
+    /**
+     * Validates that the given checksum policy string is one of the permitted values.
+     *
+     * @param checksums the checksum policy string to validate
+     * @throws BuildException if the policy is not permitted
+     */
     protected static void checkChecksums(String checksums) {
         if (!RepositoryPolicy.CHECKSUM_POLICY_FAIL.equals(checksums)
                 && !RepositoryPolicy.CHECKSUM_POLICY_WARN.equals(checksums)
@@ -222,6 +371,11 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         }
     }
 
+    /**
+     * Gets the {@link Authentication} credentials configured for this repository.
+     *
+     * @return the authentication element, or {@code null} if none
+     */
     public Authentication getAuthentication() {
         if (isReference()) {
             return getRef().getAuthentication();
@@ -229,6 +383,12 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         return authentication;
     }
 
+    /**
+     * Allow Ant to add an {@link Authentication} element to this repository.
+     *
+     * @param authentication the authentication credentials
+     * @throws BuildException if multiple authentications are specified
+     */
     public void addAuthentication(Authentication authentication) {
         checkChildrenAllowed();
         if (this.authentication != null) {
@@ -237,6 +397,11 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         this.authentication = authentication;
     }
 
+    /**
+     * Sets a reference to an existing {@link Authentication} element.
+     *
+     * @param ref the reference to an {@code Authentication} definition
+     */
     public void setAuthRef(Reference ref) {
         checkAttributesAllowed();
         if (authentication == null) {
@@ -246,12 +411,22 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         authentication.setRefid(ref);
     }
 
+    /**
+     * Returns a singleton list containing this repository.
+     * This allows {@code RemoteRepository} to be treated as a {@link RemoteRepositoryContainer}.
+     *
+     * @return a singleton list with this repository
+     */
     @Override
     public List<RemoteRepository> getRepositories() {
         return Collections.singletonList(this);
     }
 
     /**
+     * Represents a repository policy configuration for either snapshot or release handling.
+     * Includes controls for enabling/disabling access, checksum verification, and update frequency.
+     *
+     * @see RepositoryPolicy
      */
     public static class Policy {
 
@@ -261,27 +436,67 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
 
         private String updatePolicy;
 
+        /**
+         * Constructs a new {@code Policy} instance with default settings.
+         * The policy is enabled by default, with no specific checksum or update policies set.
+         */
+        public Policy() {
+            // Default constructor
+        }
+
+        /**
+         * Indicates whether the policy is enabled.
+         *
+         * @return {@code true} if enabled, {@code false} otherwise
+         */
         public boolean isEnabled() {
             return enabled;
         }
 
+        /**
+         * Enables or disables the policy.
+         *
+         * @param enabled whether to enable the policy
+         */
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
         }
 
+        /**
+         * Gets the checksum policy string.
+         *
+         * @return the checksum policy (e.g., {@code warn}, {@code fail})
+         */
         public String getChecksums() {
             return checksumPolicy;
         }
 
+        /**
+         * Sets the checksum policy for this policy.
+         *
+         * @param checksumPolicy the checksum policy
+         * @throws BuildException if the policy is invalid
+         */
         public void setChecksums(String checksumPolicy) {
             checkChecksums(checksumPolicy);
             this.checksumPolicy = checksumPolicy;
         }
 
+        /**
+         * Gets the update policy string.
+         *
+         * @return the update policy (e.g., {@code daily}, {@code never})
+         */
         public String getUpdates() {
             return updatePolicy;
         }
 
+        /**
+         * Sets the update policy for this policy.
+         *
+         * @param updatePolicy the update policy
+         * @throws BuildException if the policy is invalid
+         */
         public void setUpdates(String updatePolicy) {
             checkUpdates(updatePolicy);
             this.updatePolicy = updatePolicy;

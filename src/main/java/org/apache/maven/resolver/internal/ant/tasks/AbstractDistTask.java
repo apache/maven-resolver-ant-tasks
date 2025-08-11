@@ -33,13 +33,46 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Reference;
 
 /**
+ * Abstract base class for Ant tasks that perform distribution-related operations,
+ * such as install or deploy. It handles the configuration and validation of POM and artifact inputs.
+ * <p>
+ * Subclasses are expected to use {@link #validate()} to ensure input consistency
+ * before proceeding with distribution logic.
+ *
+ * <p>This class ensures:
+ * <ul>
+ *   <li>Only one {@code <pom>} element is specified</li>
+ *   <li>No duplicate artifacts with the same type/classifier are declared</li>
+ *   <li>Artifact GAVs (groupId:artifactId:version) match their associated POM</li>
+ * </ul>
+ *
  */
 public abstract class AbstractDistTask extends Task {
 
+    /**
+     * Default constructor for {@code AbstractDistTask}.
+     */
+    public AbstractDistTask() {
+        // Default constructor
+    }
+
+    /**
+     * The POM metadata describing the project and its coordinates.
+     */
     private Pom pom;
 
+    /**
+     * The artifacts to be distributed.
+     */
     private Artifacts artifacts;
 
+    /**
+     * Validates the configuration of the task before execution.
+     * Ensures there are no duplicate artifacts, that the POM is defined,
+     * and that each artifact's associated POM matches the main POM.
+     *
+     * @throws BuildException if validation fails
+     */
     protected void validate() {
         getArtifacts().validate(this);
 
@@ -74,6 +107,12 @@ public abstract class AbstractDistTask extends Task {
         }
     }
 
+    /**
+     * Validates that an artifact's groupId, artifactId, and version (GAV) match the main POM's GAV.
+     *
+     * @param artifact the artifact to validate
+     * @throws BuildException if the artifact's GAV does not match the main POM
+     */
     private void validateArtifactGav(final Artifact artifact) {
         final Pom artifactPom = artifact.getPom();
         if (artifactPom != null) {
@@ -102,6 +141,11 @@ public abstract class AbstractDistTask extends Task {
         }
     }
 
+    /**
+     * Returns the {@link Artifacts} container, lazily instantiating if necessary.
+     *
+     * @return the artifact container
+     */
     protected Artifacts getArtifacts() {
         if (artifacts == null) {
             artifacts = new Artifacts();
@@ -110,14 +154,29 @@ public abstract class AbstractDistTask extends Task {
         return artifacts;
     }
 
+    /**
+     * Adds a single {@link Artifact} to the task.
+     *
+     * @param artifact the artifact to add
+     */
     public void addArtifact(final Artifact artifact) {
         getArtifacts().addArtifact(artifact);
     }
 
+    /**
+     * Adds multiple {@link Artifacts} to the task.
+     *
+     * @param artifacts the artifacts to add
+     */
     public void addArtifacts(final Artifacts artifacts) {
         getArtifacts().addArtifacts(artifacts);
     }
 
+    /**
+     * Adds a reference to an existing {@link Artifacts} instance.
+     *
+     * @param ref the reference to use
+     */
     public void setArtifactsRef(final Reference ref) {
         final Artifacts artifacts = new Artifacts();
         artifacts.setProject(getProject());
@@ -125,6 +184,11 @@ public abstract class AbstractDistTask extends Task {
         getArtifacts().addArtifacts(artifacts);
     }
 
+    /**
+     * Returns the current POM, falling back to the default POM if none has been explicitly set.
+     *
+     * @return the resolved {@link Pom}
+     */
     protected Pom getPom() {
         if (pom == null) {
             return AntRepoSys.getInstance(getProject()).getDefaultPom();
@@ -133,6 +197,12 @@ public abstract class AbstractDistTask extends Task {
         return pom;
     }
 
+    /**
+     * Add the POM to use for artifact deployment or installation.
+     *
+     * @param pom the POM to use
+     * @throws BuildException if multiple {@code <pom>} elements are specified
+     */
     public void addPom(final Pom pom) {
         if (this.pom != null) {
             throw new BuildException("You must not specify multiple <pom> elements");
@@ -140,6 +210,12 @@ public abstract class AbstractDistTask extends Task {
         this.pom = pom;
     }
 
+    /**
+     * Sets a reference to an existing {@link Pom}.
+     *
+     * @param ref the reference to set
+     * @throws BuildException if multiple {@code <pom>} elements are specified
+     */
     public void setPomRef(final Reference ref) {
         if (this.pom != null) {
             throw new BuildException("You must not specify multiple <pom> elements");

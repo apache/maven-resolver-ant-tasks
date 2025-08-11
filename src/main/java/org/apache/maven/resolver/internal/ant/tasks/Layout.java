@@ -31,6 +31,32 @@ import org.apache.tools.ant.BuildException;
 import org.eclipse.aether.artifact.Artifact;
 
 /**
+ * Represents the layout type for a Maven repository.
+ * <p>
+ * This is an Ant {@code DataType} used to configure the repository layout in tasks such as
+ * {@code <repository>}. It determines how artifact coordinates are translated into paths
+ * when accessing the repository.
+ * </p>
+ *
+ * <h2>Supported Layouts:</h2>
+ * <ul>
+ *   <li><strong>default</strong> – the standard Maven 2+ repository layout (recommended)</li>
+ * </ul>
+ * Since default is currently the default layout (and no other types are currently supported), it is safe to omit this.
+ * <h2>Usage Example:</h2>
+ * <pre>{@code
+ * <repositories>
+ *   <repository id="central" url="https://repo.maven.apache.org/maven2">
+ *      <layout>default</layout>
+ *   </repository>
+ * </repositories>
+ * }</pre>
+ *
+ * <p>
+ * This type is typically used as a nested element inside {@code <repository>} definitions.
+ * </p>
+ *
+ * @see org.apache.maven.resolver.internal.ant.types.RemoteRepository
  */
 class Layout {
 

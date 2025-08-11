@@ -32,6 +32,11 @@ public class Repository extends DataType {
     private Snapshots snapshots; // actually a boolean
 
     /**
+     * Default constructor.
+     */
+    public Repository() {}
+
+    /**
      * Adds an identifier to the repository.
      *
      * @param id the id element to add, must not be null

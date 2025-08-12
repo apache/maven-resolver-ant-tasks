@@ -20,7 +20,7 @@
 -->
 <project xmlns:repo='antlib:org.apache.maven.resolver.ant' default='install'>
   <echo level='info'>*********************</echo>
-  <echo level='info'>* Building example6 *</echo>
+  <echo level='info'>* Building example5 *</echo>
   <echo level='info'>*********************</echo>
   <!-- create a path to the maven resolver ant tasks uber jar -->
   <path id='antlib.classpath'>

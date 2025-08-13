@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.apache.maven.model.RepositoryPolicy;
@@ -29,19 +30,23 @@ import org.apache.maven.resolver.internal.ant.types.Dependencies;
 import org.apache.maven.resolver.internal.ant.types.Dependency;
 import org.apache.maven.resolver.internal.ant.types.DependencyManagement;
 import org.apache.maven.resolver.internal.ant.types.Pom;
+import org.apache.maven.resolver.internal.ant.types.model.Developers;
 import org.apache.maven.resolver.internal.ant.types.model.License;
 import org.apache.maven.resolver.internal.ant.types.model.Licenses;
 import org.apache.maven.resolver.internal.ant.types.model.MavenProject;
 import org.apache.maven.resolver.internal.ant.types.model.Repositories;
+import org.apache.maven.resolver.internal.ant.types.model.Scm;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
 /**
  * Task to create a Maven POM file.
- * This task allows you to define dependencies, dependency management, licenses, and repositories for the POM.
+ * This task allows you to define dependencies, dependency management, description, licenses, scm, and repositories for the POM.
  * This is useful if you have defined your dependencies in the ant build script instead of in the POM. This task also
- * registers the POM.
+ * registers the POM. Note: if you want to publish your open source library to maven central using the new
+ * central publisher api, the following 4 additional sections are required in the pom:
+ * description, licenses, developers, and scm.
  * <h2>Usage Example:</h2>
  * <pre>{@code
  * <repo:createPom pomTarget='${pomFile}'
@@ -49,12 +54,23 @@ import org.apache.tools.ant.Task;
  *                 dependencyManagementRef='dm'
  *                 name='mylib'
  *                 description='An useful library'>
- *     <licenses>
- *         <license>
- *             <name>Apache License, Version 2.0</name>
- *             <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
- *         </license>
- *     </licenses>
+ *   <licenses>
+ *     <license>
+ *       <name>MIT</name>
+ *       <url>https://opensource.org/license/mit</url>
+ *     </license>
+ *   </licenses>
+ *   <developers>
+ *     <developer>
+ *       <id>pnyfelt</id>
+ *       <name>Per Nyfelt</name>
+ *     </developer>
+ *   </developers>
+ *  <scm>
+ *    <url>https://github.com/pnyfelt/example3/tree/master</url>
+ *    <connection>scm:git:https://github.com/pnyfelt/example3.git</connection>
+ *    <developerConnection>scm:git:https://github.com/pnyfelt/example3.git</developerConnection>
+ *  </scm>
  * </repo:createPom>
  * }</pre>
  * <h2>Attributes:</h2>
@@ -97,6 +113,8 @@ public class CreatePom extends Task {
     private String description;
     private Licenses licenses;
     private Repositories repositories;
+    private Developers developers;
+    private Scm scm;
     private boolean skipPomRegistration;
 
     /**
@@ -290,6 +308,23 @@ public class CreatePom extends Task {
     }
 
     /**
+     * Allows ant to add a <code>Developers</code> section.
+     *
+     * @param developers the <code>Developers</code> to add
+     */
+    public void addDevelopers(Developers developers) {
+        this.developers = developers;
+    }
+
+    /**
+     * Allows ant to add a <code>Scm</code> section.
+     *
+     * @param scm the <code>Scm</code> to add
+     */
+    public void addScm(Scm scm) {
+        this.scm = scm;
+    }
+    /**
      * Execute the task to create the POM file.
      * This method will create the POM file with the specified properties and dependencies.
      */
@@ -345,6 +380,34 @@ public class CreatePom extends Task {
                 }
                 pom.getModel().getRepositories().add(repo);
             });
+        }
+
+        if (developers != null) {
+            developers.getDevelopers().forEach(developer -> {
+                org.apache.maven.model.Developer dev = new org.apache.maven.model.Developer();
+                dev.setId(developer.getIdText());
+                dev.setName(developer.getNameText());
+                dev.setEmail(developer.getEmailText());
+                dev.setUrl(developer.getUrlText());
+                dev.setOrganization(developer.getOrganizationText());
+                dev.setOrganizationUrl(developer.getOrganizationUrlText());
+                if (!developer.getRoles().isEmpty()) {
+                    dev.setRoles(new ArrayList<>());
+                    developer.getRoles().forEach(role -> {
+                        dev.getRoles().add(role.getText());
+                    });
+                }
+                dev.setTimezone(developer.getTimezoneText());
+                pom.getModel().getDevelopers().add(dev);
+            });
+        }
+
+        if (scm != null) {
+            org.apache.maven.model.Scm mavenScm = new org.apache.maven.model.Scm();
+            mavenScm.setConnection(scm.getConnectionText());
+            mavenScm.setDeveloperConnection(scm.getDeveloperConnectionText());
+            mavenScm.setUrl(scm.getUrlText());
+            pom.getModel().setScm(mavenScm);
         }
 
         try (OutputStream pomOutputStream = Files.newOutputStream(pomFile.toPath())) {

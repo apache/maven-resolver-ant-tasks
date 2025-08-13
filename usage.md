@@ -29,11 +29,9 @@ The Uber jar can be [downloaded from Maven central](https://repo.maven.apache.or
 mvn org.apache.maven.plugins:maven-dependency-plugin:3.8.1:get -Dartifact="org.apache.maven.resolver:maven-resolver-ant-tasks:1.5.2:jar:uber"
 ```
 
-If you are using the Groovy Antbuilder, you can use grab to fetch the normal jar and its dependencies add them to your classpath:
+If you are using the Groovy Antbuilder, you can use grab to fetch the jar and add it to your classpath:
 ```groovy
 @Grab('org.apache.maven.resolver:maven-resolver-ant-tasks:1.5.2')
-@Grab('org.codehaus.plexus:plexus-xml:4.1.0')
-@Grab(group='org.slf4j', module='slf4j-simple', version='2.0.17', scope='test')
 @GrabConfig(systemClassLoader=true)
 import groovy.ant.AntBuilder
 def ant = new AntBuilder()
@@ -67,8 +65,6 @@ There are two ways to define dependencies in your ant build using the Maven Reso
 2. Define your dependencies in the ant build file (e.g. build.xml).
 
 After one of these is done, you can use the `resolve` task to resolve the dependencies and add them to your classpath.
-
-You can find fully working examples in the [examples directory](examples) but here is a brief overview:
 
 ## Example of defining dependencies in a pom file
 1. Create a minimal pom file with the dependencies you want to use. For example, create a file named `pom.xml` with the following content:

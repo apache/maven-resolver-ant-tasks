@@ -76,13 +76,27 @@
   <target name='pom' depends='jar'>
     <property name='pomFile' value='${targetDir}/${artifactId}-${version}.pom'/>
     <echo level='info'>Creating and registering pom file ${pomFile}</echo>
-    <repo:createPom pomTarget='${pomFile}' dependenciesRef='compile' name='example3'>
+    <!-- if you want to publish your open source library to maven central, the following 4
+    additional sections are required in the pom: description, licenses, developers, and scm -->
+    <repo:createPom pomTarget='${pomFile}' dependenciesRef='compile' name='example3'
+                    description="Maven Central Publishing Example3">
       <licenses>
         <license>
           <name>MIT</name>
           <url>https://opensource.org/license/mit</url>
         </license>
       </licenses>
+      <developers>
+        <developer>
+          <id>pnyfelt</id>
+          <name>Per Nyfelt</name>
+        </developer>
+      </developers>
+      <scm>
+        <url>https://github.com/pnyfelt/example3/tree/master</url>
+        <connection>scm:git:https://github.com/pnyfelt/example3.git</connection>
+        <developerConnection>scm:git:https://github.com/pnyfelt/example3.git</developerConnection>
+      </scm>
     </repo:createPom>
   </target>
 

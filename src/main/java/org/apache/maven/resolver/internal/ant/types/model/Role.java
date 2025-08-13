@@ -16,19 +16,37 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package test.mygroup.example5;
+package org.apache.maven.resolver.internal.ant.types.model;
 
-import org.junit.Test;
-import org.mygroup.example5.Greeting;
+import org.apache.tools.ant.types.DataType;
 
-import org.junit.Assert;
+/**
+ * Represents the <code>role</code> element of e.g. a <code>roles</code> section.
+ *
+ */
+public class Role extends DataType {
+    private String role;
 
-public class GreetingTest {
+    /**
+     * Default constructor.
+     */
+    public Role() {}
 
-  @Test
-  public void testGreeting() {
-    Greeting greeting = new Greeting();
-    String greetingResult = greeting.greet(new String[] {"hello", "world"});
-    Assert.assertEquals("{hello,world}!", greetingResult);
-  }
+    /**
+     * Allow ant to add text to the <code>role</code> element, replacing any properties in the text.
+     *
+     * @param role the <code>role</code> value to add
+     */
+    public void addText(String role) {
+        this.role = getProject().replaceProperties(role);
+    }
+
+    /**
+     * Returns the text of the <code>role</code> element.
+     *
+     * @return the <code>Role</code> text
+     */
+    public String getText() {
+        return role;
+    }
 }

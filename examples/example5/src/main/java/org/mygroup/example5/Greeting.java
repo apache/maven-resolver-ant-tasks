@@ -47,7 +47,7 @@ public class Greeting {
    */
   public static void main(String[] args) {
     Greeting greeting = new Greeting();
-    String[] words = {"Hello", "World"};
+    String[] words = new String[] {"Hello", "World"};
     System.out.println(greeting.greet(words));
   }
 }

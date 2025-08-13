@@ -16,19 +16,36 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package test.mygroup.example5;
+package org.apache.maven.resolver.internal.ant.types.model;
 
-import org.junit.Test;
-import org.mygroup.example5.Greeting;
+import org.apache.tools.ant.types.DataType;
 
-import org.junit.Assert;
+/**
+ * Represents the <code>email</code> element of e.g. a <code>developer</code> section.
+ */
+public class Email extends DataType {
+    private String email;
 
-public class GreetingTest {
+    /**
+     * Default constructor.
+     */
+    public Email() {}
 
-  @Test
-  public void testGreeting() {
-    Greeting greeting = new Greeting();
-    String greetingResult = greeting.greet(new String[] {"hello", "world"});
-    Assert.assertEquals("{hello,world}!", greetingResult);
-  }
+    /**
+     * Allow ant to add text to the <code>email</code> element, replacing any properties in the text.
+     *
+     * @param email the email address value to add
+     */
+    public void addText(String email) {
+        this.email = getProject().replaceProperties(email);
+    }
+
+    /**
+     * Returns the text of the <code>email</code> element.
+     *
+     * @return the <code>Email</code> text
+     */
+    public String getText() {
+        return email;
+    }
 }

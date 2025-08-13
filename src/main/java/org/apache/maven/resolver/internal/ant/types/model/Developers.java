@@ -1,0 +1,54 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.apache.maven.resolver.internal.ant.types.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * The developers section is required if you want to publish your POM to
+ * maven central. It contains one or more <code>developer</code> elements.
+ */
+public class Developers {
+
+    private final List<Developer> developers = new ArrayList<>();
+
+    /**
+     * Default constructor.
+     */
+    public Developers() {}
+
+    /**
+     * Get the list of Developers'
+     *
+     * @return the list of Developer objects, never null.
+     */
+    public List<Developer> getDevelopers() {
+        return developers;
+    }
+
+    /**
+     * Allows Ant to add a <code>Developer</code> element to the developers' collection.
+     *
+     * @param developer The <code>Developer</code> to add
+     */
+    public void addDeveloper(Developer developer) {
+        developers.add(developer);
+    }
+}

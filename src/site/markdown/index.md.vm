@@ -237,3 +237,7 @@ following placeholders to refer to the coordinates of the currently processed ar
 * `{baseVersion}`, e.g. "1.0.0-SNAPSHOT"
 * `{extension}`, e.g. "jar"
 * `{classifier}`, e.g. "sources"
+
+# More information
+See [usage.md](https://github.com/apache/maven-resolver-ant-tasks/usage.md) for info.
+The [examples](https://github.com/apache/maven-resolver-ant-tasks/examples) contains 7 complete examples of various ways to use Maven Resolver Ant Tasks.

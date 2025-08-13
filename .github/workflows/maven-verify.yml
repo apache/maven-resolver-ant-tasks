@@ -25,3 +25,6 @@ jobs:
   build:
     name: Verify
     uses: apache/maven-gh-actions-shared/.github/workflows/maven-verify.yml@v4
+    with:
+      maven4-enabled: true
+      matrix-exclude: '[{"maven": "3.6.3"}, {"maven": "3.8.9"}]'

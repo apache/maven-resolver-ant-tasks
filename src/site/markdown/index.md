@@ -1,3 +1,21 @@
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
 # Maven Artifact Resolver Ant Tasks
 
 The Maven Artifact Resolver Ant Tasks enable build scripts for [Apache Ant](http://ant.apache.org/) 1.7+ to use
@@ -8,11 +26,13 @@ to resolve dependencies and install and deploy locally built artifacts.
 To integrate the tasks into your build file, copy the Über JAR into your project's lib directory and use the following
 snippet to load it:
 
-    <project xmlns:resolver="antlib:org.apache.maven.resolver.ant" ...>
-      <taskdef uri="antlib:org.apache.maven.resolver.ant" resource="org/apache/maven/resolver/ant/antlib.xml"
-        classpath="lib/maven-resolver-ant-tasks-${project.version}-uber.jar" />
-      ...
-    </project>
+```xml
+<project xmlns:resolver="antlib:org.apache.maven.resolver.ant" ...>
+  <taskdef uri="antlib:org.apache.maven.resolver.ant" resource="org/apache/maven/resolver/ant/antlib.xml"
+    classpath="lib/maven-resolver-ant-tasks-${project.version}-uber.jar" />
+  ...
+</project>
+```
 
 See the `build.xml` in the project sources for a complete example build script.
 
@@ -28,7 +48,9 @@ For the global settings, different paths will be tried:
 
 The `<settings/>` definition is used to change that:
 
-    <settings file="my-settings.xml" globalfile="myglobal-settings.xml"/>
+```xml
+<settings file="my-settings.xml" globalfile="myglobal-settings.xml"/>
+```
 
 Some settings defined in the settings file or in the POM can also be changed inside the Ant file.
 
@@ -38,7 +60,9 @@ Proxy definitions are used throughout the whole session. There may be multiple
 proxies set. The proxy to use will be chosen by evaluating the `nonProxyHosts` on
 each proxy definition, the first matching proxy will be used for a given remote connection.
 
-    <proxy host="proxy.mycorp.com" port="8080" type="http" nonProxyHosts="127.*|localhost|*.mycorp.com"/>
+```xml
+<proxy host="proxy.mycorp.com" port="8080" type="http" nonProxyHosts="127.*|localhost|*.mycorp.com"/>
+```
 
 ### Authentication
 
@@ -47,50 +71,61 @@ authentication definition will be added globally and chosen based on the
 `servers` attribute. If this attribute is not set, an authentication has to be
 referenced explicitly to be used.
 
-    <authentication username="login" password="pw" id="auth"/>
-    <authentication privateKeyFile="file.pk" passphrase="phrase" servers="distrepo" id="distauth"/>
+```xml
+<authentication username="login" password="pw" id="auth"/>
+<authentication privateKeyFile="file.pk" passphrase="phrase" servers="distrepo" id="distauth"/>
+```
 
 ### Local Repository
 
 Only one local repository can be used at a time.
 
-    <localrepo dir="someDir"/>
+```xml
+<localrepo dir="someDir"/>
+```
 
 ### Remote Repositories
 
 Remote repositories may be defined directly:
 
-    <remoterepo id="ossrh" url="https://oss.sonatype.org/content/repositories/snapshots/" type="default" releases="false" snapshots="true" updates="always" checksums="fail"/>
+```xml
+<remoterepo id="ossrh" url="https://oss.sonatype.org/content/repositories/snapshots/" type="default" releases="false" snapshots="true" updates="always" checksums="fail"/>
 
-    <remoterepo id="rao" url="https://repository.apache.org/content/groups/public/">
-        <releases enabled="true" updates="daily" checksums="warn"/>
-        <snapshots enabled="false"/>
-        <authentication refid="auth"/>
-    </remoterepo>
+<remoterepo id="rao" url="https://repository.apache.org/content/groups/public/">
+    <releases enabled="true" updates="daily" checksums="warn"/>
+    <snapshots enabled="false"/>
+    <authentication refid="auth"/>
+</remoterepo>
 
-    <remoterepo id="distrepo" url="..." authref="distauth"/>
+<remoterepo id="distrepo" url="..." authref="distauth"/>
+```
 
 Multiple repositories may be used as a group in every place that is legal for a
 remote repository:
 
-    <remoterepos id="all">
-        <remoterepo refid="ossrh"/>
-        <remoterepo refid="rao"/>
-        <remoterepo refid="distrepo"/>
-    </remoterepos>
+```xml
+<remoterepos id="all">
+    <remoterepo refid="ossrh"/>
+    <remoterepo refid="rao"/>
+    <remoterepo refid="distrepo"/>
+</remoterepos>
+```
 
 *Note:* Currently, only file:, http: and https: protocols are supported for remote repositories.
 
 ### Mirrors
 
-    <mirror id="" url="" mirrorOf=""/>
+```xml
+<mirror id="" url="" mirrorOf=""/>
+```
 
 ### Offline Mode
 
 To suppress any network activity and only use already cached artifacts/metadata, you can use a boolean property:
 
-    <property name="resolver.offline" value="true"/>
-
+```xml
+<property name="resolver.offline" value="true"/>
+```
 
 ## Project
 
@@ -102,9 +137,11 @@ The POM is the data type used to determine the target for the install and
 deploy tasks. If you define a POM without an id based on a full `pom.xml` file,
 that POM will be used by default for install and deploy.
 
-    <pom file="pom.xml" id="pom"/>
-    <pom groupId="g" artifactId="a" version="v"/>
-    <pom coords="g:a:v"/>
+```xml
+<pom file="pom.xml" id="pom"/>
+<pom groupId="g" artifactId="a" version="v"/>
+<pom coords="g:a:v"/>
+```
 
 #### Properties
 
@@ -117,12 +154,14 @@ assigned, the properties use the prefix `pom.` by default.
 
 `<artifact>` elements define the artifacts produced by this build that should be installed or deployed.
 
-    <artifact file="file-src.jar" type="jar" classifier="sources" id="src"/>
+```xml
+<artifact file="file-src.jar" type="jar" classifier="sources" id="src"/>
 
-    <artifacts id="producedArtifacts">
-        <artifact refid="src"/>
-        <artifact file="file-src.jar"/>
-    </artifacts>
+<artifacts id="producedArtifacts">
+    <artifact refid="src"/>
+    <artifact file="file-src.jar"/>
+</artifacts>
+```
 
 ### Dependencies
 
@@ -130,34 +169,35 @@ Dependencies are used to to create classpaths or filesets. They are used by
 the `<resolve>`-task, which collects the artifacts belonging to the dependencies
 transitively.
 
-    <dependency coords="g:a:v:scope"/>
+```xml
+<dependency coords="g:a:v:scope"/>
 
-    <dependency groupId="g" artifactId="a" version="v" classifier="c" type="jar" scope="runtime">
-        <exclusion coords="g:a"/>
-        <exclusion groupId="g" artifactId="a"/>
-    </dependency>
+<dependency groupId="g" artifactId="a" version="v" classifier="c" type="jar" scope="runtime">
+    <exclusion coords="g:a"/>
+    <exclusion groupId="g" artifactId="a"/>
+</dependency>
 
-    <dependencies id="deps">
-        <dependency refid="first"/>
-        <dependency refid="second"/>
-        <exclusion coords="g:a"/> <!-- global exclusion for all dependencies of this group -->
-    </dependencies>
+<dependencies id="deps">
+    <dependency refid="first"/>
+    <dependency refid="second"/>
+    <exclusion coords="g:a"/> <!-- global exclusion for all dependencies of this group -->
+</dependencies>
 
-    <dependencies>
-        <dependency coords="test:artifact:1.0:runtime"/>
-        <dependencies refid="deps"/> <!-- nested dependency collection merged into this one -->
-    </dependencies>
+<dependencies>
+    <dependency coords="test:artifact:1.0:runtime"/>
+    <dependencies refid="deps"/> <!-- nested dependency collection merged into this one -->
+</dependencies>
 
-    <dependencies id="depsFromPom" pomRef="pom"/>
+<dependencies id="depsFromPom" pomRef="pom"/>
 
-    <dependencies id="depsFromPlainTextFile" file="dependencies.txt"/>
-    <!--
-    Each non-empty line of that text file declares one dependency, using the same syntax as for the `coords` attribute
-    of the `<dependency>` element, i.e.
-    <groupId>:<artifactId>:<version>[[:<type>[:<classifier>]]:<scope>]
-    Everything after the first hash (#) character on a line is considered a comment.
-    -->
-
+<dependencies id="depsFromPlainTextFile" file="dependencies.txt"/>
+<!--
+Each non-empty line of that text file declares one dependency, using the same syntax as for the `coords` attribute
+of the `<dependency>` element, i.e.
+<groupId>:<artifactId>:<version>[[:<type>[:<classifier>]]:<scope>]
+Everything after the first hash (#) character on a line is considered a comment.
+-->
+```
 
 ## Tasks
 
@@ -165,16 +205,20 @@ transitively.
 
 You need to set a POM that references a file for the install task to work.
 
-    <install artifactsref="producedArtifacts"/>
+```xml
+<install artifactsref="producedArtifacts"/>
+```
 
 ### Deploy
 
 You need to set a POM that references a file for the deploy task to work, as that POM file will be deployed to repository.
 
-    <deploy artifactsref="producedArtifacts">
-        <remoterepo refid="distrepo"/>
-        <snapshotrepo refid="snaprepo">
-    </deploy>
+```xml
+<deploy artifactsref="producedArtifacts">
+    <remoterepo refid="distrepo"/>
+    <snapshotrepo refid="snaprepo">
+</deploy>
+```
 
 ### Resolve
 
@@ -194,24 +238,26 @@ This task is able to assemble the collected dependencies in three different ways
 These targets may also be mentioned more than once for the same resolve task,
 but only one `<dependencies>` element is allowed.
 
-    <resolve failOnMissingAttachments="true">
-        <dependencies>
-            <dependency coords="org.apache.maven:maven-profile:2.0.6"/>
-            <exclusion artifactId="junit"/>
-            <exclusion groupId="org.codehaus.plexus"/>
-        </dependencies>
-        <path refid="cp" classpath="compile"/>
-        <files refid="src.files" attachments="sources" dir="target/sources"
-               layout="{artifactId}-{classifier}.{extension}"/>
-        <files refid="api.files" attachments="javadoc" dir="target/javadoc"
-               layout="{artifactId}-{classifier}.{extension}"/>
-        <properties prefix="dep." scopes="provided,system"/>
-    </resolve>
+```xml
+<resolve failOnMissingAttachments="true">
+    <dependencies>
+        <dependency coords="org.apache.maven:maven-profile:2.0.6"/>
+        <exclusion artifactId="junit"/>
+        <exclusion groupId="org.codehaus.plexus"/>
+    </dependencies>
+    <path refid="cp" classpath="compile"/>
+    <files refid="src.files" attachments="sources" dir="target/sources"
+           layout="{artifactId}-{classifier}.{extension}"/>
+    <files refid="api.files" attachments="javadoc" dir="target/javadoc"
+           layout="{artifactId}-{classifier}.{extension}"/>
+    <properties prefix="dep." scopes="provided,system"/>
+</resolve>
 
-    <resolve dependenciesref="deps">
-        <path refid="cp.compile" classpath="compile"/>
-        <path refid="cp.test" classpath="test"/>
-    </resolve>
+<resolve dependenciesref="deps">
+    <path refid="cp.compile" classpath="compile"/>
+    <path refid="cp.test" classpath="test"/>
+</resolve>
+```
 
 Scope filters can be set on every target, enumerating included and/or excluded
 scope names. Exclusions are denoted by prefixing the scope name with `-` or `!` (e.g. `provided,!system`).
@@ -220,12 +266,14 @@ The `classpath` attribute is a shortcut for the scope filters (e.g.
 `classpath="compile"` equals `scope="provided,system,compile"`). Valid values are
 "`compile`", "`runtime`", "`test`".
 
-    <resolve>
-        <dependencies pomRef="pom"/>
-        <remoterepos refid="all"/>
-        <path refid="cp" classpath="compile"/>
-        <path refid="tp" classpath="test"/>
-    </resolve>
+```xml
+<resolve>
+    <dependencies pomRef="pom"/>
+    <remoterepos refid="all"/>
+    <path refid="cp" classpath="compile"/>
+    <path refid="tp" classpath="test"/>
+</resolve>
+```
 
 The layout attribute of the `<files>` element is only allowed when the `dir` attribute is also given and recognizes the
 following placeholders to refer to the coordinates of the currently processed artifact:
@@ -239,5 +287,6 @@ following placeholders to refer to the coordinates of the currently processed ar
 * `{classifier}`, e.g. "sources"
 
 # More information
-See [usage.md](https://github.com/apache/maven-resolver-ant-tasks/usage.md) for info.
-The [examples](https://github.com/apache/maven-resolver-ant-tasks/examples) contains 7 complete examples of various ways to use Maven Resolver Ant Tasks.
+See [usage.md](https://github.com/apache/maven-resolver-ant-tasks/blob/master/usage.md) for info.
+
+The [examples](https://github.com/apache/maven-resolver-ant-tasks/tree/master/examples) contains 7 complete examples of various ways to use Maven Resolver Ant Tasks.

@@ -30,7 +30,7 @@ ant.with {
 
   delete dir: '${mainBuildDir}'
   dependencies(id:'compile') {
-    dependency groupId: 'org.apache.commons', artifactId: 'commons-lang3', version: '3.17.0'
+    dependency groupId: 'org.apache.commons', artifactId: 'commons-lang3', version: '3.18.0'
   }
   resolve(dependenciesref:'compile') {
     path refId: 'compilePath', classpath:'compile'

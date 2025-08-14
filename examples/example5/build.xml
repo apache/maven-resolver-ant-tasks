@@ -46,7 +46,7 @@
   </repo:dependencyManagement>
 
   <repo:dependencies id='compile'>
-    <repo:dependency groupId='org.apache.commons' artifactId='commons-lang3' version='3.17.0'/>
+    <repo:dependency groupId='org.apache.commons' artifactId='commons-lang3' version='3.18.0'/>
     <repo:dependency groupId='org.junit.jupiter' artifactId='junit-jupiter-engine' scope='test'/>
     <repo:dependency groupId='org.junit.platform' artifactId='junit-platform-launcher' scope='test'/>
   </repo:dependencies>

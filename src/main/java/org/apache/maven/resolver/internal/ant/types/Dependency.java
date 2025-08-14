@@ -48,7 +48,7 @@ import org.apache.tools.ant.types.Reference;
  *   <dependency
  *     groupId="org.apache.commons"
  *     artifactId="commons-lang3"
- *     version="3.12.0"
+ *     version="3.18.0"
  *     scope="compile"
  *     optional="false"
  *     type="jar">
@@ -59,7 +59,7 @@ import org.apache.tools.ant.types.Reference;
  * It is also possible to use the short notation when declaring a dependency e.g.
  * <pre>{@code
  * <dependencies>
- *   <dependency coords="org.apache.commons:commons-lang3:3.12.0" scope="compile"/>
+ *   <dependency coords="org.apache.commons:commons-lang3:3.18.0" scope="compile"/>
  * </dependencies>
  * }</pre>
  * <h2>Attributes:</h2>
@@ -555,7 +555,7 @@ public class Dependency extends DataType implements DependencyContainer {
      * For example:
      * </p>
      * <ul>
-     *   <li>{@code org.apache.commons:commons-lang3:3.12.0}</li>
+     *   <li>{@code org.apache.commons:commons-lang3:3.18.0}</li>
      *   <li>{@code com.example:lib:jar:sources:1.0.0}</li>
      * </ul>
      *

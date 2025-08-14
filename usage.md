@@ -46,7 +46,7 @@ ant.with {
   property(name:'mainBuildDir', value: '${basedir}/target/classes')
 
   dependencies(id:'compile') {
-    dependency groupId: 'org.apache.commons', artifactId: 'commons-lang3', version: '3.17.0'
+    dependency groupId: 'org.apache.commons', artifactId: 'commons-lang3', version: '3.18.0'
   }
   resolve(dependenciesref:'compile') {
     path refId: 'compilePath', classpath:'compile'
@@ -79,7 +79,7 @@ After one of these is done, you can use the `resolve` task to resolve the depend
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <version>3.17.0</version>
+      <version>3.18.0</version>
     </dependency>
   </dependencies>
 </project>
@@ -115,7 +115,7 @@ See [example1](examples/example1) for a complete example of using a pom file to 
   <taskdef uri='antlib:org.apache.maven.resolver.ant' resource='org/apache/maven/resolver/ant/antlib.xml'/>
   
   <repo:dependencies id='compile'>
-    <repo:dependency groupId='org.apache.commons' artifactId='commons-lang3' version='3.17.0'/>
+    <repo:dependency groupId='org.apache.commons' artifactId='commons-lang3' version='3.18.0'/>
   </repo:dependencies>
 
   <target name='configurePaths' description='Configure paths for compilation using the pom file for dependencies'>

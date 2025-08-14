@@ -44,7 +44,7 @@ import org.apache.tools.ant.types.Reference;
  * <pre>{@code
  * <repo:resolve>
  *   <repo:dependencies>
- *     <repo:dependency groupId="org.apache.commons" artifactId="commons-lang3" version="3.12.0"/>
+ *     <repo:dependency groupId="org.apache.commons" artifactId="commons-lang3" version="3.18.0"/>
  *     <repo:dependency groupId="com.google.guava" artifactId="guava" version="32.0.2"/>
  *   </repo:dependencies>
  *   <path id="my.classpath"/>

@@ -64,7 +64,7 @@ import org.eclipse.aether.util.filter.ScopeDependencyFilter;
  * <pre>{@code
  * <resolve>
  *   <dependencies>
- *     <dependency groupId="org.apache.commons" artifactId="commons-lang3" version="3.12.0"/>
+ *     <dependency groupId="org.apache.commons" artifactId="commons-lang3" version="3.18.0"/>
  *   </dependencies>
  *   <repositories>
  *     <repository id="central" url="https://repo.maven.apache.org/maven2"/>

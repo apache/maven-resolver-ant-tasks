@@ -18,7 +18,7 @@
  */
 package test.mygroup.example5;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mygroup.example5.Greeting;
 
 import org.junit.Assert;

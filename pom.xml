@@ -62,7 +62,6 @@
     <resolverVersion>1.9.24</resolverVersion>
     <antVersion>1.10.15</antVersion>
     <javaVersion>8</javaVersion>
-    <junitVersion>4.13.2</junitVersion>
     <hamcrestVersion>3.0</hamcrestVersion>
     <maven.site.path>resolver-archives/resolver-ant-tasks-LATEST</maven.site.path>
     <checkstyle.violation.ignore>LineLength,MagicNumber</checkstyle.violation.ignore>
@@ -184,18 +183,6 @@
       <artifactId>org.eclipse.sisu.plexus</artifactId>
     </dependency>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junitVersion}</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.hamcrest</groupId>
-          <artifactId>hamcrest-core</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant-testutil</artifactId>
       <version>${antVersion}</version>
@@ -211,6 +198,17 @@
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest</artifactId>
       <version>${hamcrestVersion}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-junit</artifactId>
+      <version>2.0.0.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -347,9 +345,9 @@
                 <version>${antVersion}</version>
               </dependency>
               <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junitVersion}</version>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>5.14.1</version>
               </dependency>
             </dependencies>
             <executions>

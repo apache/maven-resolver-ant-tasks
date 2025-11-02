@@ -18,23 +18,22 @@
  */
 package org.apache.maven.resolver.internal.ant.tasks;
 
-import junit.framework.JUnit4TestAdapter;
 import org.apache.tools.ant.BuildException;
 import org.eclipse.aether.artifact.DefaultArtifact;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  */
 public class LayoutTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(LayoutTest.class);
-    }
 
-    @Test(expected = BuildException.class)
+    @Test
     public void testUnknownVariable() {
-        new Layout("{unknown}");
+        assertThrows(BuildException.class, () -> {
+            new Layout("{unknown}");
+        });
     }
 
     @Test

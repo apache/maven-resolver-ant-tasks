@@ -20,29 +20,25 @@ package org.apache.maven.resolver.internal.ant;
 
 import java.io.File;
 
-import junit.framework.JUnit4TestAdapter;
 import org.apache.maven.resolver.internal.ant.types.Pom;
 import org.apache.tools.ant.Project;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ProjectWorkspaceReaderTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ProjectWorkspaceReaderTest.class);
-    }
 
     private ProjectWorkspaceReader reader;
 
     private Project project;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         this.reader = new ProjectWorkspaceReader();
 

@@ -21,23 +21,18 @@ package org.apache.maven.resolver.internal.ant.tasks;
 import java.io.File;
 import java.io.PrintStream;
 
-import junit.framework.JUnit4TestAdapter;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class CreatePomRainyDayTest {
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(CreatePomRainyDayTest.class);
-    }
-
-    @Rule
-    public final BuildFileRule buildRule = new BuildFileRule();
+    //    @Rule
+    private BuildFileRule buildRule = new BuildFileRule();
 
     public void configureProject(String filename, int logLevel) throws BuildException {
         buildRule.configureProject(filename, logLevel);
@@ -63,13 +58,13 @@ public class CreatePomRainyDayTest {
     public void testNoGroupId() {
         configureProject("target/test-classes/ant/createPom/noGroupId.xml", Project.MSG_VERBOSE);
         // Expect a BuildException when trying to execute the target
-        Assert.assertThrows(BuildException.class, () -> buildRule.executeTarget("setup"));
+        Assertions.assertThrows(BuildException.class, () -> buildRule.executeTarget("setup"));
 
         // This should work since the setSkipPomRegistration property is set to true
         configureProject("target/test-classes/ant/createPom/noGroupIdSkipRegistration.xml", Project.MSG_VERBOSE);
         buildRule.executeTarget("setup");
         File pomFile = getPomFile();
-        Assert.assertTrue("The pom file should have been created at " + pomFile, pomFile.exists());
+        Assertions.assertTrue(pomFile.exists(), "The pom file should have been created at " + pomFile);
     }
 
     /**
@@ -81,19 +76,19 @@ public class CreatePomRainyDayTest {
     public void testNoArtifactId() {
         configureProject("target/test-classes/ant/createPom/noArtifactId.xml", Project.MSG_VERBOSE);
         // Expect a BuildException when trying to execute the target
-        Assert.assertThrows(BuildException.class, () -> buildRule.executeTarget("setup"));
+        Assertions.assertThrows(BuildException.class, () -> buildRule.executeTarget("setup"));
 
         // This should work since the setSkipPomRegistration property is set to true
         configureProject("target/test-classes/ant/createPom/noArtifactIdSkipRegistration.xml", Project.MSG_VERBOSE);
         buildRule.executeTarget("setup");
         File pomFile = getPomFile();
-        Assert.assertTrue("The pom file should have been created at " + pomFile, pomFile.exists());
+        Assertions.assertTrue(pomFile.exists(), "The pom file should have been created at " + pomFile);
     }
 
     private File getPomFile() {
         Project project = buildRule.getProject();
         String pomPath = project.replaceProperties(project.getProperty("pomFile"));
-        Assert.assertNotNull("pomFile property should not be null", pomPath);
+        assertNotNull(pomPath, "pomFile property should not be null");
         return new File(pomPath);
     }
 }

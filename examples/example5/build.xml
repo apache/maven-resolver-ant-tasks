@@ -41,7 +41,7 @@
 
   <repo:dependencyManagement id='dm'>
     <repo:dependencies>
-      <repo:dependency groupId='org.junit' artifactId='junit-bom' version='5.12.2' type='pom' scope='import'/>
+      <repo:dependency groupId='org.junit' artifactId='junit-bom' version='5.14.2' type='pom' scope='import'/>
     </repo:dependencies>
   </repo:dependencyManagement>
 

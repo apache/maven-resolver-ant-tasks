@@ -21,55 +21,52 @@ package org.apache.maven.resolver.internal.ant;
 import java.io.File;
 import java.io.IOException;
 
-import junit.framework.JUnit4TestAdapter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.endsWith;
-import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SettingsTest extends AntBuildsTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(SettingsTest.class);
-    }
 
     @Test
     public void testUserSettings() {
         executeTarget("testUserSettings");
-        assertThat(
-                "user settings not set",
+        assertEquals(
+                "userSettings.xml",
                 AntRepoSys.getInstance(getProject()).getUserSettings().getName(),
-                equalTo("userSettings.xml"));
+                "user settings not set");
     }
 
     @Test
     public void testGlobalSettings() {
         executeTarget("testGlobalSettings");
-        assertThat(
-                "global settings not set",
+        assertEquals(
+                "globalSettings.xml",
                 AntRepoSys.getInstance(getProject()).getGlobalSettings().getName(),
-                equalTo("globalSettings.xml"));
+                "global settings not set");
     }
 
     @Test
     public void testBothSettings() {
         executeTarget("testBothSettings");
-        assertThat(
-                "global settings not set",
+        assertEquals(
+                "globalSettings.xml",
                 AntRepoSys.getInstance(getProject()).getGlobalSettings().getName(),
-                equalTo("globalSettings.xml"));
-        assertThat(
-                "user settings not set",
+                "global settings not set");
+        assertEquals(
+                "userSettings.xml",
                 AntRepoSys.getInstance(getProject()).getUserSettings().getName(),
-                equalTo("userSettings.xml"));
+                "user settings not set");
     }
 
     @Test
     public void testFallback() throws IOException {
         executeTarget("setUp");
-        assertThat(
-                "no fallback to local settings",
-                AntRepoSys.getInstance(getProject()).getUserSettings().getAbsolutePath(),
-                endsWith(".m2" + File.separator + "settings.xml"));
+        assertTrue(
+                AntRepoSys.getInstance(getProject())
+                        .getUserSettings()
+                        .getAbsolutePath()
+                        .endsWith(".m2" + File.separator + "settings.xml"),
+                "no fallback to local settings");
     }
 }

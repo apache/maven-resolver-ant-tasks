@@ -18,17 +18,13 @@
  */
 package org.apache.maven.resolver.internal.ant.types;
 
-import junit.framework.JUnit4TestAdapter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  */
 public class PomTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(PomTest.class);
-    }
 
     @Test
     public void testSetCoordsGid() {

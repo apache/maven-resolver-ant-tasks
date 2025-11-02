@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
 
-import junit.framework.JUnit4TestAdapter;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.model.Developer;
@@ -35,13 +34,13 @@ import org.apache.maven.model.Scm;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.resolver.internal.ant.AntBuildsTest;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CreatePomTest extends AntBuildsTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(CreatePomTest.class);
-    }
 
     public CreatePomTest() {
         super(new File("target/test-classes/ant/DependencyManagement/build.xml"));
@@ -52,70 +51,63 @@ public class CreatePomTest extends AntBuildsTest {
         executeTarget("setup");
         String pomPath = getProject().getProperty("pomFile");
 
-        Assert.assertNotNull("pomFile property should not be null", pomPath);
+        Assertions.assertNotNull(pomPath, "pomFile property should not be null");
         File pomFile = new File(pomPath);
 
         Model model = readPomFile(pomFile);
-        Assert.assertNotNull("Model should not be null", model);
-        Assert.assertEquals("modelVersion", "4.0.0", model.getModelVersion());
-        Assert.assertEquals("groupId", "test.resolver.dm", model.getGroupId());
-        Assert.assertEquals("artifactId", "dependency-management", model.getArtifactId());
-        Assert.assertEquals("version", "1.0-SNAPSHOT", model.getVersion());
+        Assertions.assertNotNull(model, "Model should not be null");
+        assertEquals("4.0.0", model.getModelVersion(), "modelVersion");
+        assertEquals("test.resolver.dm", model.getGroupId(), "groupId");
+        assertEquals("dependency-management", model.getArtifactId(), "artifactId");
+        assertEquals("1.0-SNAPSHOT", model.getVersion(), "version");
         DependencyManagement dm = model.getDependencyManagement();
         List<Dependency> dependencies = dm.getDependencies();
-        Assert.assertEquals("dependencies should have 2 entries", 2, dependencies.size());
+        assertEquals(2, dependencies.size(), "dependencies should have 2 entries");
         Dependency matrix = dependencies.get(0);
-        Assert.assertEquals("matrix dependency groupId", "se.alipsa.matrix", matrix.getGroupId());
-        Assert.assertEquals("matrix dependency artifactId", "matrix-bom", matrix.getArtifactId());
-        Assert.assertEquals("matrix dependency version", "2.2.0", matrix.getVersion());
-        Assert.assertEquals("matrix dependency type", "pom", matrix.getType());
-        Assert.assertEquals("matrix dependency scope", "import", matrix.getScope());
+        assertEquals("se.alipsa.matrix", matrix.getGroupId(), "matrix dependency groupId");
+        assertEquals("matrix-bom", matrix.getArtifactId(), "matrix dependency artifactId");
+        assertEquals("2.2.0", matrix.getVersion(), "matrix dependency version");
+        assertEquals("pom", matrix.getType(), "matrix dependency type");
+        assertEquals("import", matrix.getScope(), "matrix dependency scope");
 
         License license = model.getLicenses().get(0);
-        Assert.assertEquals("license name should match", "The Apache Software License, Version 2.0", license.getName());
-        Assert.assertEquals(
-                "license url should match", "http://www.apache.org/licenses/LICENSE-2.0.txt", license.getUrl());
-        Assert.assertEquals("license distribution should match", "repo", license.getDistribution());
+        assertEquals("The Apache Software License, Version 2.0", license.getName(), "license name should match");
+        assertEquals("http://www.apache.org/licenses/LICENSE-2.0.txt", license.getUrl(), "license url should match");
+        assertEquals("repo", license.getDistribution(), "license distribution should match");
 
         Repository repo = model.getRepositories().get(0);
-        Assert.assertEquals("repository id should match", "my-internal-site", repo.getId());
-        Assert.assertEquals("repository url should match", "https://myserver/repo", repo.getUrl());
-        Assert.assertEquals("repository layout should match", "default", repo.getLayout());
-        Assert.assertTrue(
-                "repository snapshots should be enabled", repo.getSnapshots().isEnabled());
-        Assert.assertTrue(
-                "repository releases should be enabled", repo.getReleases().isEnabled());
+        assertEquals("my-internal-site", repo.getId(), "repository id should match");
+        assertEquals("https://myserver/repo", repo.getUrl(), "repository url should match");
+        assertEquals("default", repo.getLayout(), "repository layout should match");
+        assertTrue(repo.getSnapshots().isEnabled(), "repository snapshots should be enabled");
+        assertTrue(repo.getReleases().isEnabled(), "repository releases should be enabled");
 
         List<Developer> developers = model.getDevelopers();
-        Assert.assertEquals("developers should have 1 entry", 1, developers.size());
+        assertEquals(1, developers.size(), "developers should have 1 entry");
         Developer developer = developers.get(0);
-        Assert.assertEquals("developer id should match", "jdoe", developer.getId());
-        Assert.assertEquals("developer name should match", "John Doe", developer.getName());
-        Assert.assertEquals("developer email should match", "jdoe@example.com", developer.getEmail());
-        Assert.assertEquals("developer url should match", "http://www.example.com/jdoe", developer.getUrl());
-        Assert.assertEquals("developer organization should match", "ACME", developer.getOrganization());
-        Assert.assertEquals(
-                "developers organizationUrl should match", "http://www.example.com", developer.getOrganizationUrl());
-        Assert.assertEquals(
-                "developer should have 2 roles", 2, developer.getRoles().size());
-        Assert.assertTrue(
-                "developer should have an architect role", developer.getRoles().contains("architect"));
-        Assert.assertTrue(
-                "developer should have a developer role", developer.getRoles().contains("developer"));
-        Assert.assertEquals("developer timezone should match", "America/New_York", developer.getTimezone());
+        assertEquals("jdoe", developer.getId(), "developer id should match");
+        assertEquals("John Doe", developer.getName(), "developer name should match");
+        assertEquals("jdoe@example.com", developer.getEmail(), "developer email should match");
+        assertEquals("http://www.example.com/jdoe", developer.getUrl(), "developer url should match");
+        assertEquals("ACME", developer.getOrganization(), "developer organization should match");
+        assertEquals(
+                "http://www.example.com", developer.getOrganizationUrl(), "developers organizationUrl should match");
+        assertEquals(2, developer.getRoles().size(), "developer should have 2 roles");
+        assertTrue(developer.getRoles().contains("architect"), "developer should have an architect role");
+        assertTrue(developer.getRoles().contains("developer"), "developer should have a developer role");
+        assertEquals("America/New_York", developer.getTimezone(), "developer timezone should match");
 
         Scm scm = model.getScm();
-        Assert.assertEquals(
-                "Scm connection should match", "scm:svn:http://127.0.0.1/svn/my-project", scm.getConnection());
-        Assert.assertEquals(
-                "Scm developerConnection should match",
+        assertEquals("scm:svn:http://127.0.0.1/svn/my-project", scm.getConnection(), "Scm connection should match");
+        assertEquals(
                 "scm:svn:https://127.0.0.1/svn/my-project",
-                scm.getDeveloperConnection());
-        Assert.assertEquals("Scm url should match", "http://127.0.0.1/websvn/my-project", scm.getUrl());
+                scm.getDeveloperConnection(),
+                "Scm developerConnection should match");
+        assertEquals("http://127.0.0.1/websvn/my-project", scm.getUrl(), "Scm url should match");
     }
 
     public static Model readPomFile(File pomFile) throws IOException, XmlPullParserException {
-        Assert.assertTrue("pomFile (" + pomFile + ") should exist", pomFile.exists());
+        assertTrue(pomFile.exists(), "pomFile (" + pomFile + ") should exist");
         try (Reader reader = new FileReader(pomFile)) {
             MavenXpp3Reader pomReader = new MavenXpp3Reader();
             return pomReader.read(reader);

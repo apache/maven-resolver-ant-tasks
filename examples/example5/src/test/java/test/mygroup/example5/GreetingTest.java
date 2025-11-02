@@ -18,10 +18,10 @@
  */
 package test.mygroup.example5;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mygroup.example5.Greeting;
 
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GreetingTest {
 
@@ -29,6 +29,6 @@ public class GreetingTest {
   public void testGreeting() {
     Greeting greeting = new Greeting();
     String greetingResult = greeting.greet(new String[] {"hello", "world"});
-    Assert.assertEquals("{hello,world}!", greetingResult);
+    assertEquals("{hello,world}!", greetingResult);
   }
 }

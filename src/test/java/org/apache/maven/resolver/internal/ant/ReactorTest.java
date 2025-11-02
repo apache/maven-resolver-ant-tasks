@@ -21,19 +21,15 @@ package org.apache.maven.resolver.internal.ant;
 import java.io.File;
 import java.io.IOException;
 
-import junit.framework.JUnit4TestAdapter;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ReactorTest extends AntBuildsTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ReactorTest.class);
-    }
 
     private Artifact artifact(String coords) {
         return new DefaultArtifact(coords);

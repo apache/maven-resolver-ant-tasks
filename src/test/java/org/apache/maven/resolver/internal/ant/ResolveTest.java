@@ -30,16 +30,16 @@ import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.junit.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.hasItemInArray;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ResolveTest extends AntBuildsTest {
     public static junit.framework.Test suite() {
@@ -51,7 +51,7 @@ public class ResolveTest extends AntBuildsTest {
         executeTarget("testResolveGlobalPom");
 
         String prop = getProject().getProperty("test.resolve.path.org.eclipse.aether:aether-api:jar");
-        assertThat("aether-api was not resolved as a property", prop, notNullValue());
+        assertNotNull(prop, "aether-api was not resolved as a property");
         assertThat(
                 "aether-api was not resolved to default local repository",
                 prop,
@@ -63,7 +63,7 @@ public class ResolveTest extends AntBuildsTest {
         executeTarget("testResolveOverrideGlobalPom");
 
         String prop = getProject().getProperty("test.resolve.path.org.eclipse.aether:aether-api:jar");
-        assertThat("aether-api was not resolved as a property", prop, notNullValue());
+        assertNotNull(prop, "aether-api was not resolved as a property");
         assertThat(
                 "aether-api was not resolved to default local repository",
                 prop,
@@ -75,11 +75,8 @@ public class ResolveTest extends AntBuildsTest {
         executeTarget("testResolveGlobalPomIntoOtherLocalRepo");
 
         String prop = getProject().getProperty("test.resolve.path.org.eclipse.aether:aether-api:jar");
-        assertThat("aether-api was not resolved as a property", prop, notNullValue());
-        assertThat(
-                "aether-api was not resolved to default local repository",
-                prop.replace('\\', '/'),
-                endsWith("local-repo-custom/org/eclipse/aether/aether-api/0.9.0.M3/aether-api-0.9.0.M3.jar"));
+        assertNotNull(prop, "aether-api was not resolved as a property");
+        assertTrue(prop.replace('\\', '/').endsWith("local-repo-custom/org/eclipse/aether/aether-api/0.9.0.M3/aether-api-0.9.0.M3.jar"), "aether-api was not resolved to default local repository");
     }
 
     @Test
@@ -87,9 +84,9 @@ public class ResolveTest extends AntBuildsTest {
         File dir = new File(BUILD_DIR, "resolve-custom-layout");
         executeTarget("testResolveCustomFileLayout");
 
-        assertThat(
-                "aether-api was not saved with custom file layout",
-                new File(dir, "org.eclipse.aether/aether-api/org/eclipse/aether/jar").exists());
+        assertTrue(
+                new File(dir, "org.eclipse.aether/aether-api/org/eclipse/aether/jar").exists(),
+                "aether-api was not saved with custom file layout");
     }
 
     @Test
@@ -99,16 +96,16 @@ public class ResolveTest extends AntBuildsTest {
 
         File jdocDir = new File(dir, "javadoc");
 
-        assertThat(
-                "aether-api-javadoc was not saved with custom file layout",
-                new File(jdocDir, "org.eclipse.aether-aether-api-javadoc.jar").exists());
+        assertTrue(
+                new File(jdocDir, "org.eclipse.aether-aether-api-javadoc.jar").exists(),
+                "aether-api-javadoc was not saved with custom file layout");
 
         assertThat("found non-javadoc files", Arrays.asList(jdocDir.list()), everyItem(endsWith("javadoc.jar")));
 
         File sourcesDir = new File(dir, "sources");
-        assertThat(
-                "aether-api-sources was not saved with custom file layout",
-                new File(sourcesDir, "org.eclipse.aether-aether-api-sources.jar").exists());
+        assertTrue(
+                new File(sourcesDir, "org.eclipse.aether-aether-api-sources.jar").exists(),
+                "aether-api-sources was not saved with custom file layout");
         assertThat("found non-sources files", Arrays.asList(sourcesDir.list()), everyItem(endsWith("sources.jar")));
     }
 
@@ -117,7 +114,7 @@ public class ResolveTest extends AntBuildsTest {
         executeTarget("testResolvePath");
         Map<?, ?> refs = getProject().getReferences();
         Object obj = refs.get("out");
-        assertThat("ref 'out' is no path", obj, instanceOf(Path.class));
+        assertInstanceOf(Path.class, obj, "ref 'out' is no path");
         Path path = (Path) obj;
         String[] elements = path.list();
         assertThat(
@@ -131,13 +128,13 @@ public class ResolveTest extends AntBuildsTest {
         executeTarget("testResolveDepsFromFile");
 
         String prop = getProject().getProperty("test.resolve.path.org.eclipse.aether:aether-spi:jar");
-        assertThat("aether-spi was not resolved as a property", prop, notNullValue());
+        assertNotNull(prop, "aether-spi was not resolved as a property");
         assertThat(
                 "aether-spi was not resolved to default local repository",
                 prop,
                 allOf(containsString("aether-spi"), endsWith(".jar")));
         prop = getProject().getProperty("test.resolve.path.org.eclipse.aether:aether-api:jar");
-        assertThat("aether-api was resolved as a property", prop, nullValue());
+        assertNull(prop, "aether-api was resolved as a property");
     }
 
     @Test
@@ -145,11 +142,11 @@ public class ResolveTest extends AntBuildsTest {
         executeTarget("testResolveNestedDependencyCollections");
 
         String prop = getProject().getProperty("test.resolve.path.org.eclipse.aether:aether-spi:jar");
-        assertThat("aether-spi was not resolved as a property", prop, notNullValue());
+        assertNotNull(prop, "aether-spi was not resolved as a property");
         prop = getProject().getProperty("test.resolve.path.org.eclipse.aether:aether-util:jar");
-        assertThat("aether-util was not resolved as a property", prop, notNullValue());
+        assertNotNull(prop, "aether-util was not resolved as a property");
         prop = getProject().getProperty("test.resolve.path.org.eclipse.aether:aether-api:jar");
-        assertThat("aether-api was resolved as a property", prop, nullValue());
+        assertNull(prop, "aether-api was resolved as a property");
     }
 
     @Test
@@ -157,7 +154,7 @@ public class ResolveTest extends AntBuildsTest {
         executeTarget("testResolveResourceCollectionOnly");
 
         ResourceCollection resources = (ResourceCollection) getProject().getReference("files");
-        assertThat(resources, is(notNullValue()));
+        assertNotNull(resources);
         assertThat(resources.size(), is(2));
         assertThat(resources.isFilesystemOnly(), is(true));
         Iterator<?> it = resources.iterator();
@@ -172,14 +169,14 @@ public class ResolveTest extends AntBuildsTest {
         executeTarget("testResolveTransitiveDependencyManagement");
 
         String prop = getProject().getProperty("test.resolve.path.org.slf4j:slf4j-api:jar");
-        assertThat("slf4j-api was not resolved as a property", prop, notNullValue());
+        assertNotNull(prop, "slf4j-api was not resolved as a property");
         assertThat(
                 "slf4j-api was not resolved to default local repository",
                 prop,
                 allOf(containsString("slf4j-api"), endsWith("slf4j-api-2.0.6.jar")));
 
         prop = getProject().getProperty("test.resolve.path.org.apiguardian:apiguardian-api:jar");
-        assertThat("apiguardian-api was not resolved as a property", prop, notNullValue());
+        assertNotNull(prop, "apiguardian-api was not resolved as a property");
         assertThat(
                 "apiguardian-api was not resolved to default local repository",
                 prop,
@@ -191,14 +188,14 @@ public class ResolveTest extends AntBuildsTest {
         executeTarget("testResolveTransitiveDependencyManagementTestScope");
 
         String prop = getProject().getProperty("test.compile.resolve.path.org.slf4j:slf4j-api:jar");
-        assertThat("slf4j-api was not resolved as a property", prop, notNullValue());
+        assertNotNull(prop, "slf4j-api was not resolved as a property");
         assertThat(
                 "slf4j-api was not resolved to default local repository",
                 prop,
                 allOf(containsString("slf4j-api"), endsWith("slf4j-api-2.0.6.jar")));
 
         prop = getProject().getProperty("test.resolve.path.org.apiguardian:apiguardian-api:jar");
-        assertThat("apiguardian-api was not resolved as a property", prop, notNullValue());
+        assertNotNull(prop, "apiguardian-api was not resolved as a property");
         assertThat(
                 "apiguardian-api was not resolved to default local repository",
                 prop,

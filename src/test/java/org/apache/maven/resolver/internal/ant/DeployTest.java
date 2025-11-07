@@ -113,16 +113,16 @@ public class DeployTest extends AntBuildsTest {
      * Once the deploy task supports this case or throws a clearer error, update the assertion accordingly.
      */
     @Test
-    public void testDeployOnlyNestedPomCausesNpe() {
+    public void testDeployOnlyNestedPomException() {
         try {
-            executeTarget("testDeployOnlyNestedPomCausesNpe");
+            executeTarget("testDeployOnlyNestedPomException");
             fail("Expected the build to fail when deploying with only a nested <pom/> inside <artifact>.");
-        } catch (BuildException e) {
+        } catch (Exception e) {
             Throwable cause = e;
             while (cause.getCause() != null) {
                 cause = cause.getCause();
             }
-            if (!(cause instanceof NullPointerException)) {
+            if (!(cause instanceof BuildException)) {
                 fail("Expected NullPointerException as root cause, but was: " + cause);
             }
         }

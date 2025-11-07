@@ -70,10 +70,10 @@
   </target>
 
  <!--
-  Repro: only nested <pom/> inside <resolver:artifact>.
-  The DeployTest expects this target to fail with an NPE today.
+  Only a nested <pom/> inside <resolver:artifact>.
+  The DeployTest expects this target to fail with a BuildException.
  -->
-  <target name="testDeployOnlyNestedPomCausesNpe">
+  <target name="testDeployOnlyNestedPomException">
     <property name="artifact.file" value="${build.dir}/dummy-artifact.jar"/>
     <property name="temp.dir" value="${build.dir}/temp"/>
     <property name="temp.content.file" value="${temp.dir}/content.txt"/>

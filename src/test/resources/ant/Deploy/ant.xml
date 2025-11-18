@@ -69,4 +69,26 @@
     </repo:deploy>
   </target>
 
+ <!--
+  Only a nested <pom/> inside <resolver:artifact>.
+  The DeployTest expects this target to fail with a BuildException.
+ -->
+  <target name="testDeployOnlyNestedPomException">
+    <property name="artifact.file" value="${build.dir}/dummy-artifact.jar"/>
+    <property name="temp.dir" value="${build.dir}/temp"/>
+    <property name="temp.content.file" value="${temp.dir}/content.txt"/>
+    <echo file="${temp.content.file}" append="false">
+      This is a test artifact content.
+    </echo>
+    <jar destfile="${artifact.file}">
+      <fileset dir="${temp.dir}">
+        <include name="content.txt"/>
+      </fileset>
+    </jar>
+    <repo:deploy>
+      <repo:artifact file="${artifact.file}">
+        <repo:pom file="${project.dir}/dummy-pom.xml"/>
+      </repo:artifact>
+    </repo:deploy>
+  </target>
 </project>

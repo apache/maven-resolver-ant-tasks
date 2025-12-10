@@ -130,13 +130,18 @@ public abstract class AbstractDistTask extends Task {
                 version = artifactPom.getVersion();
             }
 
-            final Model model = getPom().getModel(this);
+            final Pom pom = getPom();
+            if (pom == null) {
+                throw new BuildException("You must specify the <pom file=\"...\"> element"
+                        + " to denote the descriptor for the artifacts");
+            }
+            final Model model = pom.getModel(this);
 
             if (!(model.getGroupId().equals(gid)
                     && model.getArtifactId().equals(aid)
                     && model.getVersion().equals(version))) {
                 throw new BuildException(
-                        "Artifact references different pom than it would be installed with: " + artifact.toString());
+                        "Artifact references different pom than it would be installed with: " + artifact);
             }
         }
     }

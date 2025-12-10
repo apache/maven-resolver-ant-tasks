@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.Arrays;
 
 import junit.framework.JUnit4TestAdapter;
+import org.apache.tools.ant.BuildException;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -30,6 +31,7 @@ import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasItemInArray;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.junit.Assert.fail;
 
 /*
  * still missing:
@@ -95,5 +97,34 @@ public class DeployTest extends AntBuildsTest {
                 "Files were not updated for 1s before/after timestamp",
                 file.lastModified(),
                 allOf(greaterThanOrEqualTo(min), lessThanOrEqualTo(max)));
+    }
+
+    /**
+     * Reproduces an NPE when a deploy &lt;artifact&gt; contains only a nested &lt;pom/&gt;.
+     * <pre>{@code
+     *   <repo:deploy>
+     *     <repo:artifact file="${artifact.file}">
+     *       <repo:pom file="${project.dir}/dummy-pom.xml"/>
+     *     </repo:artifact>
+     *     <repo:snapshotrepo refid="Snapshots"/>
+     *   </repo:deploy>
+     * }</pre>
+     * Current behavior: Ant build fails with a NullPointerException at the root cause.
+     * Once the deploy task supports this case or throws a clearer error, update the assertion accordingly.
+     */
+    @Test
+    public void testDeployOnlyNestedPomException() {
+        try {
+            executeTarget("testDeployOnlyNestedPomException");
+            fail("Expected the build to fail when deploying with only a nested <pom/> inside <artifact>.");
+        } catch (Exception e) {
+            Throwable cause = e;
+            while (cause.getCause() != null) {
+                cause = cause.getCause();
+            }
+            if (!(cause instanceof BuildException)) {
+                fail("Expected NullPointerException as root cause, but was: " + cause);
+            }
+        }
     }
 }

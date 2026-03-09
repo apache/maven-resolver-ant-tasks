@@ -58,7 +58,7 @@
   </distributionManagement>
 
   <properties>
-    <mavenVersion>3.9.12</mavenVersion>
+    <mavenVersion>3.9.13</mavenVersion>
     <resolverVersion>1.9.27</resolverVersion>
     <antVersion>1.10.15</antVersion>
     <javaVersion>8</javaVersion>

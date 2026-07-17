@@ -96,7 +96,7 @@ public abstract class AntBuildsTest {
     @After
     public void tearDown() throws Exception {
         ProjectWorkspaceReader.dropInstance();
-        TestFileUtils.deleteFile(BUILD_DIR);
+        // TestFileUtils.deleteFile(BUILD_DIR);
     }
 
     public void configureProject(String filename, int logLevel) throws BuildException {

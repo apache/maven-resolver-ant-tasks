@@ -44,7 +44,6 @@ import org.apache.maven.model.building.FileModelSource;
 import org.apache.maven.model.building.ModelBuildingException;
 import org.apache.maven.model.building.ModelBuildingRequest;
 import org.apache.maven.model.resolution.ModelResolver;
-import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
 import org.apache.maven.resolver.internal.ant.types.Artifact;
 import org.apache.maven.resolver.internal.ant.types.Artifacts;
 import org.apache.maven.resolver.internal.ant.types.Authentication;
@@ -79,7 +78,6 @@ import org.apache.tools.ant.types.Reference;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.eclipse.aether.ConfigurationProperties;
 import org.eclipse.aether.DefaultRepositoryCache;
-import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.artifact.DefaultArtifact;
@@ -92,9 +90,9 @@ import org.eclipse.aether.impl.RemoteRepositoryManager;
 import org.eclipse.aether.installation.InstallRequest;
 import org.eclipse.aether.installation.InstallationException;
 import org.eclipse.aether.repository.AuthenticationSelector;
-import org.eclipse.aether.repository.LocalRepositoryManager;
 import org.eclipse.aether.repository.MirrorSelector;
 import org.eclipse.aether.repository.ProxySelector;
+import org.eclipse.aether.supplier.SessionBuilderSupplier;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
 import org.eclipse.aether.util.repository.ConservativeAuthenticationSelector;
 import org.eclipse.aether.util.repository.DefaultAuthenticationSelector;
@@ -218,7 +216,7 @@ public class AntRepoSys {
      * @return a configured repository system session
      */
     public RepositorySystemSession getSession(Task task, LocalRepository localRepo) {
-        DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
+        RepositorySystemSession.SessionBuilder session = new SessionBuilderSupplier(getSystem()).get();
 
         final Map<Object, Object> configProps = new LinkedHashMap<>();
         configProps.put(ConfigurationProperties.USER_AGENT, getUserAgent());
@@ -241,11 +239,11 @@ public class AntRepoSys {
         session.setRepositoryListener(new AntRepositoryListener(task));
         session.setTransferListener(new AntTransferListener(task));
 
-        session.setLocalRepositoryManager(getLocalRepoMan(session, localRepo));
+        session.withLocalRepositories(getLocalRepoMan(localRepo));
 
         session.setWorkspaceReader(ProjectWorkspaceReader.getInstance());
 
-        return session;
+        return session.build();
     }
 
     private String getUserAgent() {
@@ -316,7 +314,7 @@ public class AntRepoSys {
         return new File(new File(project.getProperty("user.home"), ".m2"), "repository");
     }
 
-    private LocalRepositoryManager getLocalRepoMan(RepositorySystemSession session, LocalRepository localRepo) {
+    private org.eclipse.aether.repository.LocalRepository getLocalRepoMan(LocalRepository localRepo) {
         if (localRepo == null) {
             localRepo = localRepository;
         }
@@ -328,9 +326,7 @@ public class AntRepoSys {
             repoDir = getDefaultLocalRepoDir();
         }
 
-        org.eclipse.aether.repository.LocalRepository repo = new org.eclipse.aether.repository.LocalRepository(repoDir);
-
-        return getSystem().newLocalRepositoryManager(session, repo);
+        return new org.eclipse.aether.repository.LocalRepository(repoDir);
     }
 
     private synchronized Settings getSettings() {

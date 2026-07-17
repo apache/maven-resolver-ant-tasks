@@ -181,7 +181,7 @@
     </dependency>
     <dependency>
       <groupId>org.eclipse.sisu</groupId>
-      <artifactId>org.eclipse.sisu.plexus</artifactId>
+      <artifactId>org.eclipse.sisu.inject</artifactId>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -217,12 +217,6 @@
       <groupId>org.apache.maven.resolver</groupId>
       <artifactId>maven-resolver-test-util</artifactId>
       <version>${resolverVersion}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>3.20.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

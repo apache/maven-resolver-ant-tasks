@@ -40,6 +40,11 @@ public abstract class AntBuildsTest {
     protected File buildFile;
 
     static {
+        // Because BuildFileRule syncing on System.out, we need to tune this down for tests
+        System.setProperty("aether.metadataResolver.threads", "1");
+        System.setProperty("aether.dependencyCollector.bf.threads", "1");
+        System.setProperty("aether.connector.basic.downstreamThreads", "1");
+        System.setProperty("aether.connector.basic.upstreamThreads", "1");
         BASE_DIR = new File("").getAbsoluteFile();
         BUILD_DIR = new File(BASE_DIR, "target/ant");
     }

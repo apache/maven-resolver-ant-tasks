@@ -20,8 +20,6 @@ package org.apache.maven.resolver.internal.ant;
 
 import org.apache.maven.model.building.ModelBuilder;
 import org.eclipse.aether.impl.RemoteRepositoryManager;
-import org.eclipse.aether.impl.UpdatePolicyAnalyzer;
-import org.eclipse.aether.spi.connector.checksum.ChecksumPolicyProvider;
 import org.eclipse.aether.supplier.RepositorySystemSupplier;
 
 /**
@@ -38,13 +36,13 @@ public class AntRepositorySystemSupplier extends RepositorySystemSupplier {
 
     /**
      * The model builder used to construct Maven models from POM files.
-     * Initialized during {@link #getModelBuilder()}.
+     * Initialized during {@link #createModelBuilder()}.
      */
     ModelBuilder modelBuilder;
 
     /**
      * The remote repository manager used for managing mirrors, proxies, and authentication
-     * for remote repositories. Initialized during {@link #getRemoteRepositoryManager(UpdatePolicyAnalyzer, ChecksumPolicyProvider)}.
+     * for remote repositories. Initialized during {@link #createRemoteRepositoryManager()}.
      */
     RemoteRepositoryManager remoteRepositoryManager;
 
@@ -57,26 +55,19 @@ public class AntRepositorySystemSupplier extends RepositorySystemSupplier {
 
     /**
      * Returns the {@link ModelBuilder} and stores it in the {@link #modelBuilder} field for later access.
-     *
-     * @return the {@link ModelBuilder} used for building effective models from POMs
      */
     @Override
-    protected ModelBuilder getModelBuilder() {
-        modelBuilder = super.getModelBuilder();
+    protected ModelBuilder createModelBuilder() {
+        modelBuilder = super.createModelBuilder();
         return modelBuilder;
     }
 
     /**
      * Returns the {@link RemoteRepositoryManager} and stores it in the {@link #remoteRepositoryManager} field for later access.
-     *
-     * @param updatePolicyAnalyzer the analyzer for update policies
-     * @param checksumPolicyProvider the provider for checksum policies
-     * @return the {@link RemoteRepositoryManager} used for handling repository-specific configurations
      */
     @Override
-    protected RemoteRepositoryManager getRemoteRepositoryManager(
-            UpdatePolicyAnalyzer updatePolicyAnalyzer, ChecksumPolicyProvider checksumPolicyProvider) {
-        remoteRepositoryManager = super.getRemoteRepositoryManager(updatePolicyAnalyzer, checksumPolicyProvider);
+    protected RemoteRepositoryManager createRemoteRepositoryManager() {
+        remoteRepositoryManager = super.createRemoteRepositoryManager();
         return remoteRepositoryManager;
     }
 }

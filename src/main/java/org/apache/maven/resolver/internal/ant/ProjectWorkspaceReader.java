@@ -53,6 +53,8 @@ public class ProjectWorkspaceReader implements WorkspaceReader {
 
     private final Map<String, Artifact> artifacts = new ConcurrentHashMap<>();
 
+    private final WorkspaceRepository workspaceRepository = new WorkspaceRepository("ant");
+
     /**
      * Registers a {@link Pom} into the workspace. Only POMs backed by a file
      * are accepted and cached.
@@ -121,7 +123,7 @@ public class ProjectWorkspaceReader implements WorkspaceReader {
      */
     @Override
     public WorkspaceRepository getRepository() {
-        return new WorkspaceRepository("ant");
+        return workspaceRepository;
     }
 
     /**

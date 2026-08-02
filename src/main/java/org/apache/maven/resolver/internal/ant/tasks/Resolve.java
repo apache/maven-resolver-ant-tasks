@@ -224,49 +224,53 @@ public class Resolve extends AbstractResolvingTask {
 
         AntRepoSys sys = AntRepoSys.getInstance(getProject());
 
-        RepositorySystemSession session = sys.getSession(this, localRepository);
-        RepositorySystem system = sys.getSystem();
-        log("Using local repository " + session.getLocalRepository(), Project.MSG_VERBOSE);
+        try (RepositorySystemSession.CloseableSession session = sys.getSession(this, localRepository)) {
+            RepositorySystem system = sys.getSystem();
+            log("Using local repository " + session.getLocalRepository(), Project.MSG_VERBOSE);
 
-        DependencyNode root = collectDependencies().getRoot();
-        root.accept(new DependencyGraphLogger(this));
+            DependencyNode root = collectDependencies().getRoot();
+            root.accept(new DependencyGraphLogger(this));
 
-        Map<String, Group> groups = new HashMap<>();
-        for (ArtifactConsumer consumer : consumers) {
-            String classifier = consumer.getClassifier();
-            Group group = groups.get(classifier);
-            if (group == null) {
-                group = new Group(classifier);
-                groups.put(classifier, group);
-            }
-            group.add(consumer);
-        }
-
-        for (Group group : groups.values()) {
-            group.createRequests(root);
-        }
-
-        log("Resolving artifacts", Project.MSG_INFO);
-
-        for (Group group : groups.values()) {
-            List<ArtifactResult> results;
-            try {
-                results = system.resolveArtifacts(session, group.getRequests());
-            } catch (ArtifactResolutionException e) {
-                if (!group.isAttachments() || failOnMissingAttachments) {
-                    throw new BuildException("Could not resolve artifacts: " + e.getMessage(), e);
+            Map<String, Group> groups = new HashMap<>();
+            for (ArtifactConsumer consumer : consumers) {
+                String classifier = consumer.getClassifier();
+                Group group = groups.get(classifier);
+                if (group == null) {
+                    group = new Group(classifier);
+                    groups.put(classifier, group);
                 }
-                results = e.getResults();
-                for (ArtifactResult result : results) {
-                    if (result.isMissing()) {
-                        log("Ignoring missing attachment " + result.getRequest().getArtifact(), Project.MSG_VERBOSE);
-                    } else if (!result.isResolved()) {
+                group.add(consumer);
+            }
+
+            for (Group group : groups.values()) {
+                group.createRequests(root);
+            }
+
+            log("Resolving artifacts", Project.MSG_INFO);
+
+            for (Group group : groups.values()) {
+                List<ArtifactResult> results;
+                try {
+                    results = system.resolveArtifacts(session, group.getRequests());
+                } catch (ArtifactResolutionException e) {
+                    if (!group.isAttachments() || failOnMissingAttachments) {
                         throw new BuildException("Could not resolve artifacts: " + e.getMessage(), e);
                     }
+                    results = e.getResults();
+                    for (ArtifactResult result : results) {
+                        if (result.isMissing()) {
+                            log(
+                                    "Ignoring missing attachment "
+                                            + result.getRequest().getArtifact(),
+                                    Project.MSG_VERBOSE);
+                        } else if (!result.isResolved()) {
+                            throw new BuildException("Could not resolve artifacts: " + e.getMessage(), e);
+                        }
+                    }
                 }
-            }
 
-            group.processResults(results, session);
+                group.processResults(results, session);
+            }
         }
     }
 

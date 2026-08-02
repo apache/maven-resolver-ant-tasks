@@ -51,6 +51,18 @@ public final class Names {
     /** Property name for controlling offline mode: {@code "resolver.offline"}. */
     public static final String PROPERTY_OFFLINE = ID + ".offline";
 
+    /**
+     * Property name for enabling the transitive dependency manager:
+     * {@code "resolver.dependencyManagerTransitivity"}.
+     * <p>
+     * Defaults to {@code false}, which applies dependency management the way Maven 3 does. Setting it to
+     * {@code true} makes the dependency management of transitive dependencies apply to their own subtrees,
+     * matching Maven 4. The equivalent Maven property is
+     * {@code maven.resolver.dependencyManagerTransitivity}.
+     * </p>
+     */
+    public static final String PROPERTY_DEPENDENCY_MANAGER_TRANSITIVITY = ID + ".dependencyManagerTransitivity";
+
     /** Default filename for the Maven settings file: {@code "settings.xml"}. */
     public static final String SETTINGS_XML = "settings.xml";
 }

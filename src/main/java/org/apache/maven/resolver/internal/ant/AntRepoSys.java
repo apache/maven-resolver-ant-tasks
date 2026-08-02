@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.DefaultModelBuildingRequest;
@@ -44,7 +45,6 @@ import org.apache.maven.model.building.FileModelSource;
 import org.apache.maven.model.building.ModelBuildingException;
 import org.apache.maven.model.building.ModelBuildingRequest;
 import org.apache.maven.model.resolution.ModelResolver;
-import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
 import org.apache.maven.resolver.internal.ant.types.Artifact;
 import org.apache.maven.resolver.internal.ant.types.Artifacts;
 import org.apache.maven.resolver.internal.ant.types.Authentication;
@@ -71,7 +71,9 @@ import org.apache.maven.settings.building.SettingsBuildingException;
 import org.apache.maven.settings.crypto.DefaultSettingsDecryptionRequest;
 import org.apache.maven.settings.crypto.SettingsDecrypter;
 import org.apache.maven.settings.crypto.SettingsDecryptionResult;
+import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Os;
@@ -79,7 +81,6 @@ import org.apache.tools.ant.types.Reference;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.eclipse.aether.ConfigurationProperties;
 import org.eclipse.aether.DefaultRepositoryCache;
-import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.artifact.DefaultArtifact;
@@ -92,9 +93,10 @@ import org.eclipse.aether.impl.RemoteRepositoryManager;
 import org.eclipse.aether.installation.InstallRequest;
 import org.eclipse.aether.installation.InstallationException;
 import org.eclipse.aether.repository.AuthenticationSelector;
-import org.eclipse.aether.repository.LocalRepositoryManager;
 import org.eclipse.aether.repository.MirrorSelector;
 import org.eclipse.aether.repository.ProxySelector;
+import org.eclipse.aether.supplier.RepositorySystemSupplier;
+import org.eclipse.aether.supplier.SessionBuilderSupplier;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
 import org.eclipse.aether.util.repository.ConservativeAuthenticationSelector;
 import org.eclipse.aether.util.repository.DefaultAuthenticationSelector;
@@ -131,9 +133,11 @@ public class AntRepoSys {
 
     private final Project project;
 
-    private final AntRepositorySystemSupplier antRepositorySystemSupplier;
+    private final RepositorySystemSupplier repositorySystemSupplier;
 
     private final RepositorySystem repoSys;
+
+    private final AtomicBoolean repoSysClosed = new AtomicBoolean();
 
     private File userSettings;
 
@@ -175,8 +179,45 @@ public class AntRepoSys {
 
     private AntRepoSys(Project project) {
         this.project = project;
-        this.antRepositorySystemSupplier = new AntRepositorySystemSupplier();
-        this.repoSys = antRepositorySystemSupplier.get();
+        this.repositorySystemSupplier = new RepositorySystemSupplier();
+        this.repoSys = repositorySystemSupplier.get();
+        project.addBuildListener(new RepositorySystemCloser());
+    }
+
+    /**
+     * Shuts down the {@link RepositorySystem} when the Ant build this instance belongs to has finished, releasing
+     * the resources (HTTP connection pools, executors, named locks) held by it.
+     * <p>
+     * Tasks like {@code <ant>} copy the build listeners of their parent project into the sub-project they create,
+     * so the event is matched against the project this instance was created for: every project gets its own
+     * {@code AntRepoSys}, and hence its own repository system to shut down.
+     * </p>
+     */
+    private class RepositorySystemCloser implements BuildListener {
+        @Override
+        public void buildFinished(BuildEvent event) {
+            if (event.getProject() == project && repoSysClosed.compareAndSet(false, true)) {
+                repoSys.shutdown();
+            }
+        }
+
+        @Override
+        public void buildStarted(BuildEvent event) {}
+
+        @Override
+        public void targetStarted(BuildEvent event) {}
+
+        @Override
+        public void targetFinished(BuildEvent event) {}
+
+        @Override
+        public void taskStarted(BuildEvent event) {}
+
+        @Override
+        public void taskFinished(BuildEvent event) {}
+
+        @Override
+        public void messageLogged(BuildEvent event) {}
     }
 
     private void initDefaults() {
@@ -206,19 +247,31 @@ public class AntRepoSys {
     }
 
     private synchronized RemoteRepositoryManager getRemoteRepoMan() {
-        return antRepositorySystemSupplier.remoteRepositoryManager;
+        return repositorySystemSupplier.getRemoteRepositoryManager();
     }
 
     /**
      * Creates and returns a new {@link RepositorySystemSession} for the given task and local repository.
      * Configures authentication, mirrors, proxies, offline mode, and repository listeners.
+     * <p>
+     * The caller owns the returned session and <strong>must</strong> close it once done with it, ideally using
+     * try-with-resources. Closing releases the resources the session accumulated, most notably the cached
+     * repository connectors and their transports.
+     * </p>
      *
      * @param task the invoking Ant task (used for logging and listeners)
      * @param localRepo optional local repository configuration
-     * @return a configured repository system session
+     * @return a configured repository system session, to be closed by the caller
+     * @see Names#PROPERTY_DEPENDENCY_MANAGER_TRANSITIVITY
      */
-    public RepositorySystemSession getSession(Task task, LocalRepository localRepo) {
-        DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
+    public RepositorySystemSession.CloseableSession getSession(Task task, LocalRepository localRepo) {
+        SessionBuilderSupplier sessionBuilderSupplier = new SessionBuilderSupplier(getSystem());
+        RepositorySystemSession.SessionBuilder session = sessionBuilderSupplier.get();
+
+        // The supplier defaults to the classic, non-transitive dependency manager, as Maven 3 does.
+        if (isDependencyManagerTransitivity()) {
+            session.setDependencyManager(sessionBuilderSupplier.getDependencyManager(true));
+        }
 
         final Map<Object, Object> configProps = new LinkedHashMap<>();
         configProps.put(ConfigurationProperties.USER_AGENT, getUserAgent());
@@ -241,11 +294,11 @@ public class AntRepoSys {
         session.setRepositoryListener(new AntRepositoryListener(task));
         session.setTransferListener(new AntTransferListener(task));
 
-        session.setLocalRepositoryManager(getLocalRepoMan(session, localRepo));
+        session.withLocalRepositories(getLocalRepo(localRepo));
 
         session.setWorkspaceReader(ProjectWorkspaceReader.getInstance());
 
-        return session;
+        return session.build();
     }
 
     private String getUserAgent() {
@@ -264,6 +317,10 @@ public class AntRepoSys {
             return Boolean.parseBoolean(prop);
         }
         return getSettings().isOffline();
+    }
+
+    private boolean isDependencyManagerTransitivity() {
+        return Boolean.parseBoolean(project.getProperty(Names.PROPERTY_DEPENDENCY_MANAGER_TRANSITIVITY));
     }
 
     private void processServerConfiguration(Map<Object, Object> configProps) {
@@ -316,7 +373,7 @@ public class AntRepoSys {
         return new File(new File(project.getProperty("user.home"), ".m2"), "repository");
     }
 
-    private LocalRepositoryManager getLocalRepoMan(RepositorySystemSession session, LocalRepository localRepo) {
+    private org.eclipse.aether.repository.LocalRepository getLocalRepo(LocalRepository localRepo) {
         if (localRepo == null) {
             localRepo = localRepository;
         }
@@ -328,9 +385,7 @@ public class AntRepoSys {
             repoDir = getDefaultLocalRepoDir();
         }
 
-        org.eclipse.aether.repository.LocalRepository repo = new org.eclipse.aether.repository.LocalRepository(repoDir);
-
-        return getSystem().newLocalRepositoryManager(session, repo);
+        return new org.eclipse.aether.repository.LocalRepository(repoDir);
     }
 
     private synchronized Settings getSettings() {
@@ -584,19 +639,18 @@ public class AntRepoSys {
      * @throws BuildException if the POM cannot be loaded or resolved
      */
     public Model loadModel(Task task, File pomFile, boolean local, RemoteRepositories remoteRepositories) {
-        RepositorySystemSession session = getSession(task, null);
+        try (RepositorySystemSession.CloseableSession session = getSession(task, null)) {
+            RemoteRepositories effectiveRepositories =
+                    remoteRepositories == null ? getMergedRepositories() : remoteRepositories;
 
-        remoteRepositories = remoteRepositories == null ? getMergedRepositories() : remoteRepositories;
+            List<org.eclipse.aether.repository.RemoteRepository> repositories =
+                    ConverterUtils.toRepositories(task.getProject(), getSystem(), session, effectiveRepositories);
 
-        List<org.eclipse.aether.repository.RemoteRepository> repositories =
-                ConverterUtils.toRepositories(task.getProject(), getSystem(), session, remoteRepositories);
+            ModelResolver modelResolver =
+                    new AntModelResolver(session, "project", getSystem(), getRemoteRepoMan(), repositories);
 
-        ModelResolver modelResolver =
-                new AntModelResolver(session, "project", getSystem(), getRemoteRepoMan(), repositories);
+            Settings settings = getSettings();
 
-        Settings settings = getSettings();
-
-        try {
             DefaultModelBuildingRequest request = new DefaultModelBuildingRequest();
             request.setLocationTracking(true);
             request.setProcessPlugins(false);
@@ -612,7 +666,7 @@ public class AntRepoSys {
             request.setProfiles(SettingsUtils.convert(settings.getProfiles()));
             request.setActiveProfileIds(settings.getActiveProfiles());
             request.setModelResolver(modelResolver);
-            return antRepositorySystemSupplier.modelBuilder.build(request).getEffectiveModel();
+            return repositorySystemSupplier.getModelBuilder().build(request).getEffectiveModel();
         } catch (ModelBuildingException e) {
             throw new BuildException("Could not load POM " + pomFile + ": " + e.getMessage(), e);
         }
@@ -677,35 +731,33 @@ public class AntRepoSys {
             Dependencies dependencies,
             LocalRepository localRepository,
             RemoteRepositories remoteRepositories) {
-        RepositorySystemSession session = getSession(task, localRepository);
+        try (RepositorySystemSession.CloseableSession session = getSession(task, localRepository)) {
+            RemoteRepositories effectiveRepositories =
+                    remoteRepositories == null ? getMergedRepositories() : remoteRepositories;
 
-        remoteRepositories = remoteRepositories == null ? getMergedRepositories() : remoteRepositories;
+            List<org.eclipse.aether.repository.RemoteRepository> repos =
+                    ConverterUtils.toRepositories(project, getSystem(), session, effectiveRepositories);
 
-        List<org.eclipse.aether.repository.RemoteRepository> repos =
-                ConverterUtils.toRepositories(project, getSystem(), session, remoteRepositories);
+            CollectRequest collectRequest = new CollectRequest();
+            collectRequest.setRequestContext("project");
 
-        CollectRequest collectRequest = new CollectRequest();
-        collectRequest.setRequestContext("project");
+            for (org.eclipse.aether.repository.RemoteRepository repo : repos) {
+                task.getProject().log("Using remote repository " + repo, Project.MSG_VERBOSE);
+                collectRequest.addRepository(repo);
+            }
 
-        for (org.eclipse.aether.repository.RemoteRepository repo : repos) {
-            task.getProject().log("Using remote repository " + repo, Project.MSG_VERBOSE);
-            collectRequest.addRepository(repo);
+            if (dependencies != null) {
+                populateCollectRequest(collectRequest, task, session, dependencies, Collections.emptyList());
+            }
+
+            task.getProject().log("Collecting dependencies", Project.MSG_VERBOSE);
+
+            try {
+                return getSystem().collectDependencies(session, collectRequest);
+            } catch (DependencyCollectionException e) {
+                throw new BuildException("Could not collect dependencies: " + e.getMessage(), e);
+            }
         }
-
-        if (dependencies != null) {
-            populateCollectRequest(collectRequest, task, session, dependencies, Collections.emptyList());
-        }
-
-        task.getProject().log("Collecting dependencies", Project.MSG_VERBOSE);
-
-        CollectResult result;
-        try {
-            result = getSystem().collectDependencies(session, collectRequest);
-        } catch (DependencyCollectionException e) {
-            throw new BuildException("Could not collect dependencies: " + e.getMessage(), e);
-        }
-
-        return result;
     }
 
     private void populateCollectRequest(
@@ -840,15 +892,15 @@ public class AntRepoSys {
      * @throws BuildException if the installation fails
      */
     public void install(Task task, Pom pom, Artifacts artifacts) {
-        RepositorySystemSession session = getSession(task, null);
+        try (RepositorySystemSession.CloseableSession session = getSession(task, null)) {
+            InstallRequest request = new InstallRequest();
+            request.setArtifacts(toArtifacts(task, session, pom, artifacts));
 
-        InstallRequest request = new InstallRequest();
-        request.setArtifacts(toArtifacts(task, session, pom, artifacts));
-
-        try {
-            getSystem().install(session, request);
-        } catch (InstallationException e) {
-            throw new BuildException("Could not install artifacts: " + e.getMessage(), e);
+            try {
+                getSystem().install(session, request);
+            } catch (InstallationException e) {
+                throw new BuildException("Could not install artifacts: " + e.getMessage(), e);
+            }
         }
     }
 
@@ -868,18 +920,19 @@ public class AntRepoSys {
             Artifacts artifacts,
             RemoteRepository releaseRepository,
             RemoteRepository snapshotRepository) {
-        RepositorySystemSession session = getSession(task, null);
+        try (RepositorySystemSession.CloseableSession session = getSession(task, null)) {
+            DeployRequest request = new DeployRequest();
+            request.setArtifacts(toArtifacts(task, session, pom, artifacts));
+            boolean snapshot = request.getArtifacts().iterator().next().isSnapshot();
+            RemoteRepository distRepo =
+                    (snapshot && snapshotRepository != null) ? snapshotRepository : releaseRepository;
+            request.setRepository(ConverterUtils.toDistRepository(distRepo, session));
 
-        DeployRequest request = new DeployRequest();
-        request.setArtifacts(toArtifacts(task, session, pom, artifacts));
-        boolean snapshot = request.getArtifacts().iterator().next().isSnapshot();
-        RemoteRepository distRepo = (snapshot && snapshotRepository != null) ? snapshotRepository : releaseRepository;
-        request.setRepository(ConverterUtils.toDistRepository(distRepo, session));
-
-        try {
-            getSystem().deploy(session, request);
-        } catch (DeploymentException e) {
-            throw new BuildException("Could not deploy artifacts: " + e.getMessage(), e);
+            try {
+                getSystem().deploy(session, request);
+            } catch (DeploymentException e) {
+                throw new BuildException("Could not deploy artifacts: " + e.getMessage(), e);
+            }
         }
     }
 

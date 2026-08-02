@@ -262,9 +262,16 @@ public class AntRepoSys {
      * @param task the invoking Ant task (used for logging and listeners)
      * @param localRepo optional local repository configuration
      * @return a configured repository system session, to be closed by the caller
+     * @see Names#PROPERTY_DEPENDENCY_MANAGER_TRANSITIVITY
      */
     public RepositorySystemSession.CloseableSession getSession(Task task, LocalRepository localRepo) {
-        RepositorySystemSession.SessionBuilder session = new SessionBuilderSupplier(getSystem()).get();
+        SessionBuilderSupplier sessionBuilderSupplier = new SessionBuilderSupplier(getSystem());
+        RepositorySystemSession.SessionBuilder session = sessionBuilderSupplier.get();
+
+        // The supplier defaults to the classic, non-transitive dependency manager, as Maven 3 does.
+        if (isDependencyManagerTransitivity()) {
+            session.setDependencyManager(sessionBuilderSupplier.getDependencyManager(true));
+        }
 
         final Map<Object, Object> configProps = new LinkedHashMap<>();
         configProps.put(ConfigurationProperties.USER_AGENT, getUserAgent());
@@ -310,6 +317,10 @@ public class AntRepoSys {
             return Boolean.parseBoolean(prop);
         }
         return getSettings().isOffline();
+    }
+
+    private boolean isDependencyManagerTransitivity() {
+        return Boolean.parseBoolean(project.getProperty(Names.PROPERTY_DEPENDENCY_MANAGER_TRANSITIVITY));
     }
 
     private void processServerConfiguration(Map<Object, Object> configProps) {

@@ -31,6 +31,7 @@ import org.junit.Test;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 
 public class ProjectWorkspaceReaderTest {
@@ -56,6 +57,16 @@ public class ProjectWorkspaceReaderTest {
 
     private File getFile(String name) {
         return new File("src/test/resources/ProjectWorkspaceReader", name);
+    }
+
+    /**
+     * A {@link org.eclipse.aether.repository.WorkspaceRepository} created without an explicit key gets a random one,
+     * so handing out a new instance per call would defeat any caching keyed on the workspace repository.
+     */
+    @Test
+    public void testRepositoryIsStable() {
+        assertSame(reader.getRepository(), reader.getRepository());
+        assertEquals(reader.getRepository().getKey(), reader.getRepository().getKey());
     }
 
     @Test

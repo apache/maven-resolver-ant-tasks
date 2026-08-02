@@ -61,6 +61,7 @@
     <mavenVersion>3.10.0-rc-1</mavenVersion>
     <resolverVersion>2.0.21</resolverVersion>
     <antVersion>1.10.17</antVersion>
+    <slf4jVersion>2.0.18</slf4jVersion>
     <javaVersion>8</javaVersion>
     <junitVersion>4.13.2</junitVersion>
     <hamcrestVersion>3.0</hamcrestVersion>
@@ -150,16 +151,24 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>2.0.18</version>
+      <version>${slf4jVersion}</version>
     </dependency>
     <dependency>
+      <!-- This shuts off annoying warnings from slf4j-api -->
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-nop</artifactId>
-      <version>2.0.18</version>
+      <version>${slf4jVersion}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-resolver-provider</artifactId>
+      <version>${mavenVersion}</version>
+    </dependency>
+    <!-- Used directly (org.apache.maven.model.building), and declared to keep it aligned with the other
+         Maven artifacts: maven-resolver-supplier-mvn3 would otherwise drag in its own, older version. -->
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-model-builder</artifactId>
       <version>${mavenVersion}</version>
     </dependency>
     <dependency>
@@ -178,7 +187,6 @@
       <artifactId>plexus-interpolation</artifactId>
       <version>1.29</version>
     </dependency>
-
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

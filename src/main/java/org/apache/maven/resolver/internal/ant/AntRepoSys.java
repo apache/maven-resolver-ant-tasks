@@ -488,6 +488,10 @@ public class AntRepoSys {
         List<String> activeProfiles = settings.getActiveProfiles();
         for (String profileId : activeProfiles) {
             Profile profile = settings.getProfilesAsMap().get(profileId);
+            if (profile == null) {
+                project.log("Profile '" + profileId + "' is not defined in settings.xml, skipping", Project.MSG_WARN);
+                continue;
+            }
             for (Repository repository : profile.getRepositories()) {
                 String id = repository.getId();
                 RemoteRepository repo = new RemoteRepository();

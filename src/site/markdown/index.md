@@ -72,7 +72,7 @@ The first proxy that matches is used for a given remote connection.
 
 Authentication elements provide access to remote repositories.
 Every authentication definition is added globally.
-The tasks choose the definition by the `servers` attribute.
+The tasks choose the definition in the `servers` attribute.
 If you do not set this attribute, the authentication must be referenced explicitly.
 
 ```xml

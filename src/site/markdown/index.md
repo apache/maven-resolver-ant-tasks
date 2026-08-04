@@ -125,7 +125,7 @@ remote repository:
 
 ### Offline Mode
 
-To suppress network activity and use only cached artifacts and metadata, set this boolean property:
+To suppress network activity and use only cached artifacts and metadata, set the `resolver.offline` boolean property to true:
 
 ```xml
 <property name="resolver.offline" value="true"/>

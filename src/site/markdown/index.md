@@ -269,7 +269,7 @@ Only one `<dependencies>` element is allowed.
 You can set scope filters on every target.
 The filters list the included and excluded scope names.
 An exclusion is denoted by a `-` or `!` prefix on the scope name.
-The value `provided,!system` is an example.
+For example, `provided,!system` includes provided and excludes system.
 
 The `classpath` attribute is a shortcut for the scope filters.
 For example, `classpath="compile"` equals `scope="provided,system,compile"`.

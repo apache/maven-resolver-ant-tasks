@@ -18,11 +18,11 @@ under the License.
 -->
 # Maven Artifact Resolver Ant Tasks
 
-The Maven Artifact Resolver Ant Tasks enable Apache Ant 1.7+ build scripts to use
-[Maven Artifact Resolver](https://maven.apache.org/resolver/).
+The Maven Artifact Resolver Ant Tasks enable [Apache Ant](https://ant.apache.org/) 1.7+ build scripts to use
+the [Maven Artifact Resolver](https://maven.apache.org/resolver/).
 The tasks combine Maven Artifact Resolver with the
-[Apache Maven Artifact Resolver Provider](https://maven.apache.org/ref/current/maven-resolver-provider/).
-The tasks resolve dependencies.
+[Apache Maven Artifact Resolver Provider](https://maven.apache.org/ref/current/maven-resolver-provider/)
+to resolve dependencies.
 The tasks also install and deploy locally built artifacts.
 
 To integrate the tasks into your build file, copy the Über JAR into your project's lib directory.

@@ -137,7 +137,7 @@ Project settings use locally available information about the build.
 
 ### POM
 
-The POM is the data type that determines the target for the install and deploy tasks.
+The `<pom>` element determines the target for the install and deploy tasks.
 If you define a POM without an id based on a full `pom.xml` file, that POM is the default.
 The tasks use the default POM for install and deploy.
 

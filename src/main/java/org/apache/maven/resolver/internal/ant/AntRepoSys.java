@@ -418,14 +418,15 @@ public class AntRepoSys {
         }
 
         Settings settings = getSettings();
-        for (org.apache.maven.settings.Proxy proxy : settings.getProxies()) {
+        org.apache.maven.settings.Proxy activeProxy = settings.getActiveProxy();
+        if (activeProxy != null) {
             AuthenticationBuilder auth = new AuthenticationBuilder();
-            auth.addUsername(proxy.getUsername()).addPassword(proxy.getPassword());
+            auth.addUsername(activeProxy.getUsername()).addPassword(activeProxy.getPassword());
             selector.add(
                     new org.eclipse.aether.repository.Proxy(
-                            proxy.getProtocol(), proxy.getHost(),
-                            proxy.getPort(), auth.build()),
-                    proxy.getNonProxyHosts());
+                            activeProxy.getProtocol(), activeProxy.getHost(),
+                            activeProxy.getPort(), auth.build()),
+                    activeProxy.getNonProxyHosts());
         }
 
         return selector;

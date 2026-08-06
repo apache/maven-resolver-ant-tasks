@@ -118,7 +118,7 @@ public class Settings extends DataType {
      */
     public File getGlobalFile() {
         if (isReference()) {
-            return getRef().getFile();
+            return getRef().getGlobalFile();
         }
         return globalFile;
     }

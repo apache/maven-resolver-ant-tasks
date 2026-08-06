@@ -20,6 +20,7 @@ package org.apache.maven.resolver.internal.ant.tasks;
 
 import java.io.File;
 
+import junit.framework.JUnit4TestAdapter;
 import org.apache.tools.ant.Project;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,6 +29,9 @@ import org.junit.rules.TemporaryFolder;
 import static org.junit.Assert.assertTrue;
 
 public class CreatePomNoParentDirTest {
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(CreatePomNoParentDirTest.class);
+    }
 
     @Rule
     public final TemporaryFolder tempFolder = new TemporaryFolder();

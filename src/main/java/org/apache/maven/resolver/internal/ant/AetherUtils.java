@@ -27,7 +27,18 @@ import org.apache.tools.ant.Project;
 class AetherUtils {
 
     public static File findGlobalSettings(final Project project) {
-        final String mavenHome = getMavenHome(project);
+        return findGlobalSettings(project, System.getenv());
+    }
+
+    /**
+     * Finds the global Maven settings file from the Maven home directory or the Ant home directory, in that order.
+     *
+     * @param project the Ant project to read the {@code ant.home} property from
+     * @param environment the environment variables to consult for the Maven home directory
+     * @return the global settings file, or {@code null} if none exists
+     */
+    static File findGlobalSettings(final Project project, final Map<String, String> environment) {
+        final String mavenHome = getMavenHome(project, environment);
         if (mavenHome != null) {
             final File mavenSettings = new File(new File(mavenHome, "conf"), Names.SETTINGS_XML);
             if (mavenSettings.isFile()) {

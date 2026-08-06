@@ -20,6 +20,7 @@ package org.apache.maven.resolver.internal.ant;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,6 +59,17 @@ public class AetherUtilsTest {
         Project project = new Project();
         project.setProperty("user.home", System.getProperty("user.home"));
         return project;
+    }
+
+    /**
+     * Looks up the global settings file without consulting the ambient environment, so that the test does not depend
+     * on the {@code MAVEN_HOME}/{@code M2_HOME} variables of the machine the test runs on.
+     *
+     * @param project the Ant project to search for
+     * @return the global settings file, or {@code null} if none exists
+     */
+    private File findGlobalSettings(Project project) {
+        return AetherUtils.findGlobalSettings(project, Collections.emptyMap());
     }
 
     /**
@@ -122,8 +134,7 @@ public class AetherUtilsTest {
                 MAVEN_HOME_PROP, mavenSettings.getParentFile().getParentFile().getAbsolutePath());
 
         assertEquals(
-                mavenSettings.getAbsolutePath(),
-                AetherUtils.findGlobalSettings(project).getAbsolutePath());
+                mavenSettings.getAbsolutePath(), findGlobalSettings(project).getAbsolutePath());
     }
 
     /**
@@ -139,9 +150,7 @@ public class AetherUtilsTest {
         project.setProperty(
                 "ant.home", antSettings.getParentFile().getParentFile().getAbsolutePath());
 
-        assertEquals(
-                antSettings.getAbsolutePath(),
-                AetherUtils.findGlobalSettings(project).getAbsolutePath());
+        assertEquals(antSettings.getAbsolutePath(), findGlobalSettings(project).getAbsolutePath());
     }
 
     /**
@@ -152,7 +161,7 @@ public class AetherUtilsTest {
         Project project = newProject();
         project.setProperty("ant.home", folder.getRoot().getAbsolutePath());
 
-        assertNull(AetherUtils.findGlobalSettings(project));
+        assertNull(findGlobalSettings(project));
     }
 
     private File writeSettings(File home, String dirName) throws Exception {

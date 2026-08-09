@@ -19,6 +19,8 @@
 package org.apache.maven.resolver.internal.ant;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.maven.resolver.internal.ant.types.Pom;
 import org.apache.tools.ant.Project;
@@ -27,11 +29,10 @@ import org.eclipse.aether.artifact.DefaultArtifact;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ProjectWorkspaceReaderTest {
     private ProjectWorkspaceReader reader;
@@ -122,7 +123,8 @@ public class ProjectWorkspaceReaderTest {
 
         reader.addArtifact(artifact2);
 
-        assertThat(
-                reader.findVersions(artifact("test:dummy:txt:[0,)")), containsInAnyOrder("1-SNAPSHOT", "2-SNAPSHOT"));
+        List<String> versions = reader.findVersions(artifact("test:dummy:txt:[0,)"));
+        assertEquals(2, versions.size(), "unexpected versions: " + versions);
+        assertTrue(versions.containsAll(Arrays.asList("1-SNAPSHOT", "2-SNAPSHOT")), "unexpected versions: " + versions);
     }
 }

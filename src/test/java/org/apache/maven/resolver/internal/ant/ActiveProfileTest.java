@@ -20,16 +20,12 @@ package org.apache.maven.resolver.internal.ant;
 
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ActiveProfileTest extends AntBuildsTest {
     @Test
     public void testActiveProfileNotDefinedInSettingsIsIgnored() {
         executeTarget("testActiveProfileNotDefinedInSettingsIsIgnored");
-        assertThat(
-                "repository of defined profile not registered",
-                getProject().getReference("defined-repo"),
-                notNullValue());
+        assertNotNull(getProject().getReference("defined-repo"), "repository of defined profile not registered");
     }
 }

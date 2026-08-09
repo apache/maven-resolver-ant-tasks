@@ -95,19 +95,24 @@
   </target>
 
   <target name="test" depends="test-compile">
-    <junit haltonfailure="true" fork="true" forkmode="once" outputtoformatters="false">
+    <mkdir dir="${build.dir}/test-reports"/>
+
+    <junitlauncher haltOnFailure="true" printSummary="true">
       <classpath>
         <pathelement location="${build.dir}/test-classes"/>
         <pathelement location="${build.dir}/classes"/>
         <path refid="cp.runtime.test"/>
       </classpath>
 
-      <formatter type="brief" usefile="false"/>
-
-      <batchtest>
+      <testclasses outputdir="${build.dir}/test-reports">
         <fileset dir="${build.dir}/test-classes" includes="**/*Test.class" excludes="**/AntBuildsTest*"/>
-      </batchtest>
-    </junit>
+
+        <listener type="legacy-brief" sendSysOut="true"/>
+
+        <!-- The JUnit platform comes from cp.runtime.test; the task's own copy is older and would clash. -->
+        <fork includeJUnitPlatformLibraries="false"/>
+      </testclasses>
+    </junitlauncher>
   </target>
 
   <target name="package" depends="test">

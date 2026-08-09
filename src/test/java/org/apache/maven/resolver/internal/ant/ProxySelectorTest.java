@@ -19,38 +19,33 @@
 package org.apache.maven.resolver.internal.ant;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
-import junit.framework.JUnit4TestAdapter;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.repository.Proxy;
 import org.eclipse.aether.repository.ProxySelector;
 import org.eclipse.aether.repository.RemoteRepository;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ProxySelectorTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ProxySelectorTest.class);
-    }
-
-    @Rule
-    public final TemporaryFolder folder = new TemporaryFolder();
+    @TempDir
+    File folder;
 
     private Project project;
 
     private Task task;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         project = new Project();
         project.setProperty("user.home", System.getProperty("user.home"));
@@ -129,7 +124,7 @@ public class ProxySelectorTest {
     }
 
     private File writeSettings(String... proxyElements) throws Exception {
-        File file = folder.newFile("settings.xml");
+        File file = newFile(folder, "settings.xml");
         StringBuilder content = new StringBuilder();
         content.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         content.append("<settings>\n");
@@ -141,5 +136,11 @@ public class ProxySelectorTest {
         content.append("</settings>\n");
         Files.write(file.toPath(), content.toString().getBytes(StandardCharsets.UTF_8));
         return file;
+    }
+
+    private static File newFile(File parent, String child) throws IOException {
+        File result = new File(parent, child);
+        result.createNewFile();
+        return result;
     }
 }

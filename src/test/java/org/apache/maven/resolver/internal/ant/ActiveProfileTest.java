@@ -18,17 +18,12 @@
  */
 package org.apache.maven.resolver.internal.ant;
 
-import junit.framework.JUnit4TestAdapter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 
 public class ActiveProfileTest extends AntBuildsTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ActiveProfileTest.class);
-    }
-
     @Test
     public void testActiveProfileNotDefinedInSettingsIsIgnored() {
         executeTarget("testActiveProfileNotDefinedInSettingsIsIgnored");

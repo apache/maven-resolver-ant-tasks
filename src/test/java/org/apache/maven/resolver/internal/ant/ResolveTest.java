@@ -24,11 +24,10 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 
-import junit.framework.JUnit4TestAdapter;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.FileResource;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
@@ -42,10 +41,6 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
 public class ResolveTest extends AntBuildsTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ResolveTest.class);
-    }
-
     @Test
     public void testResolveGlobalPom() {
         executeTarget("testResolveGlobalPom");

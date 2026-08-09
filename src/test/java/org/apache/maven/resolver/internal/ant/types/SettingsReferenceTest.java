@@ -20,19 +20,14 @@ package org.apache.maven.resolver.internal.ant.types;
 
 import java.io.File;
 
-import junit.framework.JUnit4TestAdapter;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Reference;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SettingsReferenceTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(SettingsReferenceTest.class);
-    }
-
     private Project project;
 
     private Settings referenced;
@@ -41,7 +36,7 @@ public class SettingsReferenceTest {
 
     private File globalFile;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         project = new Project();
         userFile = new File("user-settings.xml");
@@ -65,7 +60,7 @@ public class SettingsReferenceTest {
         ref.setProject(project);
         ref.setRefid(new Reference(project, "settings-id"));
 
-        assertEquals("global file should come from the referenced settings", globalFile, ref.getGlobalFile());
+        assertEquals(globalFile, ref.getGlobalFile(), "global file should come from the referenced settings");
     }
 
     /**
@@ -77,6 +72,6 @@ public class SettingsReferenceTest {
         ref.setProject(project);
         ref.setRefid(new Reference(project, "settings-id"));
 
-        assertEquals("user file should come from the referenced settings", userFile, ref.getFile());
+        assertEquals(userFile, ref.getFile(), "user file should come from the referenced settings");
     }
 }

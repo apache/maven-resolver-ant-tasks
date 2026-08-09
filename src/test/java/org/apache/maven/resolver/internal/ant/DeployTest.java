@@ -21,9 +21,8 @@ package org.apache.maven.resolver.internal.ant;
 import java.io.File;
 import java.util.Arrays;
 
-import junit.framework.JUnit4TestAdapter;
 import org.apache.tools.ant.BuildException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.allOf;
@@ -31,17 +30,13 @@ import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasItemInArray;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /*
  * still missing:
  * - deploy snapshots/releases into correct repos
  */
 public class DeployTest extends AntBuildsTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(DeployTest.class);
-    }
-
     @Test
     public void testDeployGlobalPom() {
         long min = System.currentTimeMillis();

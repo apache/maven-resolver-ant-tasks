@@ -22,15 +22,14 @@ import java.io.File;
 import java.io.PrintStream;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.eclipse.aether.internal.test.util.TestFileUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class AntBuildsTest {
 
@@ -40,7 +39,7 @@ public abstract class AntBuildsTest {
     protected File buildFile;
 
     static {
-        // Because BuildFileRule syncing on System.out, we need to tune this down for tests
+        // Because AntBuildFileExtension synchronizes on System.out, we need to tune this down for tests
         System.setProperty("aether.metadataResolver.threads", "1");
         System.setProperty("aether.dependencyCollector.bf.threads", "1");
         System.setProperty("aether.connector.basic.downstreamThreads", "1");
@@ -59,8 +58,8 @@ public abstract class AntBuildsTest {
         buildFile = projectFile;
     }
 
-    @Rule
-    public final BuildFileRule buildRule = new BuildFileRule();
+    @RegisterExtension
+    protected final AntBuildFileExtension buildRule = new AntBuildFileExtension();
 
     protected File projectDir;
 
@@ -80,7 +79,7 @@ public abstract class AntBuildsTest {
         // hook for subclasses to set further system properties for the project to pick up
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         TestFileUtils.deleteFile(BUILD_DIR);
 
@@ -96,7 +95,7 @@ public abstract class AntBuildsTest {
         configureProject(buildFile.getAbsolutePath(), Project.MSG_VERBOSE);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         ProjectWorkspaceReader.dropInstance();
         TestFileUtils.deleteFile(BUILD_DIR);
@@ -120,8 +119,8 @@ public abstract class AntBuildsTest {
     protected void assertLogContaining(String substring) {
         String realLog = getLog();
         assertTrue(
-                "expecting log to contain \"" + substring + "\" log was \"" + realLog + "\"",
-                realLog.contains(substring));
+                realLog.contains(substring),
+                "expecting log to contain \"" + substring + "\" log was \"" + realLog + "\"");
     }
 
     protected void executeTarget(String targetName) {

@@ -95,6 +95,8 @@
   </target>
 
   <target name="test" depends="test-compile">
+    <!-- Stale reports from removed or renamed classes would be re-printed by the concat below. -->
+    <delete dir="${build.dir}/test-reports"/>
     <mkdir dir="${build.dir}/test-reports"/>
 
     <junitlauncher failureProperty="test.failed" printSummary="true">

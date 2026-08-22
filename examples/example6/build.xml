@@ -35,6 +35,7 @@
   <property name='targetDir' value='${basedir}/target'/>
   <property name='mainBuildDir' value='${targetDir}/classes'/>
   <property name='testBuildDir' value='${targetDir}/test-classes'/>
+  <property name='testReportDir' value='${targetDir}/test-reports'/>
 
   <target name='configurePaths' description='Configure paths for compilation using the pom file for dependencies'>
     <repo:pom file='${basedir}/pom.xml'/>
@@ -64,9 +65,11 @@
   <target name='test' depends='compile' description='Compile and run tests'>
     <echo level='info'>Compiling test classes</echo>
 
-    <!-- A class whose source was removed would still be picked up by the fileset below. -->
+    <!-- A class or report whose source was removed would still be picked up below. -->
     <delete dir='${testBuildDir}'/>
+    <delete dir='${testReportDir}'/>
     <mkdir dir='${testBuildDir}'/>
+    <mkdir dir='${testReportDir}'/>
     <javac
       srcdir='src/test/java'
       destdir='${testBuildDir}'
@@ -84,7 +87,7 @@
         <pathelement location='${testBuildDir}'/>
         <path refid='testPath'/>
       </classpath>
-      <testclasses outputdir='${targetDir}'>
+      <testclasses outputdir='${testReportDir}'>
         <fileset dir='${testBuildDir}' includes='**/*Test.class'/>
         <listener type='legacy-plain' sendSysOut='true'/>
       </testclasses>
@@ -92,7 +95,7 @@
 
     <!-- legacy-plain writes to files only; print them so failure details reach the console. -->
     <concat if:set='test.failed'>
-      <fileset dir='${targetDir}' includes='TEST-*.txt'>
+      <fileset dir='${testReportDir}' includes='TEST-*.txt'>
         <contains text='FAILED'/>
       </fileset>
     </concat>

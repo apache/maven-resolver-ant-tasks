@@ -88,6 +88,8 @@
   <target name='test' depends='compile' description='Compile and run tests'>
     <echo level='info'>Compiling test classes</echo>
 
+    <!-- A class whose source was removed would still be picked up by the fileset below. -->
+    <delete dir='${testBuildDir}'/>
     <mkdir dir='${testBuildDir}'/>
     <javac
       srcdir='src/test/java'
@@ -106,9 +108,10 @@
         <pathelement location='${testBuildDir}'/>
         <path refid='testPath'/>
       </classpath>
-      <test name='test.mygroup.example5.GreetingTest'>
-        <listener type='legacy-plain' sendSysOut='true' outputDir='${targetDir}'/>
-      </test>
+      <testclasses outputdir='${targetDir}'>
+        <fileset dir='${testBuildDir}' includes='**/*Test.class'/>
+        <listener type='legacy-plain' sendSysOut='true'/>
+      </testclasses>
     </junitlauncher>
 
     <!-- legacy-plain writes to files only; print them so failure details reach the console. -->

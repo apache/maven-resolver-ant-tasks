@@ -39,12 +39,12 @@ class AntRepositoryListener extends AbstractRepositoryListener {
 
     @Override
     public void artifactInstalling(final RepositoryEvent event) {
-        task.log("Installing " + event.getArtifact().getFile() + " to " + event.getFile());
+        task.log("Installing " + event.getArtifact().getPath() + " to " + event.getPath());
     }
 
     @Override
     public void metadataInstalling(final RepositoryEvent event) {
-        task.log("Installing " + event.getMetadata() + " to " + event.getFile());
+        task.log("Installing " + event.getMetadata() + " to " + event.getPath());
     }
 
     @Override
@@ -65,8 +65,8 @@ class AntRepositoryListener extends AbstractRepositoryListener {
 
         final StringBuilder buffer = new StringBuilder(256);
         buffer.append("The metadata ");
-        if (event.getMetadata().getFile() != null) {
-            buffer.append(event.getMetadata().getFile());
+        if (event.getMetadata().getPath() != null) {
+            buffer.append(event.getMetadata().getPath());
         } else {
             buffer.append(event.getMetadata());
         }

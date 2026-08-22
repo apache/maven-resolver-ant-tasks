@@ -19,6 +19,7 @@
 package org.apache.maven.resolver.internal.ant;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +67,7 @@ public class ProjectWorkspaceReader implements WorkspaceReader {
             Model model = pom.getModel(pom);
             Artifact aetherArtifact =
                     new DefaultArtifact(model.getGroupId(), model.getArtifactId(), null, "pom", model.getVersion());
-            aetherArtifact = aetherArtifact.setFile(pom.getFile());
+            aetherArtifact = aetherArtifact.setPath(pom.getFile().toPath());
             String coords = coords(aetherArtifact);
             artifacts.put(coords, aetherArtifact);
         }
@@ -98,7 +99,7 @@ public class ProjectWorkspaceReader implements WorkspaceReader {
                         artifact.getType(),
                         pom.getVersion());
             }
-            aetherArtifact = aetherArtifact.setFile(artifact.getFile());
+            aetherArtifact = aetherArtifact.setPath(artifact.getFile().toPath());
 
             String coords = coords(aetherArtifact);
             artifacts.put(coords, aetherArtifact);
@@ -134,8 +135,20 @@ public class ProjectWorkspaceReader implements WorkspaceReader {
      */
     @Override
     public File findArtifact(Artifact artifact) {
-        artifact = artifacts.get(coords(artifact));
-        return (artifact != null) ? artifact.getFile() : null;
+        Path path = findArtifactPath(artifact);
+        return (path != null) ? path.toFile() : null;
+    }
+
+    /**
+     * Locates the file of the given artifact in the workspace.
+     *
+     * @param artifact the artifact to locate
+     * @return the associated path if found, or {@code null} if not registered
+     */
+    @Override
+    public Path findArtifactPath(Artifact artifact) {
+        Artifact found = artifacts.get(coords(artifact));
+        return (found != null) ? found.getPath() : null;
     }
 
     /**

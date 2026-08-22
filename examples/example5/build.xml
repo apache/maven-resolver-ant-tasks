@@ -18,7 +18,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<project xmlns:repo='antlib:org.apache.maven.resolver.ant' default='install'>
+<project xmlns:repo='antlib:org.apache.maven.resolver.ant' xmlns:if='ant:if' default='install'>
   <echo level='info'>*********************</echo>
   <echo level='info'>* Building example5 *</echo>
   <echo level='info'>*********************</echo>
@@ -100,7 +100,7 @@
       </classpath>
     </javac>
 
-    <junitlauncher printSummary='true' haltOnFailure='true'>
+    <junitlauncher printSummary='true' failureProperty='test.failed'>
       <classpath>
         <pathelement location='${mainBuildDir}'/>
         <pathelement location='${testBuildDir}'/>
@@ -110,6 +110,14 @@
         <listener type='legacy-plain' sendSysOut='true' outputDir='${targetDir}'/>
       </test>
     </junitlauncher>
+
+    <!-- legacy-plain writes to files only; print them so failure details reach the console. -->
+    <concat if:set='test.failed'>
+      <fileset dir='${targetDir}' includes='TEST-*.txt'>
+        <contains text='FAILED'/>
+      </fileset>
+    </concat>
+    <fail if='test.failed' message='Some test(s) have failure(s)'/>
   </target>
 
   <target name='jar' depends='compile'>

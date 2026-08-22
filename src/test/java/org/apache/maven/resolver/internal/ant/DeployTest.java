@@ -24,6 +24,7 @@ import java.util.Arrays;
 import org.apache.tools.ant.BuildException;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -74,6 +75,7 @@ public class DeployTest extends AntBuildsTest {
 
         File dir = new File(distRepoDir, "test/dummy/0.1-SNAPSHOT/");
         String[] files = dir.list();
+        assertNotNull(files, "deploy directory not found: " + dir);
         assertTrue(
                 Arrays.stream(files).anyMatch(name -> name.endsWith("-ant.xml")),
                 "attached artifact not found: " + Arrays.toString(files));

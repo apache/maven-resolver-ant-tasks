@@ -35,7 +35,7 @@ public class DependencyManagementTest extends AntBuildsTest {
     public void testDependencyManagement() {
         executeTarget("init");
         DependencyManagement dm = getProject().getReference("dm");
-        assertNotNull(dm, "Dependency management with id 'dm' should exists");
+        assertNotNull(dm, "Dependency management with id 'dm' should exist");
         assertEquals(2, dm.getDependencies().getDependencyContainers().size(), "Should have 2 dependencies defined");
         Dependency dep1 =
                 (Dependency) dm.getDependencies().getDependencyContainers().get(0);

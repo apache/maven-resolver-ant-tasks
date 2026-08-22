@@ -19,7 +19,7 @@
   under the License.
 -->
 
-<project xmlns:resolver="antlib:org.apache.maven.resolver.ant" default="deploy">
+<project xmlns:resolver="antlib:org.apache.maven.resolver.ant" xmlns:if="ant:if" default="deploy">
 
   <!--
   This is an example Ant build file using the Maven Artifact Resolver Ant Tasks to compile, test, install and deploy the
@@ -97,7 +97,7 @@
   <target name="test" depends="test-compile">
     <mkdir dir="${build.dir}/test-reports"/>
 
-    <junitlauncher haltOnFailure="true" printSummary="true">
+    <junitlauncher failureProperty="test.failed" printSummary="true">
       <classpath>
         <pathelement location="${build.dir}/test-classes"/>
         <pathelement location="${build.dir}/classes"/>
@@ -113,6 +113,14 @@
         <fork includeJUnitPlatformLibraries="false"/>
       </testclasses>
     </junitlauncher>
+
+    <!-- legacy-brief writes to files only; print them so failure details reach the console. -->
+    <concat if:set="test.failed">
+      <fileset dir="${build.dir}/test-reports" includes="TEST-*.txt">
+        <contains text="FAILED"/>
+      </fileset>
+    </concat>
+    <fail if="test.failed" message="Some test(s) have failure(s)"/>
   </target>
 
   <target name="package" depends="test">

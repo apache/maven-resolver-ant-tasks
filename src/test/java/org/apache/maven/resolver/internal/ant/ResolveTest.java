@@ -92,7 +92,9 @@ public class ResolveTest extends AntBuildsTest {
                 new File(jdocDir, "org.eclipse.aether-aether-api-javadoc.jar").exists(),
                 "aether-api-javadoc was not saved with custom file layout");
 
-        List<String> javadocFiles = Arrays.asList(jdocDir.list());
+        String[] javadocNames = jdocDir.list();
+        assertNotNull(javadocNames, "javadoc directory not found: " + jdocDir);
+        List<String> javadocFiles = Arrays.asList(javadocNames);
         assertTrue(
                 javadocFiles.stream().allMatch(name -> name.endsWith("javadoc.jar")),
                 "found non-javadoc files: " + javadocFiles);
@@ -101,7 +103,9 @@ public class ResolveTest extends AntBuildsTest {
         assertTrue(
                 new File(sourcesDir, "org.eclipse.aether-aether-api-sources.jar").exists(),
                 "aether-api-sources was not saved with custom file layout");
-        List<String> sourcesFiles = Arrays.asList(sourcesDir.list());
+        String[] sourcesNames = sourcesDir.list();
+        assertNotNull(sourcesNames, "sources directory not found: " + sourcesDir);
+        List<String> sourcesFiles = Arrays.asList(sourcesNames);
         assertTrue(
                 sourcesFiles.stream().allMatch(name -> name.endsWith("sources.jar")),
                 "found non-sources files: " + sourcesFiles);

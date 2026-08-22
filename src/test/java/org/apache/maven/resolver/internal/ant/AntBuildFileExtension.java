@@ -65,7 +65,8 @@ public class AntBuildFileExtension implements AfterEachCallback {
      * Sets up to run the named build file.
      *
      * @param filename the build file to run
-     * @param logLevel one of the {@code Project.MSG_*} levels; messages logged above it are discarded
+     * @param logLevel one of the {@code Project.MSG_*} levels; messages above it are discarded, and only
+     *     {@code MSG_INFO}, {@code MSG_WARN} and {@code MSG_ERR} messages are captured
      */
     public void configureProject(String filename, int logLevel) throws BuildException {
         logBuffer = new StringBuffer();

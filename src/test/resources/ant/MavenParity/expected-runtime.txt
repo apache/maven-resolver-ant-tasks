@@ -1,0 +1,16 @@
+# What "mvn dependency:list -DincludeScope=runtime" reports for the pom.xml next to this file.
+#
+# Recorded with Apache Maven 3.10.0-rc-1 and maven-dependency-plugin 3.9.0. To re-record:
+#
+#   mvn org.apache.maven.plugins:maven-dependency-plugin:3.9.0:list \
+#       -DincludeScope=runtime -DoutputFile=/tmp/runtime.txt
+#   sed -e '1d' -e 's/ -- .*//' -e 's/ (optional)//' -e 's/^ *//' /tmp/runtime.txt | grep -v '^$' | sort
+#
+# groupId:artifactId:type[:classifier]:version:scope
+com.google.code.findbugs:jsr305:jar:3.0.2:compile
+commons-codec:commons-codec:jar:1.11:compile
+org.apache.commons:commons-lang3:jar:3.20.0:compile
+org.apache.httpcomponents:httpclient:jar:4.5.14:compile
+org.apache.httpcomponents:httpcore:jar:4.4.16:compile
+org.slf4j:slf4j-api:jar:2.0.17:runtime
+org.slf4j:slf4j-simple:jar:2.0.17:runtime

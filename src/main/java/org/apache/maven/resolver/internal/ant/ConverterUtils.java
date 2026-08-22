@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.maven.model.Model;
+import org.apache.maven.repository.internal.ArtifactDescriptorReaderDelegate;
 import org.apache.maven.resolver.internal.ant.types.Authentication;
 import org.apache.maven.resolver.internal.ant.types.Dependency;
 import org.apache.maven.resolver.internal.ant.types.Exclusion;
@@ -41,6 +43,8 @@ import org.eclipse.aether.artifact.ArtifactTypeRegistry;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.artifact.DefaultArtifactType;
 import org.eclipse.aether.repository.RepositoryPolicy;
+import org.eclipse.aether.resolution.ArtifactDescriptorRequest;
+import org.eclipse.aether.resolution.ArtifactDescriptorResult;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
 
 /**
@@ -48,7 +52,7 @@ import org.eclipse.aether.util.repository.AuthenticationBuilder;
  */
 class ConverterUtils {
 
-    private static org.eclipse.aether.artifact.Artifact toArtifact(Dependency dependency, ArtifactTypeRegistry types) {
+    static org.eclipse.aether.artifact.Artifact toArtifact(Dependency dependency, ArtifactTypeRegistry types) {
         ArtifactType type = types.get(dependency.getType());
         if (type == null) {
             type = new DefaultArtifactType(dependency.getType());
@@ -70,6 +74,78 @@ class ConverterUtils {
                 type);
     }
 
+    /**
+     * Converts a Maven {@link Model} into the artifact descriptor that Maven itself would derive from it.
+     * <p>
+     * The conversion is delegated to Maven's own {@link ArtifactDescriptorReaderDelegate}, the code that turns a
+     * model into resolver input during a Maven build, so that a POM contributes the same dependencies, managed
+     * dependencies and repositories here as it does there.
+     *
+     * @param session the repository system session supplying the artifact type registry
+     * @param model the effective model to convert
+     * @return the artifact descriptor derived from the model
+     */
+    public static ArtifactDescriptorResult toArtifactDescriptor(RepositorySystemSession session, Model model) {
+        org.eclipse.aether.artifact.Artifact pomArtifact =
+                new DefaultArtifact(model.getGroupId(), model.getArtifactId(), "pom", model.getVersion());
+        ArtifactDescriptorRequest request = new ArtifactDescriptorRequest();
+        request.setArtifact(pomArtifact);
+        ArtifactDescriptorResult result = new ArtifactDescriptorResult(request);
+        new ArtifactDescriptorReaderDelegate().populateResult(session, result, model);
+        return result;
+    }
+
+    /**
+     * Returns the {@code groupId:artifactId:extension[:classifier]} key of an artifact, used to detect that a POM
+     * dependency is already declared locally.
+     *
+     * @param artifact the artifact to key
+     * @return the versionless key of the artifact
+     */
+    public static String versionlessKey(org.eclipse.aether.artifact.Artifact artifact) {
+        StringBuilder key = new StringBuilder(128);
+        key.append(artifact.getGroupId())
+                .append(':')
+                .append(artifact.getArtifactId())
+                .append(':')
+                .append(artifact.getExtension());
+        if (!artifact.getClassifier().isEmpty()) {
+            key.append(':').append(artifact.getClassifier());
+        }
+        return key.toString();
+    }
+
+    /**
+     * Returns the versionless key of an Ant {@code <dependency>}, normalized the same way as
+     * {@link #versionlessKey(org.eclipse.aether.artifact.Artifact)} so that both can be compared.
+     *
+     * @param dependency the Ant dependency to key
+     * @param session the repository system session supplying the artifact type registry
+     * @return the versionless key of the dependency
+     */
+    public static String versionlessKey(Dependency dependency, RepositorySystemSession session) {
+        return versionlessKey(toArtifact(dependency, session.getArtifactTypeRegistry()));
+    }
+
+    /**
+     * Returns a copy of the dependency with the given exclusions added to the ones it already carries.
+     *
+     * @param dependency the dependency to extend
+     * @param exclusions the exclusions to add, may be empty
+     * @return the dependency with the merged exclusions
+     */
+    public static org.eclipse.aether.graph.Dependency addExclusions(
+            org.eclipse.aether.graph.Dependency dependency, Collection<Exclusion> exclusions) {
+        if (exclusions == null || exclusions.isEmpty()) {
+            return dependency;
+        }
+        Collection<org.eclipse.aether.graph.Exclusion> merged = new LinkedHashSet<>(dependency.getExclusions());
+        for (Exclusion exclusion : exclusions) {
+            merged.add(toExclusion(exclusion));
+        }
+        return dependency.setExclusions(merged);
+    }
+
     public static org.eclipse.aether.repository.Authentication toAuthentication(Authentication auth) {
         if (auth == null) {
             return null;
@@ -86,15 +162,6 @@ class ConverterUtils {
         return new org.eclipse.aether.graph.Dependency(
                 toArtifact(dependency, session.getArtifactTypeRegistry()),
                 scope == null || scope.trim().isEmpty() ? "compile" : scope,
-                false,
-                toExclusions(dependency.getExclusions(), exclusions));
-    }
-
-    public static org.eclipse.aether.graph.Dependency toManagedDependency(
-            Dependency dependency, List<Exclusion> exclusions, RepositorySystemSession session) {
-        return new org.eclipse.aether.graph.Dependency(
-                toArtifact(dependency, session.getArtifactTypeRegistry()),
-                dependency.getScope(),
                 false,
                 toExclusions(dependency.getExclusions(), exclusions));
     }

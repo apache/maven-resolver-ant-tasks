@@ -169,6 +169,12 @@ Dependencies are used to to create classpaths or filesets. They are used by
 the `<resolve>`-task, which collects the artifacts belonging to the dependencies
 transitively.
 
+A `<dependencies>` element that names a POM contributes the dependencies, the dependency management
+and the repositories of that POM, the same way the POM would contribute them to a Maven build. The
+repositories configured on the Ant side take precedence over the ones the POM declares, and a POM
+carries Maven Central through the super POM even when it declares no repository of its own. Mirrors
+and offline mode in `settings.xml` apply to all of them.
+
 ```xml
 <dependency coords="g:a:v:scope"/>
 

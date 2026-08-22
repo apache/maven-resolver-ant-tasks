@@ -494,7 +494,7 @@ public class Resolve extends AbstractResolvingTask {
                 path = new org.apache.tools.ant.types.Path(getProject());
                 getProject().addReference(refid, path);
             }
-            File file = artifact.getFile();
+            File file = artifact.getPath().toFile();
             path.add(new FileResource(file.getParentFile(), file.getName()));
         }
     }
@@ -662,7 +662,7 @@ public class Resolve extends AbstractResolvingTask {
                     fileset.createInclude().setName(path);
                 }
 
-                File src = artifact.getFile();
+                File src = artifact.getPath().toFile();
                 File dst = new File(dir, path);
 
                 if (src.lastModified() != dst.lastModified() || src.length() != dst.length()) {
@@ -683,8 +683,8 @@ public class Resolve extends AbstractResolvingTask {
                     getProject().addReference(refid, resources);
                 }
 
-                FileResource resource = new FileResource(artifact.getFile());
-                resource.setBaseDir(session.getLocalRepository().getBasedir());
+                FileResource resource = new FileResource(artifact.getPath().toFile());
+                resource.setBaseDir(session.getLocalRepository().getBasePath().toFile());
                 resource.setProject(getProject());
                 resources.add(resource);
             }
@@ -803,7 +803,7 @@ public class Resolve extends AbstractResolvingTask {
                 buffer.append(artifact.getClassifier());
             }
 
-            String path = artifact.getFile().getAbsolutePath();
+            String path = artifact.getPath().toAbsolutePath().toString();
 
             getProject().setProperty(buffer.toString(), path);
         }

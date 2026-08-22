@@ -141,7 +141,7 @@ class AntModelResolver implements ModelResolver {
                     e);
         }
 
-        final File pomFile = pomArtifact.getFile();
+        final File pomFile = pomArtifact.getPath().toFile();
 
         return new FileModelSource(pomFile);
     }

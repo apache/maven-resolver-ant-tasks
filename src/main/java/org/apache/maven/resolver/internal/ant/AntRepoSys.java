@@ -385,7 +385,7 @@ public class AntRepoSys {
             repoDir = getDefaultLocalRepoDir();
         }
 
-        return new org.eclipse.aether.repository.LocalRepository(repoDir);
+        return new org.eclipse.aether.repository.LocalRepository(repoDir.toPath());
     }
 
     private synchronized Settings getSettings() {
@@ -950,7 +950,7 @@ public class AntRepoSys {
 
         org.eclipse.aether.artifact.Artifact pomArtifact = new DefaultArtifact(
                         model.getGroupId(), model.getArtifactId(), "pom", model.getVersion())
-                .setFile(pomFile);
+                .setPath(pomFile.toPath());
         results.add(pomArtifact);
 
         for (Artifact artifact : artifacts.getArtifacts()) {
@@ -960,7 +960,7 @@ public class AntRepoSys {
                             artifact.getClassifier(),
                             artifact.getType(),
                             model.getVersion())
-                    .setFile(artifact.getFile());
+                    .setPath(artifact.getFile().toPath());
             results.add(buildArtifact);
         }
 

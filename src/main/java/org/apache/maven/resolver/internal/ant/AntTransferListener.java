@@ -20,6 +20,8 @@ package org.apache.maven.resolver.internal.ant;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Locale;
 
 import org.apache.tools.ant.Project;
@@ -72,8 +74,8 @@ class AntTransferListener extends AbstractTransferListener {
             final String len = contentLength >= 1024 ? ((contentLength + 1023) / 1024) + " KB" : contentLength + " B";
 
             String throughput = "";
-            final long duration =
-                    System.currentTimeMillis() - event.getResource().getTransferStartTime();
+            final long duration = Duration.between(event.getResource().getStartTime(), Instant.now())
+                    .toMillis();
             if (duration > 0) {
                 final DecimalFormat format = new DecimalFormat("0.0", new DecimalFormatSymbols(Locale.ENGLISH));
                 final double kbPerSec = (contentLength / 1024.0) / (duration / 1000.0);

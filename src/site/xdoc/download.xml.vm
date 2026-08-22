@@ -29,15 +29,15 @@ under the License.
 
       <p><strong>${project.name} ${project.version}</strong> is distributed in source format.</p>
 
-      <p>Use a source archive if you intend to build <strong>${project.name}</strong> yourself.</p>
+      <p>To build <strong>${project.name}</strong> yourself, use a source archive.</p>
 
-      <p>Otherwise, simply use the ready-made binary artifacts from <strong>central repository</strong>.</p>
+      <p>Otherwise, use the ready-made binary artifacts from the <strong>Maven Central Repository</strong>.</p>
 
       <p><strong>${project.name}</strong> is distributed under the <a href="https://www.apache.org/licenses/">Apache License, version 2.0</a>.</p>
 
       <subsection name="Files">
 
-        <p>This is the current stable version of <strong>${project.name}</strong>.</p>
+        <p>The following table lists the stable release of <strong>${project.name}</strong>.</p>
 
         <table>
           <thead>
@@ -58,16 +58,21 @@ under the License.
           </tbody>
         </table>
 
-        <p>It is essential that you <a href="https://www.apache.org/info/verification.html">verify the integrity</a> of the downloaded file
-          using the checksum (.sha512 file)
-          or using the signature (.asc file) against the public <a href="https://downloads.apache.org/maven/KEYS">KEYS</a> used by the Apache Maven developers.
+        <p>You must <a href="https://www.apache.org/info/verification.html">verify the integrity</a> of the downloaded file in one of
+          the following ways:
         </p>
+        <ul>
+          <li>Compare the file against the checksum in the <code>.sha512</code> file.</li>
+          <li>Check the signature in the <code>.asc</code> file against the public
+            <a href="https://downloads.apache.org/maven/KEYS">KEYS</a> file that the Apache Maven developers use.</li>
+        </ul>
 
       </subsection>
 
       <subsection name="Previous Versions">
-        <p>It is strongly recommended to use the latest release version of <strong>${project.name}</strong> to take advantage of the newest features and bug fixes.</p>
-        <p>Older non-recommended releases can be found on our <a href="https://archive.apache.org/dist/maven/resolver/">archive site</a>.</p>
+        <p>We recommend that you use the release of <strong>${project.name}</strong> on this page, which includes the most
+          recent features and bug fixes.</p>
+        <p>To download an earlier release, see the <a href="https://archive.apache.org/dist/maven/resolver/">archive site</a>.</p>
       </subsection>
     </section>
   </body>

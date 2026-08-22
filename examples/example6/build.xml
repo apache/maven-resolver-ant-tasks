@@ -68,18 +68,24 @@
     <javac
       srcdir='src/test/java'
       destdir='${testBuildDir}'
-      classpathref='testClassPath'
-    />
+      includeantruntime='false'
+    >
+      <classpath>
+        <pathelement location='${mainBuildDir}'/>
+        <path refid='testPath'/>
+      </classpath>
+    </javac>
 
-    <junit printsummary='true' haltonfailure='true'>
+    <junitlauncher printSummary='true' haltOnFailure='true'>
       <classpath>
         <pathelement location='${mainBuildDir}'/>
         <pathelement location='${testBuildDir}'/>
         <path refid='testPath'/>
       </classpath>
-      <formatter type='plain'/>
-      <test name='my.test.TestCase'/>
-    </junit>
+      <test name='test.mygroup.example6.GreetingTest'>
+        <listener type='legacy-plain' sendSysOut='true' outputDir='${targetDir}'/>
+      </test>
+    </junitlauncher>
   </target>
 
   <target name='jar' depends='compile'>
@@ -121,7 +127,7 @@
     <repo:artifact file='${javadocJarFile}' type='jar' classifier='javadocs' id='javadocJar'/>
   </target>
 
-  <target name='install' depends='jar, sourcesJar, javadocJar'>
+  <target name='install' depends='test, jar, sourcesJar, javadocJar'>
     <echo level='info'>Publishing to local maven repository</echo>
     <repo:artifacts id='localArtifacts'>
       <repo:artifact refid='mainJar'/>

@@ -32,9 +32,9 @@ import static org.junit.jupiter.api.Assertions.fail;
  * still missing:
  * - deploy snapshots/releases into correct repos
  */
-public class DeployTest extends AntBuildsTest {
+class DeployTest extends AntBuildsTest {
     @Test
-    public void testDeployGlobalPom() {
+    void deployGlobalPom() {
         long min = System.currentTimeMillis();
         executeTarget("testDeployGlobalPom");
         long max = System.currentTimeMillis();
@@ -45,7 +45,7 @@ public class DeployTest extends AntBuildsTest {
     }
 
     @Test
-    public void testDeployOverrideGlobalPom() {
+    void deployOverrideGlobalPom() {
         long min = System.currentTimeMillis();
         executeTarget("testDeployOverrideGlobalPom");
         long max = System.currentTimeMillis();
@@ -56,7 +56,7 @@ public class DeployTest extends AntBuildsTest {
     }
 
     @Test
-    public void testDeployOverrideGlobalPomByRef() {
+    void deployOverrideGlobalPomByRef() {
         long min = System.currentTimeMillis();
         executeTarget("testDeployOverrideGlobalPomByRef");
         long max = System.currentTimeMillis();
@@ -68,7 +68,7 @@ public class DeployTest extends AntBuildsTest {
     }
 
     @Test
-    public void testDeployAttachedArtifact() {
+    void deployAttachedArtifact() {
         executeTarget("testDeployAttachedArtifact");
 
         assertLogContaining("Uploading");
@@ -106,7 +106,7 @@ public class DeployTest extends AntBuildsTest {
      * Once the deploy task supports this case or throws a clearer error, update the assertion accordingly.
      */
     @Test
-    public void testDeployOnlyNestedPomException() {
+    void deployOnlyNestedPomException() {
         try {
             executeTarget("testDeployOnlyNestedPomException");
             fail("Expected the build to fail when deploying with only a nested <pom/> inside <artifact>.");

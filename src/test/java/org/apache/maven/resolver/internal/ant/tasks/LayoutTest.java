@@ -27,16 +27,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  */
-public class LayoutTest {
+class LayoutTest {
     @Test
-    public void testUnknownVariable() {
+    void unknownVariable() {
         assertThrows(BuildException.class, () -> {
             new Layout("{unknown}");
         });
     }
 
     @Test
-    public void testGetPath() {
+    void getPath() {
         Layout layout;
 
         layout = new Layout("{groupIdDirs}/{artifactId}/{baseVersion}/{artifactId}-{version}-{classifier}.{extension}");

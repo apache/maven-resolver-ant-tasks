@@ -19,16 +19,15 @@
 package org.apache.maven.resolver.internal.ant;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class SettingsTest extends AntBuildsTest {
+class SettingsTest extends AntBuildsTest {
     @Test
-    public void testUserSettings() {
+    void userSettings() {
         executeTarget("testUserSettings");
         assertEquals(
                 "userSettings.xml",
@@ -37,7 +36,7 @@ public class SettingsTest extends AntBuildsTest {
     }
 
     @Test
-    public void testGlobalSettings() {
+    void globalSettings() {
         executeTarget("testGlobalSettings");
         assertEquals(
                 "globalSettings.xml",
@@ -46,7 +45,7 @@ public class SettingsTest extends AntBuildsTest {
     }
 
     @Test
-    public void testBothSettings() {
+    void bothSettings() {
         executeTarget("testBothSettings");
         assertEquals(
                 "globalSettings.xml",
@@ -59,7 +58,7 @@ public class SettingsTest extends AntBuildsTest {
     }
 
     @Test
-    public void testFallback() throws IOException {
+    void fallback() throws Exception {
         executeTarget("setUp");
         String userSettings =
                 AntRepoSys.getInstance(getProject()).getUserSettings().getAbsolutePath();

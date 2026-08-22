@@ -28,15 +28,15 @@ import org.eclipse.aether.util.graph.manager.TransitiveDependencyManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
-public class AntRepoSysTest {
+class AntRepoSysTest {
     private Project project;
 
     private Task task;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         project = new Project();
         project.setProperty("user.home", System.getProperty("user.home"));
         project.setProperty(
@@ -57,32 +57,35 @@ public class AntRepoSysTest {
      * anyone's dependency tree.
      */
     @Test
-    public void testDependencyManagerIsClassicByDefault() {
+    void dependencyManagerIsClassicByDefault() {
         try (RepositorySystemSession.CloseableSession session = newSession()) {
-            assertTrue(
-                    session.getDependencyManager() instanceof ClassicDependencyManager,
+            assertInstanceOf(
+                    ClassicDependencyManager.class,
+                    session.getDependencyManager(),
                     "expected the classic dependency manager, got " + session.getDependencyManager());
         }
     }
 
     @Test
-    public void testDependencyManagerTransitivityCanBeEnabled() {
+    void dependencyManagerTransitivityCanBeEnabled() {
         project.setProperty(Names.PROPERTY_DEPENDENCY_MANAGER_TRANSITIVITY, "true");
 
         try (RepositorySystemSession.CloseableSession session = newSession()) {
-            assertTrue(
-                    session.getDependencyManager() instanceof TransitiveDependencyManager,
+            assertInstanceOf(
+                    TransitiveDependencyManager.class,
+                    session.getDependencyManager(),
                     "expected the transitive dependency manager, got " + session.getDependencyManager());
         }
     }
 
     @Test
-    public void testDependencyManagerTransitivityOffIsClassic() {
+    void dependencyManagerTransitivityOffIsClassic() {
         project.setProperty(Names.PROPERTY_DEPENDENCY_MANAGER_TRANSITIVITY, "false");
 
         try (RepositorySystemSession.CloseableSession session = newSession()) {
-            assertTrue(
-                    session.getDependencyManager() instanceof ClassicDependencyManager,
+            assertInstanceOf(
+                    ClassicDependencyManager.class,
+                    session.getDependencyManager(),
                     "expected the classic dependency manager, got " + session.getDependencyManager());
         }
     }

@@ -34,13 +34,13 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ProjectWorkspaceReaderTest {
+class ProjectWorkspaceReaderTest {
     private ProjectWorkspaceReader reader;
 
     private Project project;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    void setUp() throws Exception {
         this.reader = new ProjectWorkspaceReader();
 
         this.project = new Project();
@@ -60,13 +60,13 @@ public class ProjectWorkspaceReaderTest {
      * so handing out a new instance per call would defeat any caching keyed on the workspace repository.
      */
     @Test
-    public void testRepositoryIsStable() {
+    void repositoryIsStable() {
         assertSame(reader.getRepository(), reader.getRepository());
         assertEquals(reader.getRepository().getKey(), reader.getRepository().getKey());
     }
 
     @Test
-    public void testFindPom() {
+    void findPom() {
         Pom pom = new Pom();
         pom.setProject(project);
         pom.setFile(getFile("dummy-pom.xml"));
@@ -78,7 +78,7 @@ public class ProjectWorkspaceReaderTest {
     }
 
     @Test
-    public void testFindArtifact() {
+    void findArtifact() {
         Pom pom = new Pom();
         pom.setProject(project);
         pom.setFile(getFile("dummy-pom.xml"));
@@ -98,7 +98,7 @@ public class ProjectWorkspaceReaderTest {
     }
 
     @Test
-    public void testFindVersions() {
+    void findVersions() {
         Pom pom1 = new Pom();
         pom1.setProject(project);
         pom1.setCoords("test:dummy:1-SNAPSHOT");

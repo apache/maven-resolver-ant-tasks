@@ -25,9 +25,12 @@ import org.apache.maven.resolver.internal.ant.AntBuildFileExtension;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CreatePomRainyDayTest {
 
@@ -55,16 +58,16 @@ public class CreatePomRainyDayTest {
      * if the skipPomRegistration property is set to true.
      */
     @Test
-    public void testNoGroupId() {
+    void noGroupId() {
         configureProject("target/test-classes/ant/createPom/noGroupId.xml", Project.MSG_VERBOSE);
         // Expect a BuildException when trying to execute the target
-        Assertions.assertThrows(BuildException.class, () -> buildRule.executeTarget("setup"));
+        assertThrows(BuildException.class, () -> buildRule.executeTarget("setup"));
 
         // This should work since the setSkipPomRegistration property is set to true
         configureProject("target/test-classes/ant/createPom/noGroupIdSkipRegistration.xml", Project.MSG_VERBOSE);
         buildRule.executeTarget("setup");
         File pomFile = getPomFile();
-        Assertions.assertTrue(pomFile.exists(), "The pom file should have been created at " + pomFile);
+        assertTrue(pomFile.exists(), "The pom file should have been created at " + pomFile);
     }
 
     /**
@@ -73,22 +76,22 @@ public class CreatePomRainyDayTest {
      * if the skipPomRegistration property is set to true.
      */
     @Test
-    public void testNoArtifactId() {
+    void noArtifactId() {
         configureProject("target/test-classes/ant/createPom/noArtifactId.xml", Project.MSG_VERBOSE);
         // Expect a BuildException when trying to execute the target
-        Assertions.assertThrows(BuildException.class, () -> buildRule.executeTarget("setup"));
+        assertThrows(BuildException.class, () -> buildRule.executeTarget("setup"));
 
         // This should work since the setSkipPomRegistration property is set to true
         configureProject("target/test-classes/ant/createPom/noArtifactIdSkipRegistration.xml", Project.MSG_VERBOSE);
         buildRule.executeTarget("setup");
         File pomFile = getPomFile();
-        Assertions.assertTrue(pomFile.exists(), "The pom file should have been created at " + pomFile);
+        assertTrue(pomFile.exists(), "The pom file should have been created at " + pomFile);
     }
 
     private File getPomFile() {
         Project project = buildRule.getProject();
         String pomPath = project.replaceProperties(project.getProperty("pomFile"));
-        Assertions.assertNotNull(pomPath, "pomFile property should not be null");
+        assertNotNull(pomPath, "pomFile property should not be null");
         return new File(pomPath);
     }
 }

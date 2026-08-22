@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class ProxySelectorTest {
+class ProxySelectorTest {
     @TempDir
     File folder;
 
@@ -46,7 +46,7 @@ public class ProxySelectorTest {
     private Task task;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         project = new Project();
         project.setProperty("user.home", System.getProperty("user.home"));
         project.setProperty(
@@ -64,7 +64,7 @@ public class ProxySelectorTest {
      * @throws Exception in case of problems
      */
     @Test
-    public void testInactiveProxyFromSettingsIsNotApplied() throws Exception {
+    void inactiveProxyFromSettingsIsNotApplied() throws Exception {
         File settings = writeSettings(
                 "<proxy>",
                 "  <id>inactive-proxy</id>",
@@ -98,7 +98,7 @@ public class ProxySelectorTest {
      * @throws Exception in case of problems
      */
     @Test
-    public void testOnlyInactiveProxiesApplyNoProxy() throws Exception {
+    void onlyInactiveProxiesApplyNoProxy() throws Exception {
         File settings = writeSettings(
                 "<proxy>",
                 "  <id>inactive-proxy</id>",

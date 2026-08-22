@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SettingsReferenceTest {
+class SettingsReferenceTest {
     private Project project;
 
     private Settings referenced;
@@ -37,7 +37,7 @@ public class SettingsReferenceTest {
     private File globalFile;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         project = new Project();
         userFile = new File("user-settings.xml");
         globalFile = new File("global-settings.xml");
@@ -55,7 +55,7 @@ public class SettingsReferenceTest {
      * settings file.
      */
     @Test
-    public void testGlobalFileDelegatesToReferencedGlobalFile() {
+    void globalFileDelegatesToReferencedGlobalFile() {
         Settings ref = new Settings();
         ref.setProject(project);
         ref.setRefid(new Reference(project, "settings-id"));
@@ -67,7 +67,7 @@ public class SettingsReferenceTest {
      * The user settings file delegation of a referenced {@code <settings>} must keep working.
      */
     @Test
-    public void testFileDelegatesToReferencedFile() {
+    void fileDelegatesToReferencedFile() {
         Settings ref = new Settings();
         ref.setProject(project);
         ref.setRefid(new Reference(project, "settings-id"));

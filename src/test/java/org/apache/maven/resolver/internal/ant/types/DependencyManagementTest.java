@@ -32,7 +32,7 @@ public class DependencyManagementTest extends AntBuildsTest {
     }
 
     @Test
-    public void testDependencyManagement() {
+    void dependencyManagement() {
         executeTarget("init");
         DependencyManagement dm = getProject().getReference("dm");
         assertNotNull(dm, "Dependency management with id 'dm' should exist");

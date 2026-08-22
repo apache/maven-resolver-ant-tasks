@@ -24,9 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  */
-public class ExclusionTest {
+class ExclusionTest {
     @Test
-    public void testSetCoordsGid() {
+    void setCoordsGid() {
         Exclusion ex = new Exclusion();
         ex.setCoords("gid");
 
@@ -37,7 +37,7 @@ public class ExclusionTest {
     }
 
     @Test
-    public void testSetCoordsGidAid() {
+    void setCoordsGidAid() {
         Exclusion ex = new Exclusion();
         ex.setCoords("gid:aid");
 
@@ -48,7 +48,7 @@ public class ExclusionTest {
     }
 
     @Test
-    public void testSetCoordsGidAidExt() {
+    void setCoordsGidAidExt() {
         Exclusion ex = new Exclusion();
         ex.setCoords("gid:aid:ext");
 
@@ -59,7 +59,7 @@ public class ExclusionTest {
     }
 
     @Test
-    public void testSetCoordsGidAidExtCls() {
+    void setCoordsGidAidExtCls() {
         Exclusion ex = new Exclusion();
         ex.setCoords("gid:aid:ext:cls");
 

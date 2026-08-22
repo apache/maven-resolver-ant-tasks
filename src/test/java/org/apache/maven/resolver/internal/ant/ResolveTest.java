@@ -19,7 +19,6 @@
 package org.apache.maven.resolver.internal.ant;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -36,9 +35,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ResolveTest extends AntBuildsTest {
+class ResolveTest extends AntBuildsTest {
     @Test
-    public void testResolveGlobalPom() {
+    void resolveGlobalPom() {
         executeTarget("testResolveGlobalPom");
 
         String prop = getProject().getProperty("test.resolve.path.org.eclipse.aether:aether-api:jar");
@@ -49,7 +48,7 @@ public class ResolveTest extends AntBuildsTest {
     }
 
     @Test
-    public void testResolveOverrideGlobalPom() {
+    void resolveOverrideGlobalPom() {
         executeTarget("testResolveOverrideGlobalPom");
 
         String prop = getProject().getProperty("test.resolve.path.org.eclipse.aether:aether-api:jar");
@@ -60,7 +59,7 @@ public class ResolveTest extends AntBuildsTest {
     }
 
     @Test
-    public void testResolveGlobalPomIntoOtherLocalRepo() {
+    void resolveGlobalPomIntoOtherLocalRepo() {
         executeTarget("testResolveGlobalPomIntoOtherLocalRepo");
 
         String prop = getProject().getProperty("test.resolve.path.org.eclipse.aether:aether-api:jar");
@@ -72,7 +71,7 @@ public class ResolveTest extends AntBuildsTest {
     }
 
     @Test
-    public void testResolveCustomFileLayout() throws IOException {
+    void resolveCustomFileLayout() throws Exception {
         File dir = new File(BUILD_DIR, "resolve-custom-layout");
         executeTarget("testResolveCustomFileLayout");
 
@@ -82,7 +81,7 @@ public class ResolveTest extends AntBuildsTest {
     }
 
     @Test
-    public void testResolveAttachments() throws IOException {
+    void resolveAttachments() throws Exception {
         File dir = new File(BUILD_DIR, "resolve-attachments");
         executeTarget("testResolveAttachments");
 
@@ -112,7 +111,7 @@ public class ResolveTest extends AntBuildsTest {
     }
 
     @Test
-    public void testResolvePath() {
+    void resolvePath() {
         executeTarget("testResolvePath");
         Map<?, ?> refs = getProject().getReferences();
         Object obj = refs.get("out");
@@ -124,7 +123,7 @@ public class ResolveTest extends AntBuildsTest {
     }
 
     @Test
-    public void testResolveDepsFromFile() {
+    void resolveDepsFromFile() {
         executeTarget("testResolveDepsFromFile");
 
         String prop = getProject().getProperty("test.resolve.path.org.eclipse.aether:aether-spi:jar");
@@ -137,7 +136,7 @@ public class ResolveTest extends AntBuildsTest {
     }
 
     @Test
-    public void testResolveNestedDependencyCollections() {
+    void resolveNestedDependencyCollections() {
         executeTarget("testResolveNestedDependencyCollections");
 
         String prop = getProject().getProperty("test.resolve.path.org.eclipse.aether:aether-spi:jar");
@@ -149,7 +148,7 @@ public class ResolveTest extends AntBuildsTest {
     }
 
     @Test
-    public void testResolveResourceCollectionOnly() {
+    void resolveResourceCollectionOnly() {
         executeTarget("testResolveResourceCollectionOnly");
 
         ResourceCollection resources = (ResourceCollection) getProject().getReference("files");
@@ -164,7 +163,7 @@ public class ResolveTest extends AntBuildsTest {
     }
 
     @Test
-    public void testResolveTransitiveDependencyManagement() {
+    void resolveTransitiveDependencyManagement() {
         executeTarget("testResolveTransitiveDependencyManagement");
 
         String prop = getProject().getProperty("test.resolve.path.org.slf4j:slf4j-api:jar");
@@ -181,7 +180,7 @@ public class ResolveTest extends AntBuildsTest {
     }
 
     @Test
-    public void testResolveTransitiveDependencyManagementTestScope() {
+    void resolveTransitiveDependencyManagementTestScope() {
         executeTarget("testResolveTransitiveDependencyManagementTestScope");
 
         String prop = getProject().getProperty("test.compile.resolve.path.org.slf4j:slf4j-api:jar");

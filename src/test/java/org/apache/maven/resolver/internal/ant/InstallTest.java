@@ -19,15 +19,14 @@
 package org.apache.maven.resolver.internal.ant;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class InstallTest extends AntBuildsTest {
+class InstallTest extends AntBuildsTest {
     @Test
-    public void testInstallGlobalPom() {
+    void installGlobalPom() {
         executeTarget("testInstallGlobalPom");
         long tstamp = System.currentTimeMillis();
 
@@ -37,7 +36,7 @@ public class InstallTest extends AntBuildsTest {
     }
 
     @Test
-    public void testInstallOverrideGlobalPom() {
+    void installOverrideGlobalPom() {
         executeTarget("testInstallOverrideGlobalPom");
         long tstamp = System.currentTimeMillis();
 
@@ -47,7 +46,7 @@ public class InstallTest extends AntBuildsTest {
     }
 
     @Test
-    public void testInstallOverrideGlobalPomByRef() {
+    void installOverrideGlobalPomByRef() {
         long tstamp = System.currentTimeMillis();
         executeTarget("testInstallOverrideGlobalPomByRef");
 
@@ -58,7 +57,7 @@ public class InstallTest extends AntBuildsTest {
     }
 
     @Test
-    public void testDefaultRepo() {
+    void defaultRepo() {
         executeTarget("testDefaultRepo");
         long tstamp = System.currentTimeMillis();
 
@@ -69,7 +68,7 @@ public class InstallTest extends AntBuildsTest {
     }
 
     @Test
-    public void testCustomRepo() throws IOException {
+    void customRepo() throws Exception {
         File repoPath = new File(BUILD_DIR, "local-repo-custom");
 
         executeTarget("testCustomRepo");

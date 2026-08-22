@@ -24,9 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  */
-public class DependencyTest {
+class DependencyTest {
     @Test
-    public void testSetCoordsGidAidVer() {
+    void setCoordsGidAidVer() {
         Dependency dep = new Dependency();
         dep.setCoords("gid:aid:ver");
 
@@ -39,7 +39,7 @@ public class DependencyTest {
     }
 
     @Test
-    public void testSetCoordsGidAidVerScope() {
+    void setCoordsGidAidVerScope() {
         Dependency dep = new Dependency();
         dep.setCoords("gid:aid:ver:scope");
 
@@ -52,7 +52,7 @@ public class DependencyTest {
     }
 
     @Test
-    public void testSetCoordsGidAidVerTypeScope() {
+    void setCoordsGidAidVerTypeScope() {
         Dependency dep = new Dependency();
         dep.setCoords("gid:aid:ver:type:scope");
 
@@ -65,7 +65,7 @@ public class DependencyTest {
     }
 
     @Test
-    public void testSetCoordsGidAidVerTypeClsScope() {
+    void setCoordsGidAidVerTypeClsScope() {
         Dependency dep = new Dependency();
         dep.setCoords("gid:aid:ver:type:cls:scope");
 

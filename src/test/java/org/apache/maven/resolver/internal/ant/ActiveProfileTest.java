@@ -22,9 +22,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class ActiveProfileTest extends AntBuildsTest {
+class ActiveProfileTest extends AntBuildsTest {
     @Test
-    public void testActiveProfileNotDefinedInSettingsIsIgnored() {
+    void activeProfileNotDefinedInSettingsIsIgnored() {
         executeTarget("testActiveProfileNotDefinedInSettingsIsIgnored");
         assertNotNull(getProject().getReference("defined-repo"), "repository of defined profile not registered");
     }

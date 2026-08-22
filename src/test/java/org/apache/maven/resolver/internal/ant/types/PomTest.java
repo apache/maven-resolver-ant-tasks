@@ -24,9 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  */
-public class PomTest {
+class PomTest {
     @Test
-    public void testSetCoordsGid() {
+    void setCoordsGid() {
         Pom pom = new Pom();
         pom.setCoords("gid:aid:ver");
 

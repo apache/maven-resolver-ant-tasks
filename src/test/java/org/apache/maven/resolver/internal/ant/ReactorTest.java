@@ -19,7 +19,6 @@
 package org.apache.maven.resolver.internal.ant;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
@@ -29,13 +28,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class ReactorTest extends AntBuildsTest {
+class ReactorTest extends AntBuildsTest {
     private Artifact artifact(String coords) {
         return new DefaultArtifact(coords);
     }
 
     @Test
-    public void testPom() throws IOException {
+    void pom() throws Exception {
         executeTarget("testPom");
         ProjectWorkspaceReader reader = ProjectWorkspaceReader.getInstance();
         File found = reader.findArtifact(artifact("test:test:pom:0.1-SNAPSHOT"));
@@ -44,7 +43,7 @@ public class ReactorTest extends AntBuildsTest {
     }
 
     @Test
-    public void testArtifact() throws IOException {
+    void testArtifact() throws Exception {
         executeTarget("testArtifact");
         ProjectWorkspaceReader reader = ProjectWorkspaceReader.getInstance();
         File found = reader.findArtifact(artifact("test:test:pom:0.1-SNAPSHOT"));
@@ -57,7 +56,7 @@ public class ReactorTest extends AntBuildsTest {
     }
 
     @Test
-    public void testArtifactInMemoryPom() throws IOException {
+    void artifactInMemoryPom() throws Exception {
         executeTarget("testArtifactInMemoryPom");
         ProjectWorkspaceReader reader = ProjectWorkspaceReader.getInstance();
         File found = reader.findArtifact(artifact("test:test:pom:0.1-SNAPSHOT"));
@@ -69,14 +68,14 @@ public class ReactorTest extends AntBuildsTest {
     }
 
     @Test
-    public void testResolveArtifact() throws IOException {
+    void resolveArtifact() throws Exception {
         executeTarget("testResolveArtifact");
         String prop = getProject().getProperty("resolve.test:test:jar");
         assertEquals(new File(projectDir, "pom1.xml").getAbsolutePath(), prop);
     }
 
     @Test
-    public void testResolveArtifactInMemoryPom() throws IOException {
+    void resolveArtifactInMemoryPom() throws Exception {
         executeTarget("testResolveArtifactInMemoryPom");
         String prop = getProject().getProperty("resolve.test:test:jar");
         assertEquals(new File(projectDir, "pom1.xml").getAbsolutePath(), prop);
@@ -84,7 +83,7 @@ public class ReactorTest extends AntBuildsTest {
     }
 
     @Test
-    public void testResolveVersionRange() throws IOException {
+    void resolveVersionRange() throws Exception {
         executeTarget("testResolveVersionRange");
         String prop = getProject().getProperty("resolve.test:test:jar");
         assertEquals(new File(projectDir, "pom1.xml").getAbsolutePath(), prop);

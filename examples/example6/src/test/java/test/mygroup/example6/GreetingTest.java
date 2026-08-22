@@ -16,19 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package test.mygroup.example5;
+package test.mygroup.example6;
 
-import org.junit.Test;
-import org.mygroup.example5.Greeting;
+import org.junit.jupiter.api.Test;
+import org.mygroup.example6.Greeting;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 
-public class GreetingTest {
+class GreetingTest {
 
   @Test
-  public void testGreeting() {
+  void greeting() {
     Greeting greeting = new Greeting();
     String greetingResult = greeting.greet(new String[] {"hello", "world"});
-    Assert.assertEquals("{hello, world}!", greetingResult);
+    Assertions.assertEquals("{hello,world}!", greetingResult);
   }
 }

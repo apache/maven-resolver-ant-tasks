@@ -18,13 +18,15 @@ under the License.
 -->
 # Maven Artifact Resolver Ant Tasks
 
-The Maven Artifact Resolver Ant Tasks enable build scripts for [Apache Ant](http://ant.apache.org/) 1.7+ to use
-[Maven Artifact Resolver](https://maven.apache.org/resolver/) combined to
+The Maven Artifact Resolver Ant Tasks enable [Apache Ant](https://ant.apache.org/) 1.7+ build scripts to use
+the [Maven Artifact Resolver](https://maven.apache.org/resolver/).
+The tasks combine Maven Artifact Resolver with the
 [Apache Maven Artifact Resolver Provider](https://maven.apache.org/ref/current/maven-resolver-provider/)
-to resolve dependencies and install and deploy locally built artifacts.
+to resolve dependencies.
+The tasks also install and deploy locally built artifacts.
 
-To integrate the tasks into your build file, copy the Über JAR into your project's lib directory and use the following
-snippet to load it:
+To integrate the tasks into your build file, copy the Über JAR into your project's lib directory.
+Use the following snippet to load the tasks:
 
 ```xml
 <project xmlns:resolver="antlib:org.apache.maven.resolver.ant" ...>
@@ -38,27 +40,29 @@ See the `build.xml` in the project sources for a complete example build script.
 
 ## Settings
 
-The Ant tasks are tightly integrated with the usual [Apache Maven settings.xml](/settings.html).
-By default, the usual `${user.home}/.m2/settings.xml` is used for user settings.
+The Ant tasks use the usual [Apache Maven settings.xml](/settings.html).
+By default, the tasks use the `${user.home}/.m2/settings.xml` file for user settings.
 
-For the global settings, different paths will be tried:
+For global settings, the tasks try different paths:
 
 * `${ant.home}/etc/settings.xml`
 * `${maven.home}/conf/settings.xml`
 
-The `<settings/>` definition is used to change that:
+The `<settings/>` definition changes these paths:
 
 ```xml
 <settings file="my-settings.xml" globalfile="myglobal-settings.xml"/>
 ```
 
-Some settings defined in the settings file or in the POM can also be changed inside the Ant file.
+You can also change some settings in the Ant file.
+These settings come from the settings file or the POM.
 
 ### Proxy Settings
 
-Proxy definitions are used throughout the whole session. There may be multiple
-proxies set. The proxy to use will be chosen by evaluating the `nonProxyHosts` on
-each proxy definition, the first matching proxy will be used for a given remote connection.
+Proxy definitions apply to the whole session.
+You can set multiple proxies.
+The tasks evaluate the `nonProxyHosts` attribute on each proxy definition to choose the proxy.
+The first proxy that matches is used for a given remote connection.
 
 ```xml
 <proxy host="proxy.mycorp.com" port="8080" type="http" nonProxyHosts="127.*|localhost|*.mycorp.com"/>
@@ -66,10 +70,10 @@ each proxy definition, the first matching proxy will be used for a given remote 
 
 ### Authentication
 
-Authentication elements are used to access remote repositories. Every
-authentication definition will be added globally and chosen based on the
-`servers` attribute. If this attribute is not set, an authentication has to be
-referenced explicitly to be used.
+Authentication elements provide access to remote repositories.
+Every authentication definition is added globally.
+The tasks choose the definition in the `servers` attribute.
+If you do not set this attribute, the authentication must be referenced explicitly.
 
 ```xml
 <authentication username="login" password="pw" id="auth"/>
@@ -86,7 +90,7 @@ Only one local repository can be used at a time.
 
 ### Remote Repositories
 
-Remote repositories may be defined directly:
+Remote repositories can be defined directly:
 
 ```xml
 <remoterepo id="ossrh" url="https://oss.sonatype.org/content/repositories/snapshots/" type="default" releases="false" snapshots="true" updates="always" checksums="fail"/>
@@ -100,7 +104,7 @@ Remote repositories may be defined directly:
 <remoterepo id="distrepo" url="..." authref="distauth"/>
 ```
 
-Multiple repositories may be used as a group in every place that is legal for a
+Multiple repositories can be used as a group in every place that is legal for a
 remote repository:
 
 ```xml
@@ -121,7 +125,7 @@ remote repository:
 
 ### Offline Mode
 
-To suppress any network activity and only use already cached artifacts/metadata, you can use a boolean property:
+To suppress network activity and use only cached artifacts and metadata, set the `resolver.offline` boolean property to true:
 
 ```xml
 <property name="resolver.offline" value="true"/>
@@ -129,13 +133,13 @@ To suppress any network activity and only use already cached artifacts/metadata,
 
 ## Project
 
-Project settings deal with locally available information about the build.
+Project settings use locally available information about the build.
 
 ### POM
 
-The POM is the data type used to determine the target for the install and
-deploy tasks. If you define a POM without an id based on a full `pom.xml` file,
-that POM will be used by default for install and deploy.
+The `<pom>` element determines the target for the install and deploy tasks.
+If you define a POM without an id based on a full `pom.xml` file, that POM is the default.
+The tasks use the default POM for install and deploy.
 
 ```xml
 <pom file="pom.xml" id="pom"/>
@@ -145,14 +149,15 @@ that POM will be used by default for install and deploy.
 
 #### Properties
 
-If a POM is set via a file parameter its effective model is made available as properties to the Ant project.
-The properties are prefixed with the ref id of the `<pom>` element, e.g. `${pom.version}` for the example above.
-Likewise, project properties defined in the POM are accessible via the prefix `pom.properties.`. If no id has been
-assigned, the properties use the prefix `pom.` by default.
+If you set a POM via a file parameter, its effective model is available as properties to the Ant project.
+The properties use the ref id of the `<pom>` element as the prefix.
+For the POM above, the prefix is `${pom.version}`.
+Project properties defined in the POM also use the prefix `pom.properties.`.
+If you assign no id, the properties use the prefix `pom.` by default.
 
 ### Output Artifacts
 
-`<artifact>` elements define the artifacts produced by this build that should be installed or deployed.
+The `<artifact>` elements define the artifacts that this build produces for install or deploy.
 
 ```xml
 <artifact file="file-src.jar" type="jar" classifier="sources" id="src"/>
@@ -165,9 +170,8 @@ assigned, the properties use the prefix `pom.` by default.
 
 ### Dependencies
 
-Dependencies are used to to create classpaths or filesets. They are used by
-the `<resolve>`-task, which collects the artifacts belonging to the dependencies
-transitively.
+Dependencies create classpaths or filesets.
+The `<resolve>` task collects the dependency artifacts transitively.
 
 ```xml
 <dependency coords="g:a:v:scope"/>
@@ -203,7 +207,7 @@ Everything after the first hash (#) character on a line is considered a comment.
 
 ### Install
 
-You need to set a POM that references a file for the install task to work.
+Set a POM that references a file for the install task to work.
 
 ```xml
 <install artifactsref="producedArtifacts"/>
@@ -211,7 +215,8 @@ You need to set a POM that references a file for the install task to work.
 
 ### Deploy
 
-You need to set a POM that references a file for the deploy task to work, as that POM file will be deployed to repository.
+Set a POM that references a file for the deploy task to work.
+The deploy task deploys that POM file to the repository.
 
 ```xml
 <deploy artifactsref="producedArtifacts">
@@ -222,21 +227,23 @@ You need to set a POM that references a file for the deploy task to work, as tha
 
 ### Resolve
 
-The `<resolve>`-task is used to collect and resolve dependencies from remote
-servers. If no repositories are set explicitly for the task, the repositories
-referenced by "resolver.repositories" are used. This contains only central by
-default, but can be overridden by supplying another repository definition with
-this id.
+The `<resolve>` task collects and resolves dependencies from remote servers.
+If no repositories are set for the task, the task uses the `resolver.repositories` reference.
+This reference contains only central by default.
+You can override it with another repository definition that uses this id.
 
 
-This task is able to assemble the collected dependencies in three different ways:
+The task can assemble the collected dependencies in three ways:
 
 * Classpath: The `<path>` element defines a classpath with all resolved dependencies.
-* Files: `<files>` will assemble a resource collection containing all resolved dependencies and/or copy the files to some directory.
-* Properties: `<properties>` will set properties with the given prefix and the coordinates to the path to the resolved file.
+* Files: The `<files>` element assembles a resource collection with all resolved dependencies.
+  The element can also copy the files to a directory.
+* Properties: The `<properties>` element sets properties with the given prefix.
+  The name of a property is the prefix plus the coordinates.
+  The value of a property is the path to the resolved file.
 
-These targets may also be mentioned more than once for the same resolve task,
-but only one `<dependencies>` element is allowed.
+These targets can be mentioned more than once for the same resolve task.
+Only one `<dependencies>` element is allowed.
 
 ```xml
 <resolve failOnMissingAttachments="true">
@@ -259,12 +266,14 @@ but only one `<dependencies>` element is allowed.
 </resolve>
 ```
 
-Scope filters can be set on every target, enumerating included and/or excluded
-scope names. Exclusions are denoted by prefixing the scope name with `-` or `!` (e.g. `provided,!system`).
+You can set scope filters on every target.
+The filters list the included and excluded scope names.
+An exclusion is denoted by a `-` or `!` prefix on the scope name.
+For example, `provided,!system` includes provided and excludes system.
 
-The `classpath` attribute is a shortcut for the scope filters (e.g.
-`classpath="compile"` equals `scope="provided,system,compile"`). Valid values are
-"`compile`", "`runtime`", "`test`".
+The `classpath` attribute is a shortcut for the scope filters.
+For example, `classpath="compile"` equals `scope="provided,system,compile"`.
+Valid values are `compile`, `runtime`, and `test`.
 
 ```xml
 <resolve>
@@ -275,18 +284,19 @@ The `classpath` attribute is a shortcut for the scope filters (e.g.
 </resolve>
 ```
 
-The layout attribute of the `<files>` element is only allowed when the `dir` attribute is also given and recognizes the
-following placeholders to refer to the coordinates of the currently processed artifact:
+The layout attribute of the `<files>` element is only allowed when the `dir` attribute is also given.
+The attribute recognizes the placeholders below.
+The placeholders refer to the coordinates of the processed artifact:
 
-* `{groupId}`, e.g. "org.apache.maven.resolver"
-* `{groupIdDirs}`, e.g. "org/apache/maven/resolver"
-* `{artifactId}`, e.g. "maven-resolver-api"
-* `{version}`, e.g. "1.0.0-20140518.181353-123"
-* `{baseVersion}`, e.g. "1.0.0-SNAPSHOT"
-* `{extension}`, e.g. "jar"
-* `{classifier}`, e.g. "sources"
+* `{groupId}`, for example "org.apache.maven.resolver"
+* `{groupIdDirs}`, for example "org/apache/maven/resolver"
+* `{artifactId}`, for example "maven-resolver-api"
+* `{version}`, for example "1.0.0-20140518.181353-123"
+* `{baseVersion}`, for example "1.0.0-SNAPSHOT"
+* `{extension}`, for example "jar"
+* `{classifier}`, for example "sources"
 
 # More information
-See [usage.md](https://github.com/apache/maven-resolver-ant-tasks/blob/master/usage.md) for info.
+See [usage.md](https://github.com/apache/maven-resolver-ant-tasks/blob/master/usage.md) for more information.
 
-The [examples](https://github.com/apache/maven-resolver-ant-tasks/tree/master/examples) contains 7 complete examples of various ways to use Maven Resolver Ant Tasks.
+The [examples](https://github.com/apache/maven-resolver-ant-tasks/tree/master/examples) directory contains 7 complete examples of how to use Maven Resolver Ant Tasks.

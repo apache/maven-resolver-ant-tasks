@@ -19,6 +19,7 @@
 package org.apache.maven.resolver.internal.ant;
 
 import java.io.File;
+import java.util.Map;
 
 import org.apache.maven.resolver.internal.ant.types.RemoteRepositories;
 import org.apache.tools.ant.Project;
@@ -26,21 +27,58 @@ import org.apache.tools.ant.Project;
 class AetherUtils {
 
     public static File findGlobalSettings(final Project project) {
-        final File file = new File(new File(project.getProperty("ant.home"), "etc"), Names.SETTINGS_XML);
-        if (file.isFile()) {
-            return file;
-        } else {
-            final String mavenHome = getMavenHome(project);
-            if (mavenHome != null) {
-                return new File(new File(mavenHome, "conf"), Names.SETTINGS_XML);
+        return findGlobalSettings(project, System.getenv());
+    }
+
+    /**
+     * Finds the global Maven settings file from the Maven home directory or the Ant home directory, in that order.
+     *
+     * @param project the Ant project to read the {@code ant.home} property from
+     * @param environment the environment variables to consult for the Maven home directory
+     * @return the global settings file, or {@code null} if none exists
+     */
+    static File findGlobalSettings(final Project project, final Map<String, String> environment) {
+        final String mavenHome = getMavenHome(project, environment);
+        if (mavenHome != null) {
+            final File mavenSettings = new File(new File(mavenHome, "conf"), Names.SETTINGS_XML);
+            if (mavenSettings.isFile()) {
+                return mavenSettings;
             }
+        }
+
+        final File antSettings = new File(new File(project.getProperty("ant.home"), "etc"), Names.SETTINGS_XML);
+        if (antSettings.isFile()) {
+            return antSettings;
         }
 
         return null;
     }
 
     public static String getMavenHome(final Project project) {
-        return project.getProperty("maven.home");
+        return getMavenHome(project, System.getenv());
+    }
+
+    /**
+     * Resolves the Maven home directory from the {@code maven.home} Ant property, the {@code maven.home} system
+     * property, the {@code MAVEN_HOME} environment variable, or the {@code M2_HOME} environment variable, in that
+     * order.
+     *
+     * @param project the Ant project to read the {@code maven.home} property from
+     * @param environment the environment variables to consult
+     * @return the resolved Maven home directory, or {@code null} if none is set
+     */
+    static String getMavenHome(final Project project, final Map<String, String> environment) {
+        String mavenHome = project.getProperty("maven.home");
+        if (mavenHome == null) {
+            mavenHome = System.getProperty("maven.home");
+        }
+        if (mavenHome == null) {
+            mavenHome = environment.get("MAVEN_HOME");
+        }
+        if (mavenHome == null) {
+            mavenHome = environment.get("M2_HOME");
+        }
+        return mavenHome;
     }
 
     public static File findUserSettings(final Project project) {

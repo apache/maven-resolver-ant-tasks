@@ -330,6 +330,9 @@ public class CreatePom extends Task {
      */
     @Override
     public void execute() {
+        if (pomFile.getParentFile() == null) {
+            pomFile = new File(getProject().getBaseDir(), pomFile.getName());
+        }
         if (!pomFile.getParentFile().exists()) {
             pomFile.getParentFile().mkdirs();
         }

@@ -24,10 +24,7 @@ import java.io.IOException;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.junit.Assert.assertTrue;
 
 public class InstallTest extends AntBuildsTest {
     public static junit.framework.Test suite() {
@@ -92,10 +89,10 @@ public class InstallTest extends AntBuildsTest {
 
     private void assertUpdatedFile(long tstamp, File repoPath, String path) {
         File file = new File(repoPath, path);
-        assertThat("File does not exist in default repo: " + file.getAbsolutePath(), file.exists());
-        assertThat(
+        assertTrue("File does not exist in default repo: " + file.getAbsolutePath(), file.exists());
+        long lastModified = file.lastModified();
+        assertTrue(
                 "Files were not updated for 1s before/after timestamp",
-                file.lastModified(),
-                allOf(greaterThanOrEqualTo(((tstamp - 500) / 1000) * 1000), lessThanOrEqualTo(tstamp + 2000)));
+                lastModified >= ((tstamp - 500) / 1000) * 1000 && lastModified <= tstamp + 2000);
     }
 }

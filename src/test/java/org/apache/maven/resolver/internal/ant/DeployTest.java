@@ -25,12 +25,7 @@ import junit.framework.JUnit4TestAdapter;
 import org.apache.tools.ant.BuildException;
 import org.junit.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.endsWith;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.hamcrest.Matchers.hasItemInArray;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /*
@@ -84,19 +79,18 @@ public class DeployTest extends AntBuildsTest {
 
         File dir = new File(distRepoDir, "test/dummy/0.1-SNAPSHOT/");
         String[] files = dir.list();
-        assertThat(
-                "attached artifact not found: " + Arrays.toString(files), files, hasItemInArray(endsWith("-ant.xml")));
+        assertTrue(
+                "attached artifact not found: " + Arrays.toString(files),
+                Arrays.stream(files).anyMatch(f -> f.endsWith("-ant.xml")));
     }
 
     private void assertUpdatedFile(long min, long max, File repoPath, String path) {
         File file = new File(repoPath, path);
         min = (min / 1000) * 1000;
         max = ((max + 999) / 1000) * 1000;
-        assertThat("File does not exist in default repo: " + file.getAbsolutePath(), file.exists());
-        assertThat(
-                "Files were not updated for 1s before/after timestamp",
-                file.lastModified(),
-                allOf(greaterThanOrEqualTo(min), lessThanOrEqualTo(max)));
+        assertTrue("File does not exist in default repo: " + file.getAbsolutePath(), file.exists());
+        long lastModified = file.lastModified();
+        assertTrue("Files were not updated for 1s before/after timestamp", lastModified >= min && lastModified <= max);
     }
 
     /**

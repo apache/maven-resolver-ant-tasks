@@ -19,6 +19,10 @@
 package org.apache.maven.resolver.internal.ant;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import junit.framework.JUnit4TestAdapter;
 import org.apache.maven.resolver.internal.ant.types.Pom;
@@ -28,8 +32,6 @@ import org.eclipse.aether.artifact.DefaultArtifact;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
@@ -127,7 +129,8 @@ public class ProjectWorkspaceReaderTest {
 
         reader.addArtifact(artifact2);
 
-        assertThat(
-                reader.findVersions(artifact("test:dummy:txt:[0,)")), containsInAnyOrder("1-SNAPSHOT", "2-SNAPSHOT"));
+        List<String> versions = new ArrayList<>(reader.findVersions(artifact("test:dummy:txt:[0,)")));
+        Collections.sort(versions);
+        assertEquals(Arrays.asList("1-SNAPSHOT", "2-SNAPSHOT"), versions);
     }
 }

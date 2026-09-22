@@ -28,7 +28,7 @@ project:
   metadata:
     key: maven-resolver-ant-tasks
     committee: maven
-    name: Maven Resolver Ant Tasks
+    name: Apache Maven Resolver Ant Tasks
     description: The Maven Resolver Ant Tasks enable build scripts for Apache Ant 1.7+ to use Maven Artifact Resolver to resolve dependencies and install and deploy locally built artifacts.
     short_description: The Maven Resolver Ant Tasks enable build scripts for Apache Ant 1.7+ to use Maven Artifact Resolver to resolve dependencies and install and deploy locally built artifacts.
     homepage: https://maven.apache.org/resolver-ant-tasks/

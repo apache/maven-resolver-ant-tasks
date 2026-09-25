@@ -228,18 +228,25 @@
   </dependencies>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.rat</groupId>
+          <artifactId>apache-rat-plugin</artifactId>
+          <configuration>
+            <inputExcludes combine.children="append">
+
+              <exclude>src/test/resources/**/*.txt</exclude>
+              <exclude>README.md</exclude>
+              <exclude>src/site/markdown/**/*.md.vm</exclude>
+
+            </inputExcludes>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
-      <plugin>
-        <groupId>org.apache.rat</groupId>
-        <artifactId>apache-rat-plugin</artifactId>
-        <configuration>
-          <excludes combine.children="append">
-            <exclude>src/test/resources/**/*.txt</exclude>
-            <exclude>README.md</exclude>
-            <exclude>src/site/markdown/**/*.md.vm</exclude>
-          </excludes>
-        </configuration>
-      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
@@ -309,6 +316,7 @@
   </build>
 
   <profiles>
+
     <profile>
       <id>run-its</id>
       <build>

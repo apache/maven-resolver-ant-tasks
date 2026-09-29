@@ -20,6 +20,10 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    ignore:
+      # JUnit 6 requires Java 17; the build still runs on JDK 8
+      - dependency-name: "org.junit*"
+        versions: [">= 6.0.0"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

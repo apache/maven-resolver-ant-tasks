@@ -400,6 +400,7 @@ public class AntRepoSys {
                 settings = SETTINGS_BUILDER.build(request).getEffectiveSettings();
             } catch (SettingsBuildingException e) {
                 project.log("Could not process settings.xml: " + e.getMessage(), e, Project.MSG_WARN);
+                settings = new Settings();
             }
 
             SettingsDecryptionResult result =

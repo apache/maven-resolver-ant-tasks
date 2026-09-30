@@ -19,6 +19,8 @@
 package org.apache.maven.resolver.internal.ant;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 import junit.framework.JUnit4TestAdapter;
 import org.apache.tools.ant.Project;
@@ -27,7 +29,9 @@ import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.util.graph.manager.ClassicDependencyManager;
 import org.eclipse.aether.util.graph.manager.TransitiveDependencyManager;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import static org.junit.Assert.assertTrue;
 
@@ -35,6 +39,9 @@ public class AntRepoSysTest {
     public static junit.framework.Test suite() {
         return new JUnit4TestAdapter(AntRepoSysTest.class);
     }
+
+    @Rule
+    public TemporaryFolder temp = new TemporaryFolder();
 
     private Project project;
 
@@ -89,6 +96,24 @@ public class AntRepoSysTest {
             assertTrue(
                     "expected the classic dependency manager, got " + session.getDependencyManager(),
                     session.getDependencyManager() instanceof ClassicDependencyManager);
+        }
+    }
+
+    /**
+     * A settings.xml that cannot be parsed is logged and ignored; it must not surface as a NullPointerException.
+     */
+    @Test
+    public void testUnreadableSettingsAreIgnored() throws Exception {
+        File broken = temp.newFile("settings.xml");
+        Files.write(broken.toPath(), "<settings><not-closed>".getBytes(StandardCharsets.UTF_8));
+        File missing = new File(temp.getRoot(), "no-such-global-settings.xml");
+
+        AntRepoSys sys = AntRepoSys.getInstance(project);
+        sys.setUserSettings(broken);
+        sys.setGlobalSettings(missing);
+
+        try (RepositorySystemSession.CloseableSession session = sys.getSession(task, null)) {
+            assertTrue(session.getProxySelector() != null);
         }
     }
 }

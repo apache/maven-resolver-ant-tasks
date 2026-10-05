@@ -24,6 +24,10 @@ updates:
       # JUnit 6 requires Java 17; the build still runs on JDK 8
       - dependency-name: "org.junit*"
         versions: [">= 6.0.0"]
+      # plexus-cipher 2.1.0 changed the KDF, so passwords encrypted for Maven 3
+      # no longer decrypt; 3.0.0 also drops org.sonatype.plexus.components.cipher
+      - dependency-name: "org.codehaus.plexus:plexus-cipher"
+        versions: [">= 2.1.0"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

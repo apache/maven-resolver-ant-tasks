@@ -47,8 +47,8 @@
     <url>https://github.com/apache/maven-resolver-ant-tasks/issues</url>
   </issueManagement>
   <ciManagement>
-    <system>Jenkins</system>
-    <url>https://ci-maven.apache.org/job/Maven/job/maven-box/job/maven-resolver-ant-tasks</url>
+    <system>GitHub</system>
+    <url>https://github.com/apache/maven-resolver-ant-tasks/actions</url>
   </ciManagement>
   <distributionManagement>
     <site>

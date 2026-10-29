@@ -149,11 +149,6 @@
       <version>${resolverVersion}</version>
     </dependency>
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>${slf4jVersion}</version>
-    </dependency>
-    <dependency>
       <!-- This shuts off annoying warnings from slf4j-api -->
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-nop</artifactId>
@@ -181,6 +176,14 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-cipher</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-sec-dispatcher</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
     </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>

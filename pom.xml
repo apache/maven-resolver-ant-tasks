@@ -158,6 +158,16 @@
       <artifactId>maven-resolver-provider</artifactId>
       <version>${mavenVersion}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-model</artifactId>
+      <version>${mavenVersion}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-settings</artifactId>
+      <version>${mavenVersion}</version>
+    </dependency>
     <!-- Used directly (org.apache.maven.model.building), and declared to keep it aligned with the other
          Maven artifacts: maven-resolver-supplier-mvn3 would otherwise drag in its own, older version. -->
     <dependency>

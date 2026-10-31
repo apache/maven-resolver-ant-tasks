@@ -18,20 +18,15 @@
  */
 package org.apache.maven.resolver.internal.ant;
 
-import junit.framework.JUnit4TestAdapter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ActiveProfileTest extends AntBuildsTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ActiveProfileTest.class);
-    }
 
     @Test
     public void testActiveProfileNotDefinedInSettingsIsIgnored() {
         executeTarget("testActiveProfileNotDefinedInSettingsIsIgnored");
-        assertNotNull(
-                "repository of defined profile not registered", getProject().getReference("defined-repo"));
+        assertNotNull(getProject().getReference("defined-repo"), "repository of defined profile not registered");
     }
 }

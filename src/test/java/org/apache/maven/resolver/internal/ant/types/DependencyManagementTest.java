@@ -20,17 +20,13 @@ package org.apache.maven.resolver.internal.ant.types;
 
 import java.io.File;
 
-import junit.framework.JUnit4TestAdapter;
 import org.apache.maven.resolver.internal.ant.AntBuildsTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class DependencyManagementTest extends AntBuildsTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(DependencyManagementTest.class);
-    }
 
     public DependencyManagementTest() {
         super(new File("src/test/resources/ant/DependencyManagement/build.xml"));
@@ -40,17 +36,14 @@ public class DependencyManagementTest extends AntBuildsTest {
     public void testDependencyManagement() {
         executeTarget("init");
         DependencyManagement dm = getProject().getReference("dm");
-        assertNotNull("Dependency management with id 'dm' should exists", dm);
-        assertEquals(
-                "Should have 2 dependencies defined",
-                2,
-                dm.getDependencies().getDependencyContainers().size());
+        assertNotNull(dm, "Dependency management with id 'dm' should exists");
+        assertEquals(2, dm.getDependencies().getDependencyContainers().size(), "Should have 2 dependencies defined");
         Dependency dep1 =
                 (Dependency) dm.getDependencies().getDependencyContainers().get(0);
-        assertEquals("groupId should match", "se.alipsa.matrix", dep1.getGroupId());
-        assertEquals("artifactId should match", "matrix-bom", dep1.getArtifactId());
-        assertEquals("version should match", "2.2.0", dep1.getVersion());
-        assertEquals("type should match", "pom", dep1.getType());
-        assertEquals("scope should match", "import", dep1.getScope());
+        assertEquals("se.alipsa.matrix", dep1.getGroupId(), "groupId should match");
+        assertEquals("matrix-bom", dep1.getArtifactId(), "artifactId should match");
+        assertEquals("2.2.0", dep1.getVersion(), "version should match");
+        assertEquals("pom", dep1.getType(), "type should match");
+        assertEquals("import", dep1.getScope(), "scope should match");
     }
 }

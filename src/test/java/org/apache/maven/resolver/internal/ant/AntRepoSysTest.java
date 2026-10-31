@@ -22,32 +22,27 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
-import junit.framework.JUnit4TestAdapter;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.util.graph.manager.ClassicDependencyManager;
 import org.eclipse.aether.util.graph.manager.TransitiveDependencyManager;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AntRepoSysTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(AntRepoSysTest.class);
-    }
 
-    @Rule
-    public TemporaryFolder temp = new TemporaryFolder();
+    @TempDir
+    File temp;
 
     private Project project;
 
     private Task task;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         project = new Project();
         project.setProperty("user.home", System.getProperty("user.home"));
@@ -72,8 +67,8 @@ public class AntRepoSysTest {
     public void testDependencyManagerIsClassicByDefault() {
         try (RepositorySystemSession.CloseableSession session = newSession()) {
             assertTrue(
-                    "expected the classic dependency manager, got " + session.getDependencyManager(),
-                    session.getDependencyManager() instanceof ClassicDependencyManager);
+                    session.getDependencyManager() instanceof ClassicDependencyManager,
+                    "expected the classic dependency manager, got " + session.getDependencyManager());
         }
     }
 
@@ -83,8 +78,8 @@ public class AntRepoSysTest {
 
         try (RepositorySystemSession.CloseableSession session = newSession()) {
             assertTrue(
-                    "expected the transitive dependency manager, got " + session.getDependencyManager(),
-                    session.getDependencyManager() instanceof TransitiveDependencyManager);
+                    session.getDependencyManager() instanceof TransitiveDependencyManager,
+                    "expected the transitive dependency manager, got " + session.getDependencyManager());
         }
     }
 
@@ -94,8 +89,8 @@ public class AntRepoSysTest {
 
         try (RepositorySystemSession.CloseableSession session = newSession()) {
             assertTrue(
-                    "expected the classic dependency manager, got " + session.getDependencyManager(),
-                    session.getDependencyManager() instanceof ClassicDependencyManager);
+                    session.getDependencyManager() instanceof ClassicDependencyManager,
+                    "expected the classic dependency manager, got " + session.getDependencyManager());
         }
     }
 
@@ -104,9 +99,9 @@ public class AntRepoSysTest {
      */
     @Test
     public void testUnreadableSettingsAreIgnored() throws Exception {
-        File broken = temp.newFile("settings.xml");
+        File broken = new File(temp, "settings.xml");
         Files.write(broken.toPath(), "<settings><not-closed>".getBytes(StandardCharsets.UTF_8));
-        File missing = new File(temp.getRoot(), "no-such-global-settings.xml");
+        File missing = new File(temp, "no-such-global-settings.xml");
 
         AntRepoSys sys = AntRepoSys.getInstance(project);
         sys.setUserSettings(broken);

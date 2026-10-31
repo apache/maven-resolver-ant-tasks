@@ -18,18 +18,99 @@
  */
 package org.apache.maven.resolver.internal.ant;
 
-import org.apache.tools.ant.BuildFileRule;
+import java.io.File;
+
+import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildListener;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectHelper;
 
 /**
- * Ant's {@link BuildFileRule} for JUnit 5 tests. The rule is a JUnit 4 {@code ExternalResource} whose cleanup is
- * protected, so this subclass exposes it to be called from an {@code @AfterEach} method.
+ * Loads an Ant build file into a {@link Project}, runs its targets and records the log. It stands in for Ant's own
+ * {@code BuildFileRule}, which is a JUnit 4 rule and would keep JUnit 4 on the test classpath.
  */
-public class AntBuildFile extends BuildFileRule {
+public class AntBuildFile {
+
+    private final StringBuffer log = new StringBuffer();
+
+    private Project project;
 
     /**
-     * Restores the standard streams the rule replaced while a build file was configured and executed.
+     * Configures the project from the given build file.
+     *
+     * @param filename the path of the build file
+     * @param logLevel the most verbose {@link Project} message level to record
+     * @throws BuildException if the build file cannot be parsed
+     */
+    public void configureProject(String filename, int logLevel) throws BuildException {
+        log.setLength(0);
+        project = new Project();
+        project.init();
+        project.addBuildListener(new BuildListener() {
+            @Override
+            public void buildStarted(BuildEvent event) {}
+
+            @Override
+            public void buildFinished(BuildEvent event) {}
+
+            @Override
+            public void targetStarted(BuildEvent event) {}
+
+            @Override
+            public void targetFinished(BuildEvent event) {}
+
+            @Override
+            public void taskStarted(BuildEvent event) {}
+
+            @Override
+            public void taskFinished(BuildEvent event) {}
+
+            @Override
+            public void messageLogged(BuildEvent event) {
+                int priority = event.getPriority();
+                if (priority <= logLevel && priority <= Project.MSG_INFO) {
+                    log.append(event.getMessage());
+                }
+            }
+        });
+        ProjectHelper.configureProject(project, new File(filename));
+    }
+
+    /**
+     * Runs a target of the configured project.
+     *
+     * @param targetName the target to run
+     */
+    public void executeTarget(String targetName) {
+        log.setLength(0);
+        project.executeTarget(targetName);
+    }
+
+    /**
+     * Returns the messages at info level or above that the last executed target logged.
+     *
+     * @return the log
+     */
+    public String getLog() {
+        return log.toString();
+    }
+
+    /**
+     * Returns the configured project.
+     *
+     * @return the project, or {@code null} before {@link #configureProject(String, int)}
+     */
+    public Project getProject() {
+        return project;
+    }
+
+    /**
+     * Runs the {@code tearDown} target when the build file has one.
      */
     public void release() {
-        after();
+        if (project != null && project.getTargets().containsKey("tearDown")) {
+            project.executeTarget("tearDown");
+        }
     }
 }

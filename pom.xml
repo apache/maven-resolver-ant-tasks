@@ -62,7 +62,6 @@
     <resolverVersion>2.0.24</resolverVersion>
     <antVersion>1.10.18</antVersion>
     <slf4jVersion>2.0.20</slf4jVersion>
-    <junitVersion>4.13.2</junitVersion>
     <maven.site.path>resolver-archives/resolver-ant-tasks-LATEST</maven.site.path>
     <checkstyle.violation.ignore>LineLength,MagicNumber</checkstyle.violation.ignore>
     <project.build.outputTimestamp>2026-08-03T16:01:18Z</project.build.outputTimestamp>
@@ -204,9 +203,14 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.ant</groupId>
-      <artifactId>ant-testutil</artifactId>
-      <version>${antVersion}</version>
+      <!-- not needed by Surefire, which adds it; the Ant smoke test in build.xml runs the tests on the classpath -->
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-launcher</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -328,13 +332,15 @@
               </dependency>
               <dependency>
                 <groupId>org.apache.ant</groupId>
-                <artifactId>ant-junit</artifactId>
+                <artifactId>ant-junitlauncher</artifactId>
                 <version>${antVersion}</version>
-              </dependency>
-              <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junitVersion}</version>
+                <exclusions>
+                  <exclusion>
+                    <!-- an older launcher than the engine of the tests, which brings its own -->
+                    <groupId>org.junit.platform</groupId>
+                    <artifactId>*</artifactId>
+                  </exclusion>
+                </exclusions>
               </dependency>
             </dependencies>
             <executions>

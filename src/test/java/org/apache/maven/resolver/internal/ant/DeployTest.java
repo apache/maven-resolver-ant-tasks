@@ -21,21 +21,17 @@ package org.apache.maven.resolver.internal.ant;
 import java.io.File;
 import java.util.Arrays;
 
-import junit.framework.JUnit4TestAdapter;
 import org.apache.tools.ant.BuildException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /*
  * still missing:
  * - deploy snapshots/releases into correct repos
  */
 public class DeployTest extends AntBuildsTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(DeployTest.class);
-    }
 
     @Test
     public void testDeployGlobalPom() {
@@ -80,17 +76,17 @@ public class DeployTest extends AntBuildsTest {
         File dir = new File(distRepoDir, "test/dummy/0.1-SNAPSHOT/");
         String[] files = dir.list();
         assertTrue(
-                "attached artifact not found: " + Arrays.toString(files),
-                Arrays.stream(files).anyMatch(f -> f.endsWith("-ant.xml")));
+                Arrays.stream(files).anyMatch(f -> f.endsWith("-ant.xml")),
+                "attached artifact not found: " + Arrays.toString(files));
     }
 
     private void assertUpdatedFile(long min, long max, File repoPath, String path) {
         File file = new File(repoPath, path);
         min = (min / 1000) * 1000;
         max = ((max + 999) / 1000) * 1000;
-        assertTrue("File does not exist in default repo: " + file.getAbsolutePath(), file.exists());
+        assertTrue(file.exists(), "File does not exist in default repo: " + file.getAbsolutePath());
         long lastModified = file.lastModified();
-        assertTrue("Files were not updated for 1s before/after timestamp", lastModified >= min && lastModified <= max);
+        assertTrue(lastModified >= min && lastModified <= max, "Files were not updated for 1s before/after timestamp");
     }
 
     /**

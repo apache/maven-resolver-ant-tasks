@@ -20,25 +20,21 @@ package org.apache.maven.resolver.internal.ant.tasks;
 
 import java.io.File;
 
-import junit.framework.JUnit4TestAdapter;
 import org.apache.tools.ant.Project;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CreatePomNoParentDirTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(CreatePomNoParentDirTest.class);
-    }
 
-    @Rule
-    public final TemporaryFolder tempFolder = new TemporaryFolder();
+    @TempDir
+    File tempFolder;
 
     @Test
     public void testPomTargetWithoutParentDirectory() throws Exception {
-        File baseDir = tempFolder.newFolder("base");
+        File baseDir = new File(tempFolder, "base");
+        assertTrue(baseDir.mkdir());
 
         Project project = new Project();
         project.setBaseDir(baseDir);
@@ -54,6 +50,6 @@ public class CreatePomNoParentDirTest {
         task.execute();
 
         File expected = new File(baseDir, "pom.xml");
-        assertTrue("bare pomTarget should write the POM to the project base dir: " + expected, expected.exists());
+        assertTrue(expected.exists(), "bare pomTarget should write the POM to the project base dir: " + expected);
     }
 }

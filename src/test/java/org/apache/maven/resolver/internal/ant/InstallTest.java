@@ -21,15 +21,11 @@ package org.apache.maven.resolver.internal.ant;
 import java.io.File;
 import java.io.IOException;
 
-import junit.framework.JUnit4TestAdapter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class InstallTest extends AntBuildsTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(InstallTest.class);
-    }
 
     @Test
     public void testInstallGlobalPom() {
@@ -89,10 +85,10 @@ public class InstallTest extends AntBuildsTest {
 
     private void assertUpdatedFile(long tstamp, File repoPath, String path) {
         File file = new File(repoPath, path);
-        assertTrue("File does not exist in default repo: " + file.getAbsolutePath(), file.exists());
+        assertTrue(file.exists(), "File does not exist in default repo: " + file.getAbsolutePath());
         long lastModified = file.lastModified();
         assertTrue(
-                "Files were not updated for 1s before/after timestamp",
-                lastModified >= ((tstamp - 500) / 1000) * 1000 && lastModified <= tstamp + 2000);
+                lastModified >= ((tstamp - 500) / 1000) * 1000 && lastModified <= tstamp + 2000,
+                "Files were not updated for 1s before/after timestamp");
     }
 }

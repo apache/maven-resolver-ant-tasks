@@ -95,19 +95,20 @@
   </target>
 
   <target name="test" depends="test-compile">
-    <junit haltonfailure="true" fork="true" forkmode="once" outputtoformatters="false">
+    <mkdir dir="${build.dir}/test-reports"/>
+    <junitlauncher haltOnFailure="true" printSummary="true">
       <classpath>
         <pathelement location="${build.dir}/test-classes"/>
         <pathelement location="${build.dir}/classes"/>
         <path refid="cp.runtime.test"/>
       </classpath>
 
-      <formatter type="brief" usefile="false"/>
-
-      <batchtest>
+      <testclasses outputdir="${build.dir}/test-reports">
+        <fork/>
         <fileset dir="${build.dir}/test-classes" includes="**/*Test.class" excludes="**/AntBuildsTest*"/>
-      </batchtest>
-    </junit>
+        <listener type="legacy-brief" sendSysOut="false"/>
+      </testclasses>
+    </junitlauncher>
   </target>
 
   <target name="package" depends="test">

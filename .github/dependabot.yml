@@ -28,6 +28,18 @@ updates:
       # no longer decrypt; 3.0.0 also drops org.sonatype.plexus.components.cipher
       - dependency-name: "org.codehaus.plexus:plexus-cipher"
         versions: [">= 2.1.0"]
+      # The 2.0.x line is built on Resolver 2, which ships with Maven 3.10;
+      # cap the core artifacts at the next minor so 3.10.x patches keep flowing.
+      - dependency-name: "org.apache.maven:maven-model"
+        versions: [">= 3.11.0"]
+      - dependency-name: "org.apache.maven:maven-model-builder"
+        versions: [">= 3.11.0"]
+      - dependency-name: "org.apache.maven:maven-resolver-provider"
+        versions: [">= 3.11.0"]
+      - dependency-name: "org.apache.maven:maven-settings"
+        versions: [">= 3.11.0"]
+      - dependency-name: "org.apache.maven:maven-settings-builder"
+        versions: [">= 3.11.0"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

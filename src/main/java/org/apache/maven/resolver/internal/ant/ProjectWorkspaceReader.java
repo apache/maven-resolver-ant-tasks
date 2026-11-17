@@ -136,7 +136,7 @@ public class ProjectWorkspaceReader implements WorkspaceReader {
     @Override
     public File findArtifact(Artifact artifact) {
         Path path = findArtifactPath(artifact);
-        return (path != null) ? path.toFile() : null;
+        return path != null ? path.toFile() : null;
     }
 
     /**
@@ -148,7 +148,7 @@ public class ProjectWorkspaceReader implements WorkspaceReader {
     @Override
     public Path findArtifactPath(Artifact artifact) {
         Artifact found = artifacts.get(coords(artifact));
-        return (found != null) ? found.getPath() : null;
+        return found != null ? found.getPath() : null;
     }
 
     /**

@@ -195,7 +195,7 @@ public class Artifact extends RefTask implements ArtifactContainer {
         if (isReference()) {
             return getRef().getType();
         }
-        return (type != null) ? type : "jar";
+        return type != null ? type : "jar";
     }
 
     /**
@@ -217,7 +217,7 @@ public class Artifact extends RefTask implements ArtifactContainer {
         if (isReference()) {
             return getRef().getClassifier();
         }
-        return (classifier != null) ? classifier : "";
+        return classifier != null ? classifier : "";
     }
 
     /**

@@ -21,7 +21,6 @@ package org.apache.maven.resolver.internal.ant;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.maven.resolver.internal.ant.types.Pom;
@@ -126,7 +125,7 @@ public class ProjectWorkspaceReaderTest {
         reader.addArtifact(artifact2);
 
         List<String> versions = new ArrayList<>(reader.findVersions(artifact("test:dummy:txt:[0,)")));
-        Collections.sort(versions);
+        versions.sort(null);
         assertEquals(Arrays.asList("1-SNAPSHOT", "2-SNAPSHOT"), versions);
     }
 }

@@ -94,7 +94,6 @@ class AntRepositoryListener extends AbstractRepositoryListener {
                 event.getException(),
                 Project.MSG_WARN);
     }
-    ;
 
     @Override
     public void artifactDescriptorMissing(final RepositoryEvent event) {
@@ -102,5 +101,4 @@ class AntRepositoryListener extends AbstractRepositoryListener {
                 "The POM for " + event.getArtifact() + " is missing, no dependency information available",
                 Project.MSG_WARN);
     }
-    ;
 }

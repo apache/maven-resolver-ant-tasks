@@ -241,7 +241,7 @@ public class Mirror extends DataType {
         if (isReference()) {
             return getRef().getType();
         }
-        return (type != null) ? type : "default";
+        return type != null ? type : "default";
     }
 
     /**

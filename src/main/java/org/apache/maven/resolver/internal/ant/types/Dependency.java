@@ -446,7 +446,7 @@ public class Dependency extends DataType implements DependencyContainer {
         if (isReference()) {
             return getRef().getType();
         }
-        return (type != null) ? type : "jar";
+        return type != null ? type : "jar";
     }
 
     /**
@@ -505,7 +505,7 @@ public class Dependency extends DataType implements DependencyContainer {
         if (isReference()) {
             return getRef().getScope();
         }
-        return (scope != null) ? scope : "";
+        return scope != null ? scope : "";
     }
 
     /**
@@ -695,7 +695,7 @@ public class Dependency extends DataType implements DependencyContainer {
             key.append(artifactId);
         }
         key.append(':');
-        key.append((type != null) ? type : "jar");
+        key.append(type != null ? type : "jar");
         if (classifier != null && !classifier.isEmpty()) {
             key.append(':');
             key.append(classifier);

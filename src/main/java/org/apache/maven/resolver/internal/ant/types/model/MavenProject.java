@@ -100,6 +100,7 @@ public class MavenProject extends DataType {
      *
      * @param description the description to set, can be null or empty
      */
+    @Override
     public void setDescription(String description) {
         model.setDescription(description);
     }

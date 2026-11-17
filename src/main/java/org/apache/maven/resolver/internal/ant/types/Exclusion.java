@@ -155,7 +155,7 @@ public class Exclusion extends DataType {
         if (isReference()) {
             return getRef().getGroupId();
         }
-        return (groupId != null) ? groupId : WILDCARD;
+        return groupId != null ? groupId : WILDCARD;
     }
 
     /**
@@ -202,7 +202,7 @@ public class Exclusion extends DataType {
         if (isReference()) {
             return getRef().getArtifactId();
         }
-        return (artifactId != null) ? artifactId : WILDCARD;
+        return artifactId != null ? artifactId : WILDCARD;
     }
 
     /**
@@ -253,7 +253,7 @@ public class Exclusion extends DataType {
         if (isReference()) {
             return getRef().getClassifier();
         }
-        return (classifier != null) ? classifier : WILDCARD;
+        return classifier != null ? classifier : WILDCARD;
     }
 
     /**
@@ -303,7 +303,7 @@ public class Exclusion extends DataType {
         if (isReference()) {
             return getRef().getExtension();
         }
-        return (extension != null) ? extension : WILDCARD;
+        return extension != null ? extension : WILDCARD;
     }
 
     /**

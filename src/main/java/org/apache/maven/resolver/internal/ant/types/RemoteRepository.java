@@ -185,7 +185,7 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         if (isReference()) {
             return getRef().getType();
         }
-        return (type != null) ? type : "default";
+        return type != null ? type : "default";
     }
 
     /**
@@ -303,7 +303,7 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         if (isReference()) {
             return getRef().getUpdates();
         }
-        return (updates != null) ? updates : RepositoryPolicy.UPDATE_POLICY_DAILY;
+        return updates != null ? updates : RepositoryPolicy.UPDATE_POLICY_DAILY;
     }
 
     /**
@@ -342,7 +342,7 @@ public class RemoteRepository extends DataType implements RemoteRepositoryContai
         if (isReference()) {
             return getRef().getChecksums();
         }
-        return (checksums != null) ? checksums : RepositoryPolicy.CHECKSUM_POLICY_WARN;
+        return checksums != null ? checksums : RepositoryPolicy.CHECKSUM_POLICY_WARN;
     }
 
     /**

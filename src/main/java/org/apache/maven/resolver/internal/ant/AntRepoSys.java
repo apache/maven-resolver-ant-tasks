@@ -122,7 +122,7 @@ import org.eclipse.aether.util.repository.DefaultProxySelector;
  * </p>
  *
  */
-public class AntRepoSys {
+public final class AntRepoSys {
     private static final Date STARTED = new Date();
 
     private static final boolean OS_WINDOWS = Os.isFamily("windows");
@@ -353,7 +353,7 @@ public class AntRepoSys {
             Xpp3Dom name = child.getChild("name");
             Xpp3Dom value = child.getChild("value");
             if (name != null && name.getValue() != null) {
-                headers.put(name.getValue(), (value != null) ? value.getValue() : null);
+                headers.put(name.getValue(), value != null ? value.getValue() : null);
             }
         }
         return Collections.unmodifiableMap(headers);
@@ -930,8 +930,7 @@ public class AntRepoSys {
             DeployRequest request = new DeployRequest();
             request.setArtifacts(toArtifacts(task, session, pom, artifacts));
             boolean snapshot = request.getArtifacts().iterator().next().isSnapshot();
-            RemoteRepository distRepo =
-                    (snapshot && snapshotRepository != null) ? snapshotRepository : releaseRepository;
+            RemoteRepository distRepo = snapshot && snapshotRepository != null ? snapshotRepository : releaseRepository;
             request.setRepository(ConverterUtils.toDistRepository(distRepo, session));
 
             try {

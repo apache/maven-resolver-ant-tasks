@@ -19,7 +19,6 @@
 package org.apache.maven.resolver.internal.ant;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
@@ -60,7 +59,7 @@ public class SettingsTest extends AntBuildsTest {
     }
 
     @Test
-    public void testFallback() throws IOException {
+    public void testFallback() throws Exception {
         executeTarget("setUp");
         assertTrue(
                 AntRepoSys.getInstance(getProject())

@@ -31,6 +31,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AntRepoSysTest {
@@ -66,8 +67,9 @@ public class AntRepoSysTest {
     @Test
     public void testDependencyManagerIsClassicByDefault() {
         try (RepositorySystemSession.CloseableSession session = newSession()) {
-            assertTrue(
-                    session.getDependencyManager() instanceof ClassicDependencyManager,
+            assertInstanceOf(
+                    ClassicDependencyManager.class,
+                    session.getDependencyManager(),
                     "expected the classic dependency manager, got " + session.getDependencyManager());
         }
     }
@@ -77,8 +79,9 @@ public class AntRepoSysTest {
         project.setProperty(Names.PROPERTY_DEPENDENCY_MANAGER_TRANSITIVITY, "true");
 
         try (RepositorySystemSession.CloseableSession session = newSession()) {
-            assertTrue(
-                    session.getDependencyManager() instanceof TransitiveDependencyManager,
+            assertInstanceOf(
+                    TransitiveDependencyManager.class,
+                    session.getDependencyManager(),
                     "expected the transitive dependency manager, got " + session.getDependencyManager());
         }
     }
@@ -88,8 +91,9 @@ public class AntRepoSysTest {
         project.setProperty(Names.PROPERTY_DEPENDENCY_MANAGER_TRANSITIVITY, "false");
 
         try (RepositorySystemSession.CloseableSession session = newSession()) {
-            assertTrue(
-                    session.getDependencyManager() instanceof ClassicDependencyManager,
+            assertInstanceOf(
+                    ClassicDependencyManager.class,
+                    session.getDependencyManager(),
                     "expected the classic dependency manager, got " + session.getDependencyManager());
         }
     }

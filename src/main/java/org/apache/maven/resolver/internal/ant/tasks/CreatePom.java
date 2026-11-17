@@ -219,6 +219,7 @@ public class CreatePom extends Task {
      *
      * @param description the description for the POM
      */
+    @Override
     public void setDescription(String description) {
         this.description = getProject().replaceProperties(description);
     }
@@ -282,6 +283,7 @@ public class CreatePom extends Task {
      *
      * @return the description for the POM
      */
+    @Override
     public String getDescription() {
         return description == null ? super.getDescription() : description;
     }

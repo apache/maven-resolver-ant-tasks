@@ -77,6 +77,7 @@ public class Settings extends DataType {
      * @param ref the Ant reference to another {@code Settings} element
      * @throws org.apache.tools.ant.BuildException if attributes are already set
      */
+    @Override
     public void setRefid(Reference ref) {
         if (file != null || globalFile != null) {
             throw tooManyAttributes();

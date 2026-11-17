@@ -84,6 +84,7 @@ class AntModelResolver implements ModelResolver {
         this.repositoryIds = new HashSet<>(original.repositoryIds);
     }
 
+    @Override
     public void addRepository(final Repository repository) throws InvalidRepositoryException {
         if (!repositoryIds.add(repository.getId())) {
             return;
@@ -120,10 +121,12 @@ class AntModelResolver implements ModelResolver {
         return new RepositoryPolicy(enabled, updates, checksums);
     }
 
+    @Override
     public ModelResolver newCopy() {
         return new AntModelResolver(this);
     }
 
+    @Override
     public ModelSource resolveModel(final String groupId, final String artifactId, final String version)
             throws UnresolvableModelException {
         Artifact pomArtifact = new DefaultArtifact(groupId, artifactId, "", "pom", version);

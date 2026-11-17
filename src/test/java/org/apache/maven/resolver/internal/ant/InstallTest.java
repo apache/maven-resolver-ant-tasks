@@ -19,7 +19,6 @@
 package org.apache.maven.resolver.internal.ant;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
@@ -70,7 +69,7 @@ public class InstallTest extends AntBuildsTest {
     }
 
     @Test
-    public void testCustomRepo() throws IOException {
+    public void testCustomRepo() throws Exception {
         File repoPath = new File(BUILD_DIR, "local-repo-custom");
 
         executeTarget("testCustomRepo");

@@ -19,7 +19,6 @@
 package org.apache.maven.resolver.internal.ant;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
@@ -30,6 +29,7 @@ import org.apache.tools.ant.types.resources.FileResource;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -71,7 +71,7 @@ public class ResolveTest extends AntBuildsTest {
     }
 
     @Test
-    public void testResolveCustomFileLayout() throws IOException {
+    public void testResolveCustomFileLayout() throws Exception {
         File dir = new File(BUILD_DIR, "resolve-custom-layout");
         executeTarget("testResolveCustomFileLayout");
 
@@ -81,7 +81,7 @@ public class ResolveTest extends AntBuildsTest {
     }
 
     @Test
-    public void testResolveAttachments() throws IOException {
+    public void testResolveAttachments() throws Exception {
         File dir = new File(BUILD_DIR, "resolve-attachments");
         executeTarget("testResolveAttachments");
 
@@ -106,7 +106,7 @@ public class ResolveTest extends AntBuildsTest {
         executeTarget("testResolvePath");
         Map<?, ?> refs = getProject().getReferences();
         Object obj = refs.get("out");
-        assertTrue(obj instanceof Path, "ref 'out' is no path");
+        assertInstanceOf(Path.class, obj, "ref 'out' is no path");
         Path path = (Path) obj;
         String[] elements = path.list();
         assertTrue(

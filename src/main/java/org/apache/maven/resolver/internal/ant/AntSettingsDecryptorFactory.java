@@ -20,8 +20,6 @@ package org.apache.maven.resolver.internal.ant;
 
 import org.apache.maven.settings.crypto.DefaultSettingsDecrypter;
 
-/**
- */
 class AntSettingsDecryptorFactory {
 
     public DefaultSettingsDecrypter newInstance() {

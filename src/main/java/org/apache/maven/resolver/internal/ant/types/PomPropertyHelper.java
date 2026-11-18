@@ -20,8 +20,6 @@ package org.apache.maven.resolver.internal.ant.types;
 
 import org.apache.tools.ant.PropertyHelper;
 
-/**
- */
 @SuppressWarnings("deprecation")
 class PomPropertyHelper extends PropertyHelper {
 

@@ -23,8 +23,6 @@ import java.util.Collections;
 import org.sonatype.plexus.components.cipher.DefaultPlexusCipher;
 import org.sonatype.plexus.components.sec.dispatcher.DefaultSecDispatcher;
 
-/**
- */
 class AntSecDispatcher extends DefaultSecDispatcher {
 
     AntSecDispatcher() {

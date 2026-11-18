@@ -22,8 +22,6 @@ import org.apache.maven.model.Model;
 import org.apache.tools.ant.Project;
 import org.codehaus.plexus.interpolation.reflection.ReflectionValueExtractor;
 
-/**
- */
 class ModelValueExtractor {
 
     private static final String PREFIX_PROPERTIES = "properties.";

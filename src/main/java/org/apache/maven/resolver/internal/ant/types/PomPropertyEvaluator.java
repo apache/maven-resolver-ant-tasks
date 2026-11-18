@@ -22,8 +22,6 @@ import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.PropertyHelper.PropertyEvaluator;
 import org.apache.tools.ant.property.NullReturn;
 
-/**
- */
 final class PomPropertyEvaluator implements PropertyEvaluator {
 
     private final ModelValueExtractor extractor;

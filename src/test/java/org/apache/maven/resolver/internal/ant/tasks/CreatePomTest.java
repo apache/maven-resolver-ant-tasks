@@ -44,7 +44,7 @@ public class CreatePomTest extends AntBuildsTest {
     }
 
     @Test
-    public void testCreatePom() throws Exception {
+    void createPom() throws Exception {
         executeTarget("setup");
         String pomPath = getProject().getProperty("pomFile");
 

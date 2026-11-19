@@ -35,7 +35,7 @@ public class ReactorTest extends AntBuildsTest {
     }
 
     @Test
-    public void testPom() throws Exception {
+    void pom() throws Exception {
         executeTarget("testPom");
         ProjectWorkspaceReader reader = ProjectWorkspaceReader.getInstance();
         File found = reader.findArtifact(artifact("test:test:pom:0.1-SNAPSHOT"));
@@ -44,7 +44,7 @@ public class ReactorTest extends AntBuildsTest {
     }
 
     @Test
-    public void testArtifact() throws Exception {
+    void artifact() throws Exception {
         executeTarget("testArtifact");
         ProjectWorkspaceReader reader = ProjectWorkspaceReader.getInstance();
         File found = reader.findArtifact(artifact("test:test:pom:0.1-SNAPSHOT"));
@@ -57,7 +57,7 @@ public class ReactorTest extends AntBuildsTest {
     }
 
     @Test
-    public void testArtifactInMemoryPom() throws Exception {
+    void artifactInMemoryPom() throws Exception {
         executeTarget("testArtifactInMemoryPom");
         ProjectWorkspaceReader reader = ProjectWorkspaceReader.getInstance();
         File found = reader.findArtifact(artifact("test:test:pom:0.1-SNAPSHOT"));
@@ -69,14 +69,14 @@ public class ReactorTest extends AntBuildsTest {
     }
 
     @Test
-    public void testResolveArtifact() throws Exception {
+    void resolveArtifact() throws Exception {
         executeTarget("testResolveArtifact");
         String prop = getProject().getProperty("resolve.test:test:jar");
         assertEquals(new File(projectDir, "pom1.xml").getAbsolutePath(), prop);
     }
 
     @Test
-    public void testResolveArtifactInMemoryPom() throws Exception {
+    void resolveArtifactInMemoryPom() throws Exception {
         executeTarget("testResolveArtifactInMemoryPom");
         String prop = getProject().getProperty("resolve.test:test:jar");
         assertEquals(new File(projectDir, "pom1.xml").getAbsolutePath(), prop);
@@ -84,7 +84,7 @@ public class ReactorTest extends AntBuildsTest {
     }
 
     @Test
-    public void testResolveVersionRange() throws Exception {
+    void resolveVersionRange() throws Exception {
         executeTarget("testResolveVersionRange");
         String prop = getProject().getProperty("resolve.test:test:jar");
         assertEquals(new File(projectDir, "pom1.xml").getAbsolutePath(), prop);

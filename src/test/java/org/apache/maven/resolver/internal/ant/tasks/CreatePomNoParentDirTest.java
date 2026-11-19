@@ -32,7 +32,7 @@ public class CreatePomNoParentDirTest {
     File tempFolder;
 
     @Test
-    public void testPomTargetWithoutParentDirectory() throws Exception {
+    void pomTargetWithoutParentDirectory() throws Exception {
         File baseDir = new File(tempFolder, "base");
         assertTrue(baseDir.mkdir());
 

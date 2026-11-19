@@ -56,7 +56,7 @@ public class SettingsReferenceTest {
      * settings file.
      */
     @Test
-    public void testGlobalFileDelegatesToReferencedGlobalFile() {
+    void globalFileDelegatesToReferencedGlobalFile() {
         Settings ref = new Settings();
         ref.setProject(project);
         ref.setRefid(new Reference(project, "settings-id"));
@@ -68,7 +68,7 @@ public class SettingsReferenceTest {
      * The user settings file delegation of a referenced {@code <settings>} must keep working.
      */
     @Test
-    public void testFileDelegatesToReferencedFile() {
+    void fileDelegatesToReferencedFile() {
         Settings ref = new Settings();
         ref.setProject(project);
         ref.setRefid(new Reference(project, "settings-id"));

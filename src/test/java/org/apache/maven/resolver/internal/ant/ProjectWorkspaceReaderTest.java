@@ -61,13 +61,13 @@ public class ProjectWorkspaceReaderTest {
      * so handing out a new instance per call would defeat any caching keyed on the workspace repository.
      */
     @Test
-    public void testRepositoryIsStable() {
+    void repositoryIsStable() {
         assertSame(reader.getRepository(), reader.getRepository());
         assertEquals(reader.getRepository().getKey(), reader.getRepository().getKey());
     }
 
     @Test
-    public void testFindPom() {
+    void findPom() {
         Pom pom = new Pom();
         pom.setProject(project);
         pom.setFile(getFile("dummy-pom.xml"));
@@ -79,7 +79,7 @@ public class ProjectWorkspaceReaderTest {
     }
 
     @Test
-    public void testFindArtifact() {
+    void findArtifact() {
         Pom pom = new Pom();
         pom.setProject(project);
         pom.setFile(getFile("dummy-pom.xml"));
@@ -99,7 +99,7 @@ public class ProjectWorkspaceReaderTest {
     }
 
     @Test
-    public void testFindVersions() {
+    void findVersions() {
         Pom pom1 = new Pom();
         pom1.setProject(project);
         pom1.setCoords("test:dummy:1-SNAPSHOT");

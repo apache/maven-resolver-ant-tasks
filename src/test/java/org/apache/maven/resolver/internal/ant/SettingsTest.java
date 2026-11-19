@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class SettingsTest extends AntBuildsTest {
 
     @Test
-    public void testUserSettings() {
+    void userSettings() {
         executeTarget("testUserSettings");
         assertEquals(
                 "userSettings.xml",
@@ -37,7 +37,7 @@ public class SettingsTest extends AntBuildsTest {
     }
 
     @Test
-    public void testGlobalSettings() {
+    void globalSettings() {
         executeTarget("testGlobalSettings");
         assertEquals(
                 "globalSettings.xml",
@@ -46,7 +46,7 @@ public class SettingsTest extends AntBuildsTest {
     }
 
     @Test
-    public void testBothSettings() {
+    void bothSettings() {
         executeTarget("testBothSettings");
         assertEquals(
                 "globalSettings.xml",
@@ -59,7 +59,7 @@ public class SettingsTest extends AntBuildsTest {
     }
 
     @Test
-    public void testFallback() throws Exception {
+    void fallback() throws Exception {
         executeTarget("setUp");
         assertTrue(
                 AntRepoSys.getInstance(getProject())

@@ -59,7 +59,7 @@ public class CreatePomRainyDayTest {
      * if the skipPomRegistration property is set to true.
      */
     @Test
-    public void testNoGroupId() {
+    void noGroupId() {
         configureProject("target/test-classes/ant/createPom/noGroupId.xml", Project.MSG_VERBOSE);
         // Expect a BuildException when trying to execute the target
         Assertions.assertThrows(BuildException.class, () -> buildRule.executeTarget("setup"));
@@ -77,7 +77,7 @@ public class CreatePomRainyDayTest {
      * if the skipPomRegistration property is set to true.
      */
     @Test
-    public void testNoArtifactId() {
+    void noArtifactId() {
         configureProject("target/test-classes/ant/createPom/noArtifactId.xml", Project.MSG_VERBOSE);
         // Expect a BuildException when trying to execute the target
         Assertions.assertThrows(BuildException.class, () -> buildRule.executeTarget("setup"));

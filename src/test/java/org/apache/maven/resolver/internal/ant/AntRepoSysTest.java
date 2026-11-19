@@ -65,7 +65,7 @@ public class AntRepoSysTest {
      * anyone's dependency tree.
      */
     @Test
-    public void testDependencyManagerIsClassicByDefault() {
+    void dependencyManagerIsClassicByDefault() {
         try (RepositorySystemSession.CloseableSession session = newSession()) {
             assertInstanceOf(
                     ClassicDependencyManager.class,
@@ -75,7 +75,7 @@ public class AntRepoSysTest {
     }
 
     @Test
-    public void testDependencyManagerTransitivityCanBeEnabled() {
+    void dependencyManagerTransitivityCanBeEnabled() {
         project.setProperty(Names.PROPERTY_DEPENDENCY_MANAGER_TRANSITIVITY, "true");
 
         try (RepositorySystemSession.CloseableSession session = newSession()) {
@@ -87,7 +87,7 @@ public class AntRepoSysTest {
     }
 
     @Test
-    public void testDependencyManagerTransitivityOffIsClassic() {
+    void dependencyManagerTransitivityOffIsClassic() {
         project.setProperty(Names.PROPERTY_DEPENDENCY_MANAGER_TRANSITIVITY, "false");
 
         try (RepositorySystemSession.CloseableSession session = newSession()) {
@@ -102,7 +102,7 @@ public class AntRepoSysTest {
      * A settings.xml that cannot be parsed is logged and ignored; it must not surface as a NullPointerException.
      */
     @Test
-    public void testUnreadableSettingsAreIgnored() throws Exception {
+    void unreadableSettingsAreIgnored() throws Exception {
         File broken = new File(temp, "settings.xml");
         Files.write(broken.toPath(), "<settings><not-closed>".getBytes(StandardCharsets.UTF_8));
         File missing = new File(temp, "no-such-global-settings.xml");

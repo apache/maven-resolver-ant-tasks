@@ -64,7 +64,7 @@ public class ProxySelectorTest {
      * @throws Exception in case of problems
      */
     @Test
-    public void testInactiveProxyFromSettingsIsNotApplied() throws Exception {
+    void inactiveProxyFromSettingsIsNotApplied() throws Exception {
         File settings = writeSettings(
                 "<proxy>",
                 "  <id>inactive-proxy</id>",
@@ -98,7 +98,7 @@ public class ProxySelectorTest {
      * @throws Exception in case of problems
      */
     @Test
-    public void testOnlyInactiveProxiesApplyNoProxy() throws Exception {
+    void onlyInactiveProxiesApplyNoProxy() throws Exception {
         File settings = writeSettings(
                 "<proxy>",
                 "  <id>inactive-proxy</id>",

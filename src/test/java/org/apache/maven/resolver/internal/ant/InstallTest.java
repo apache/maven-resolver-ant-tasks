@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class InstallTest extends AntBuildsTest {
 
     @Test
-    public void testInstallGlobalPom() {
+    void installGlobalPom() {
         executeTarget("testInstallGlobalPom");
         long tstamp = System.currentTimeMillis();
 
@@ -37,7 +37,7 @@ public class InstallTest extends AntBuildsTest {
     }
 
     @Test
-    public void testInstallOverrideGlobalPom() {
+    void installOverrideGlobalPom() {
         executeTarget("testInstallOverrideGlobalPom");
         long tstamp = System.currentTimeMillis();
 
@@ -47,7 +47,7 @@ public class InstallTest extends AntBuildsTest {
     }
 
     @Test
-    public void testInstallOverrideGlobalPomByRef() {
+    void installOverrideGlobalPomByRef() {
         long tstamp = System.currentTimeMillis();
         executeTarget("testInstallOverrideGlobalPomByRef");
 
@@ -58,7 +58,7 @@ public class InstallTest extends AntBuildsTest {
     }
 
     @Test
-    public void testDefaultRepo() {
+    void defaultRepo() {
         executeTarget("testDefaultRepo");
         long tstamp = System.currentTimeMillis();
 
@@ -69,7 +69,7 @@ public class InstallTest extends AntBuildsTest {
     }
 
     @Test
-    public void testCustomRepo() throws Exception {
+    void customRepo() throws Exception {
         File repoPath = new File(BUILD_DIR, "local-repo-custom");
 
         executeTarget("testCustomRepo");
